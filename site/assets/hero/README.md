@@ -38,6 +38,8 @@ float crop box, so the move has no whole-pixel steps.
 
 The browser starts the film only with the hero visible. It pauses when the
 hero leaves the viewport, the tab is hidden, or the user presses Pause film.
+Back and Next move to the adjacent six-second scene, wrapping at either end
+and preserving the current play/pause state.
 Reduced-motion and data-saving preferences use the poster without loading
 the video. Routing away disposes the observer, listeners, and media source.
 

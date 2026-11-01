@@ -187,7 +187,12 @@ function setupHeroFilm() {
   const hero = document.querySelector('.hero');
   if (!hero) return () => {};
   const video = hero.querySelector('video');
+  const controls = hero.querySelector('.film-controls');
   const toggle = hero.querySelector('[data-film-toggle]');
+  const back = hero.querySelector('[data-film-back]');
+  const next = hero.querySelector('[data-film-next]');
+  // The six equal-length scenes are recorded in assets/hero/sources.json.
+  const sceneCount = Number(video.dataset.scenes);
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const connection = navigator.connection;
   let inView = false;
@@ -196,12 +201,15 @@ function setupHeroFilm() {
 
   const updateControl = () => {
     const paused = video.paused;
-    toggle.querySelector('span').textContent = paused ? 'Play film' : 'Pause film';
+    const label = paused ? 'Play film' : 'Pause film';
+    toggle.querySelector('span').textContent = label;
+    toggle.title = label;
     toggle.querySelector('path').setAttribute('d', paused ? 'M4 2l8 5-8 5z' : 'M3 2h3v10H3zm5 0h3v10H8z');
+    back.disabled = next.disabled = !Number.isFinite(video.duration) || video.duration <= 0;
   };
   const sync = () => {
     const still = motion.matches || connection?.saveData;
-    toggle.hidden = Boolean(still);
+    controls.hidden = Boolean(still);
     if (disposed || still || userPaused || !inView || document.hidden) {
       video.pause();
       if (still) hero.classList.remove('film-playing');
@@ -220,6 +228,19 @@ function setupHeroFilm() {
     updateControl();
   };
   const onToggle = () => { userPaused = !video.paused; sync(); };
+  const stepScene = direction => {
+    const sceneDuration = video.duration / sceneCount;
+    const current = Math.floor(video.currentTime / sceneDuration);
+    const target = (current + direction + sceneCount) % sceneCount;
+    // Land one frame into the scene, clear of the preceding dissolve.
+    video.currentTime = target * sceneDuration + 1 / 24;
+  };
+  const onBack = () => stepScene(-1);
+  const onNext = () => stepScene(1);
+  const onSeeked = () => {
+    hero.classList.add('film-playing');
+    updateControl();
+  };
   const observer = new IntersectionObserver(entries => {
     inView = entries.at(-1).isIntersecting;
     sync();
@@ -227,7 +248,11 @@ function setupHeroFilm() {
   observer.observe(hero);
   video.addEventListener('playing', onPlaying);
   video.addEventListener('pause', updateControl);
+  video.addEventListener('loadedmetadata', updateControl);
+  video.addEventListener('seeked', onSeeked);
   toggle.addEventListener('click', onToggle);
+  back.addEventListener('click', onBack);
+  next.addEventListener('click', onNext);
   motion.addEventListener('change', sync);
   document.addEventListener('visibilitychange', sync);
   sync();
@@ -237,8 +262,12 @@ function setupHeroFilm() {
     motion.removeEventListener('change', sync);
     document.removeEventListener('visibilitychange', sync);
     toggle.removeEventListener('click', onToggle);
+    back.removeEventListener('click', onBack);
+    next.removeEventListener('click', onNext);
     video.removeEventListener('playing', onPlaying);
     video.removeEventListener('pause', updateControl);
+    video.removeEventListener('loadedmetadata', updateControl);
+    video.removeEventListener('seeked', onSeeked);
     video.pause();
     video.removeAttribute('src');
     video.load();

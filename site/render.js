@@ -239,28 +239,37 @@ function tabbedTerminal(id, label, steps) {
 function homePage() {
   return html`
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-media" aria-hidden="true">
-        <video class="hero-video" muted loop playsinline preload="none" width="1600" height="1000"
-          poster="/assets/hero/poster.webp" data-src="/assets/hero/outputs.mp4" tabindex="-1"></video>
-      </div>
       <div class="container hero-layout">
         <div class="hero-inner">
-          <h1 id="hero-title">Medical imaging.<br>Native on Mac.</h1>
-          <p class="hero-lead">On-device AI for segmentation, detection, generation and <span class="nowrap">vision-language</span> on Apple Silicon.</p>
+          <div class="hero-copy">
+            <h1 id="hero-title">Medical imaging.<br>Native on Mac.</h1>
+            <p class="hero-lead">Run medical imaging models locally on Apple Silicon.</p>
+          </div>
           <div class="actions">
             <a class="button" href="/models/" data-route>Browse models</a>
-            <a class="button secondary" href="${articleUrl}">Read the article</a>
-            <a class="hero-guide" href="/get-started/" data-route>Get started <span aria-hidden="true">›</span></a>
+            <a class="hero-article" href="${articleUrl}">Read the article <span aria-hidden="true">↗</span></a>
           </div>
           ${installAll('hero-install')}
+        </div>
+        <div class="hero-media" aria-hidden="true">
+          <video class="hero-video" muted loop playsinline preload="none" width="1600" height="1000"
+            poster="/assets/hero/poster.webp" data-src="/assets/hero/outputs.mp4" data-scenes="6" tabindex="-1"></video>
         </div>
       </div>
       <div class="container hero-film-bar">
         <p>Outputs from MedMLX runtimes. <a href="/assets/hero/credits.html">Image credits</a></p>
-        <button class="film-toggle" type="button" data-film-toggle hidden>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 2h3v10H3zm5 0h3v10H8z"/></svg>
-          <span>Pause film</span>
-        </button>
+        <div class="film-controls" role="group" aria-label="Hero visuals" hidden>
+          <button class="film-toggle" type="button" data-film-back aria-label="Previous visual" title="Previous visual" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
+          </button>
+          <button class="film-toggle" type="button" data-film-toggle title="Pause film">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 2h3v10H3zm5 0h3v10H8z"/></svg>
+            <span class="sr-only">Pause film</span>
+          </button>
+          <button class="film-toggle" type="button" data-film-next aria-label="Next visual" title="Next visual" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
+          </button>
+        </div>
       </div>
     </section>
 
