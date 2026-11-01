@@ -20,7 +20,7 @@ let announcerReset;
 // Catalog filtering and report command builder
 
 /** Hide catalog items outside the current search and task; announce the count. */
-function filterCatalog() {
+function filterCatalog({ updateQuery = false } = {}) {
   const search = document.querySelector('#model-search');
   if (!search) return;
   const task = document.querySelector('input[name="task"]:checked')?.value || '';
@@ -39,6 +39,17 @@ function filterCatalog() {
   }
   document.querySelector('#catalog-status').textContent = `${count} ${count === 1 ? 'package' : 'packages'}`;
   document.querySelector('#catalog-empty').hidden = count !== 0;
+  if (updateQuery) {
+    const parameters = new URLSearchParams(location.search);
+    const text = search.value.trim();
+    if (text) parameters.set('q', text);
+    else parameters.delete('q');
+    if (task) parameters.set('task', task);
+    else parameters.delete('task');
+    const searchString = parameters.toString();
+    history.replaceState(history.state, '', `${location.pathname}${searchString ? `?${searchString}` : ''}${location.hash}`);
+    renderedLocation = location.pathname + location.search;
+  }
 }
 
 /** Validate Reason-CT form fields and update the copyable shell text. */
@@ -303,7 +314,7 @@ async function copyCommand(button) {
     showCopyResult(button, 'Copied', 'Command copied.');
   } catch {
     getSelection().selectAllChildren(code);
-    showCopyResult(button, 'Press ⌘C', 'Copying failed. The command is selected; press Command-C to copy it.');
+    showCopyResult(button, 'Selected', 'Automatic copying failed. The command is selected for manual copying.');
   }
 }
 
@@ -371,17 +382,12 @@ document.addEventListener('keydown', event => {
 
 document.addEventListener('input', event => {
   if (event.target.form?.id === 'command-form') updateCommand();
-  if (event.target.id === 'model-search') filterCatalog();
+  if (event.target.id === 'model-search') filterCatalog({ updateQuery: true });
 });
 
 document.addEventListener('change', event => {
   if (event.target.name !== 'task') return;
-  const query = new URLSearchParams(location.search);
-  if (event.target.value) query.set('task', event.target.value);
-  else query.delete('task');
-  const search = query.toString();
-  history.replaceState({}, '', `${location.pathname}${search ? `?${search}` : ''}${location.hash}`);
-  filterCatalog();
+  filterCatalog({ updateQuery: true });
 });
 
 document.addEventListener('submit', event => event.preventDefault());

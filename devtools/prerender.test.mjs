@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { catalogJson, llmsText, prerender, robots, sitemap } from './prerender.mjs';
-import { catalog, routes, siteUrl } from '../site/render.js';
+import { catalog, route, routes, siteUrl } from '../site/render.js';
 
 const shell = readFileSync(new URL('../site/index.html', import.meta.url), 'utf8');
 const tag = (html, pattern) => html.match(pattern)?.[1];
@@ -29,6 +29,12 @@ test('every route prerenders with its own title, description, canonical URL and 
 test('every catalog entry has a page in the route list', () => {
   for (const item of catalog) assert.ok(routes.includes(item.href), item.href);
   assert.equal(new Set(routes).size, routes.length);
+});
+
+test('catalog URLs restore search text and task selection when revisited', () => {
+  const body = String(route('/models', '?q=SynthSeg&task=Segmentation').body);
+  assert.match(body, /id="model-search"[^>]*value="SynthSeg"/);
+  assert.match(body, /name="task" value="Segmentation"\s+checked/);
 });
 
 test('the 404 page is not indexed and has no canonical URL', () => {

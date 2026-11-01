@@ -310,9 +310,10 @@ function homePage() {
     </section>`;
 }
 
-/** Render the catalog, honoring a recognized task from the query string. */
+/** Render the catalog with its search text and recognized task from the URL. */
 function modelsPage(search = '') {
-  const requestedTask = new URLSearchParams(search).get('task');
+  const parameters = new URLSearchParams(search);
+  const requestedTask = parameters.get('task');
   const selectedTask = tasks.includes(requestedTask) ? requestedTask : '';
   const choice = (value, label) => html`<label class="task-chip"><input type="radio" name="task" value="${value}"
     ${value === selectedTask ? html`checked` : ''}><span>${label}</span></label>`;
@@ -326,7 +327,7 @@ function modelsPage(search = '') {
       <form class="catalog-controls" role="search">
         <div class="field catalog-search">
           <label for="model-search" class="sr-only">Search models</label>
-          <input id="model-search" type="search" placeholder="Search liver, CT or nnU-Net" autocomplete="off">
+          <input id="model-search" type="search" value="${parameters.get('q') || ''}" placeholder="Search liver, CT or nnU-Net" autocomplete="off">
         </div>
         <fieldset class="task-chips">
           <legend class="sr-only">Task</legend>

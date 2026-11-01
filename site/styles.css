@@ -942,7 +942,14 @@ main:focus { outline: none; }
   .specs > div, .specs.files > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .field-row { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .terminal pre { padding: 16px 20px; font-size: 0.8125rem; }
-  .terminal-tabs button { padding-inline: 10px; }
+  .terminal-bar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; padding-inline: 10px; }
+  .terminal-label { min-width: 0; overflow-wrap: anywhere; }
+  .terminal-tabs { min-width: 0; }
+  .terminal-tabs button { min-height: 44px; padding-inline: 6px; }
+  .copy-button, .film-toggle, .task-chip span, .install-details summary, .choices label { min-height: 44px; }
+  .media-toggle { width: 44px; height: 44px; }
+  .brand, .lab-mark { min-height: 44px; align-items: center; }
+  .catalog-links a { display: inline-flex; align-items: center; min-height: 44px; }
   .lab-credit { flex-direction: column; align-items: flex-start; gap: 24px; }
   .lab-logo img { height: 80px; }
 
