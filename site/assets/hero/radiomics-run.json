@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "method": "Native MLX Radiomics voxel extraction through the connected MedMLX MCP server",
+  "job": {
+    "job_id": "5192108bfe00",
+    "state": "completed",
+    "started_at": "2026-10-31T20:43:15+00:00",
+    "finished_at": "2026-10-31T20:43:16+00:00",
+    "exit_code": 0
+  },
+  "runtime": {
+    "model_id": "mlxradiomics",
+    "package": "mlxradiomics",
+    "version": "0.1.0.dev5",
+    "medmlx_version": "0.4.0",
+    "mlx_version": "0.32.4",
+    "python_version": "3.13.17",
+    "device": "Apple M5 Max GPU",
+    "precision": "float32"
+  },
+  "source": {
+    "source_file": "paper/inputs/figure1.npz",
+    "source_sha256": "809be09f21e54691861026c9b43dcb50a2e4f2eeb13b5d9f0b4cff33909a6198",
+    "image_key": "swinunetr/image",
+    "labels_key": "swinunetr/labels",
+    "selected_label": 6,
+    "source_case": "AMOS22 amos_0008",
+    "axial_slice": 80,
+    "spacing_mm_row_col": [
+      0.6158854365348816,
+      0.6158854365348816
+    ],
+    "input_shape": [
+      768,
+      768
+    ],
+    "roi_pixels": 14940,
+    "derivation": "The retained raw HU axial slice and native SwinUNETR liver prediction are written as one-slice NIfTI in local display coordinates. The original display orientation and in-plane physical spacing are preserved. The single through-plane spacing of 1 mm is a storage convention; force2D excludes it from local neighborhoods. No image resampling or input smoothing.",
+    "parameters": {
+      "setting": {
+        "binWidth": 10,
+        "kernelRadius": 5,
+        "maskedKernel": true,
+        "force2D": true,
+        "force2Ddimension": 0
+      },
+      "featureClass": {
+        "firstorder": [
+          "Entropy"
+        ],
+        "glcm": [
+          "Contrast",
+          "Idmn"
+        ]
+      }
+    },
+    "ct_nifti_sha256": "f4d18d7a6eac69d620bc48b65a9ade83349aca088f6e080e87dd0226a3df3bba",
+    "liver-roi_nifti_sha256": "bcd2ce26e73500ec93b13142003360cd36fc5c23c357ae1855353fbcf884d091",
+    "roi_selection": {
+      "rule": "largest 4-connected component of the original predicted liver mask, computed before radiomics extraction",
+      "original_roi_pixels": 14940,
+      "selected_roi_pixels": 14435,
+      "excluded_roi_pixels": 505,
+      "original_component_count": 3,
+      "manual_mask_edits": false
+    },
+    "liver-roi-main_nifti_sha256": "c5239e3354e6b388d2fa402c3ac24c87767567b928e9c4dbd39e27327024716a"
+  },
+  "execution": {
+    "batch_size": 687,
+    "device": "gpu",
+    "gray_levels": 25,
+    "histogram_method": "mlx",
+    "precision": "float32",
+    "preprocessing": "Host float64 normalization, resegmentation and binning; native Metal features",
+    "scratch_estimate_bytes": 67087536,
+    "settings": {
+      "bin_count": null,
+      "bin_width": 10.0,
+      "distances": [
+        1
+      ],
+      "features": [
+        "firstorder_Entropy",
+        "glcm_Contrast",
+        "glcm_Idmn"
+      ],
+      "force2d_axis": 0,
+      "gldm_alpha": 0,
+      "kernel_radius": 5,
+      "label": 1,
+      "masked_kernel": true,
+      "max_gray_levels": 256,
+      "normalize": false,
+      "normalize_scale": 1.0,
+      "remove_outliers": null,
+      "resegment_mode": "absolute",
+      "resegment_range": null,
+      "resegment_shape": false,
+      "scratch_mib": 64,
+      "symmetrical_glcm": true,
+      "voxel_array_shift": 0.0
+    },
+    "spacing": [
+      1.0,
+      0.6158854365348816,
+      0.6158854365348816
+    ],
+    "voxel": true
+  },
+  "maps": {
+    "original_firstorder_Entropy": {
+      "sha256": "b1f5021b41cdde937a4e334feef6ad63c874e2c16fac0e13f849a6002a94ab43",
+      "finite_roi_voxels": 14435,
+      "outside_roi_zero": true,
+      "range": [
+        0.6815892457962036,
+        3.194377899169922
+      ],
+      "local_artifact": "dist/radiomics-demo/computed-main/maps/original_firstorder_Entropy.nii.gz"
+    },
+    "original_glcm_Contrast": {
+      "sha256": "afca448197d5d5ad0a34c676c9de1fc183dd3b3bdef0a5d2dfbabad499c4751a",
+      "finite_roi_voxels": 14435,
+      "outside_roi_zero": true,
+      "range": [
+        0.17607757449150085,
+        5.514487266540527
+      ],
+      "local_artifact": "dist/radiomics-demo/computed-main/maps/original_glcm_Contrast.nii.gz"
+    },
+    "original_glcm_Idmn": {
+      "sha256": "f90942caa4814f34352e8365a6f47d7c5bac1c552034827e2829fb23bd6f9d75",
+      "finite_roi_voxels": 14435,
+      "outside_roi_zero": true,
+      "range": [
+        0.9918270707130432,
+        0.9997187256813049
+      ],
+      "local_artifact": "dist/radiomics-demo/computed-main/maps/original_glcm_Idmn.nii.gz"
+    }
+  },
+  "display": {
+    "renderer": "docs/hero/render_radiomics.py",
+    "renderer_sha256": "00f4bf95fed828f8d6c9d9aae58293865a1b8998d2e03b3d020c18ecb2aa4a37",
+    "feature": "original_firstorder_Entropy",
+    "units": "bits",
+    "ct_window_hu": [
+      -160,
+      240
+    ],
+    "color_range_percentiles": [
+      2,
+      98
+    ],
+    "color_range_bits": [
+      1.4660650730133056,
+      2.936603088378906
+    ],
+    "feature_range_bits": [
+      0.6815892457962036,
+      3.194377899169922
+    ],
+    "color_palette_rgb": [
+      [
+        48,
+        9,
+        20
+      ],
+      [
+        120,
+        24,
+        43
+      ],
+      [
+        195,
+        58,
+        77
+      ],
+      [
+        239,
+        137,
+        143
+      ],
+      [
+        255,
+        233,
+        226
+      ]
+    ],
+    "overlay_opacity": 0.78,
+    "body_mask": "largest CT > -300 HU component, holes filled; contains entire analysis ROI",
+    "source_crop_xyxy": [
+      118,
+      164,
+      639,
+      576
+    ],
+    "display_resampling": "uniform Lanczos",
+    "numerical_smoothing": false,
+    "feature_map_sha256": "b1f5021b41cdde937a4e334feef6ad63c874e2c16fac0e13f849a6002a94ab43",
+    "output_sha256": "c1819edd9ad8843a028e9c646721ead8b538b4fa39d081324c7c5850f541c638",
+    "output_size_px": [
+      1200,
+      1030
+    ]
+  },
+  "interpretation": "One axial plane for a software visualization. Not a clinical finding, comparison, or performance validation. Entropy values are computed from the selected local ROI neighborhoods."
+}

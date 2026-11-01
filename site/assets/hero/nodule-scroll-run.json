@@ -1,0 +1,401 @@
+{
+  "schema_version": 1,
+  "method": "Native MLX 3D RetinaNet lung-nodule detection (lung-nodule-mlx public runner) on one LUNA16 chest CT, run locally on the Apple GPU",
+  "job": {
+    "state": "completed",
+    "started_at": "2026-10-31T21:36:43+00:00",
+    "finished_at": "2026-10-31T21:37:08+00:00",
+    "wall_seconds": 24.84,
+    "call": "lung_nodule_mlx.medmlx.run(image_path=\"<LUNA16>/nifti/nodule_03_20mm.nii.gz\", weights_path=\"~/.cache/medmlx/lung-nodule\", output_dir=\"dist/nodule-scroll-demo/nodule_03_20mm\", overwrite=True, resample_raw_input=True)",
+    "fresh_process": true,
+    "deterministic_rerun": "A second run in a fresh process wrote byte-identical detections.json and bundle_detections.json."
+  },
+  "runtime": {
+    "model_id": "lung-nodule",
+    "package": "lung-nodule-mlx",
+    "version": "0.2.5",
+    "install": "uv venv --python 3.13 && uv pip install \"lung-nodule-mlx==0.2.5\" (PyPI)",
+    "documentation": "README.md and docs/technical.md at tag v0.2.5 of MedMLX/lung-nodule-mlx",
+    "medmlx_core_version": "0.2.5",
+    "mlx_version": "0.32.4",
+    "mlx_metal_version": "0.32.4",
+    "numpy_version": "2.5.4",
+    "nibabel_version": "5.4.2",
+    "python_version": "3.13.18",
+    "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+    "device": "Apple M5 Max GPU",
+    "mlx_device": "Device(gpu, 0)",
+    "gpu_architecture": "applegpu_g17s",
+    "precision": "float32",
+    "peak_memory_bytes": 10658920920
+  },
+  "weights": {
+    "repository": "MedMLX/retinanet-lung-nodule-mlx",
+    "file": "network.safetensors",
+    "sha256": "6e7a51d99f5835c114c126ae9244c407551a680069c33a7d3e85c85a551d22c6",
+    "size_bytes": 83669894,
+    "download_revision": "d2d635fbac34254f14192ac348a05d275a949317",
+    "hub_check": "Hub LFS sha256 of network.safetensors at main (8d8a48d8adfc8a8e71c7565f961979e91f20e3ec) equals the local file",
+    "weights_path": "Existing local cache folder passed explicitly and read only; the runner therefore reports weights_revision null",
+    "upstream": "MONAI/lung_nodule_ct_detection bundle 0.6.10, Hugging Face revision 9d6622fda0e52be0a4155fed2e0afb9c17bcd80b",
+    "license": "Apache-2.0"
+  },
+  "source": {
+    "dataset": "LUNA16 subset0",
+    "dataset_record": "Zenodo record 3723295",
+    "dataset_license": "CC BY 4.0",
+    "citations": [
+      "Setio et al., Medical Image Analysis 42 (2017) 1-13",
+      "Armato et al., Medical Physics 38(2) (2011) 915-931 (LIDC-IDRI, TCIA)"
+    ],
+    "case": "nodule_03_20mm",
+    "case_file": "nifti/nodule_03_20mm.nii.gz",
+    "series_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.752756872840730509471096155114",
+    "input_sha256": "20fba180797acb74b5eccc2eb7590bf6e0591ff377c32aaca97326e74fea90a8",
+    "derivation": "Local read-only copy: LUNA16 MetaImage converted to HU NIfTI with a RAS affine. Not copied into this repository.",
+    "shape_ijk": [
+      512,
+      512,
+      127
+    ],
+    "spacing_mm_ijk": [
+      0.703125,
+      0.703125,
+      2.5
+    ],
+    "voxel_axes": "LPS",
+    "bundle_split": "Listed under \"validation\" in the bundle data split dataset_fold0.json (MONAI-extra-test-data 0.8.1, LUNA16_datasplit). The pinned bundle trains on the \"training\" list and evaluates on \"validation\", so this series is from its held-out fold-0 test list."
+  },
+  "model_settings": {
+    "resample_raw_input": true,
+    "preprocessing": "Reorient to RAS, Spacing to 0.703125 x 0.703125 x 1.25 mm (trilinear), HU -1024..300 scaled to [0, 1]",
+    "prepared_shape": [
+      1,
+      1,
+      512,
+      512,
+      253
+    ],
+    "padded_shape": [
+      512,
+      512,
+      256
+    ],
+    "prepared_affine": [
+      [
+        0.703125,
+        0.0,
+        0.0,
+        -175.69686889648438
+      ],
+      [
+        0.0,
+        0.703125,
+        0.0,
+        -196.39688110351562
+      ],
+      [
+        0.0,
+        0.0,
+        1.25,
+        -335.25
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "sliding_window": "512 x 512 x 192, 25% overlap, constant weights",
+    "score_threshold": 0.02,
+    "topk_candidates_per_level": 1000,
+    "nms_iou": 0.22,
+    "max_detections": 300,
+    "source": "Runner defaults documented in docs/technical.md at v0.2.5; no settings changed"
+  },
+  "outputs": {
+    "detections": {
+      "local_artifact": "dist/nodule-scroll-demo/nodule_03_20mm/detections.json",
+      "sha256": "152d226f0236177ce0e4248d0a2a9b614b14ee63b64b70455b87dda7bf7d3c3d",
+      "schema": "medmlx.detections.v1, cccwhd boxes in NIfTI RAS mm"
+    },
+    "bundle_detections": {
+      "local_artifact": "dist/nodule-scroll-demo/nodule_03_20mm/bundle_detections.json",
+      "sha256": "2f18782369dc66e491cfddf3e12c4d7617eb0f7c48c099bf556da4f07deb2a9f",
+      "schema": "MONAI bundle rows, cccwhd boxes in patient LPS mm"
+    }
+  },
+  "detections": [
+    {
+      "rank": 1,
+      "box_ras_cccwhd_mm": [
+        -53.366573333740234,
+        -65.22567749023438,
+        -61.97404479980469,
+        19.683128356933594,
+        19.736289978027344,
+        19.254669189453125
+      ],
+      "score": 0.9994294047355652,
+      "label": "nodule"
+    },
+    {
+      "rank": 2,
+      "box_ras_cccwhd_mm": [
+        100.33944702148438,
+        46.18894958496094,
+        -180.97381591796875,
+        4.0435791015625,
+        4.062835693359375,
+        4.0328826904296875
+      ],
+      "score": 0.033589404076337814,
+      "label": "nodule"
+    }
+  ],
+  "annotation_comparison": {
+    "source": "LUNA16 annotations.csv row for this series (consensus of at least 3 of 4 LIDC-IDRI readers), via nodules.json",
+    "annotation_world_lps_mm": [
+      56.39315434,
+      67.68008675,
+      -64.67445255
+    ],
+    "annotation_world_ras_mm": [
+      -56.39315434,
+      -67.68008675,
+      -64.67445255
+    ],
+    "annotation_diameter_mm": 19.65387738,
+    "compared_detection_rank": 1,
+    "center_offset_ras_mm": [
+      3.026581006259768,
+      2.454409259765626,
+      2.7004077501953105
+    ],
+    "center_distance_mm": 4.740940773642984,
+    "within_annotated_radius": true,
+    "hit_rule": "LUNA16 counts a candidate as a hit when its center lies within the annotated nodule radius",
+    "box_size_mm": [
+      19.683128356933594,
+      19.736289978027344,
+      19.254669189453125
+    ],
+    "drawn": false,
+    "note": "Used only to check the detection; the annotation is not drawn in the video or poster."
+  },
+  "case_selection": {
+    "rule": "Three large-nodule LUNA16 subset0 cases were run with the same settings. The case whose top box was closest to its consensus annotation, with no other box scoring 0.5 or more inside the +/-25 mm scroll range, was used. The renderer refuses to hide such a box.",
+    "candidates": [
+      {
+        "case": "nodule_01_25mm",
+        "case_file": "nifti/nodule_01_25mm.nii.gz",
+        "consensus_nodules": 3,
+        "detection_count": 18,
+        "top_score": 0.9997783303260803,
+        "top_box_center_to_nearest_annotation_mm": 8.73,
+        "other_boxes_score_ge_0.5_within_25mm_of_top_box_z": 3,
+        "top_box_size_mm": [
+          24.93,
+          24.95,
+          24.85
+        ],
+        "nearest_annotation_diameter_mm": 25.23,
+        "local_artifact": "dist/nodule-scroll-demo/nodule_01_25mm/detections.json",
+        "detections_sha256": "8509ea829b1a715ab3ffbb66543184ca87a15cbd5af6a6c8b17d867ac3b2b011"
+      },
+      {
+        "case": "nodule_02_22mm",
+        "case_file": "nifti/nodule_02_22mm.nii.gz",
+        "consensus_nodules": 1,
+        "detection_count": 9,
+        "top_score": 0.9985462427139282,
+        "top_box_center_to_nearest_annotation_mm": 8.67,
+        "other_boxes_score_ge_0.5_within_25mm_of_top_box_z": 1,
+        "top_box_size_mm": [
+          21.57,
+          21.61,
+          21.7
+        ],
+        "nearest_annotation_diameter_mm": 21.58,
+        "local_artifact": "dist/nodule-scroll-demo/nodule_02_22mm/detections.json",
+        "detections_sha256": "7076788dd0194308c9e64c708e7875e30f990731bb445170c5980abe835b3043"
+      },
+      {
+        "case": "nodule_03_20mm",
+        "case_file": "nifti/nodule_03_20mm.nii.gz",
+        "consensus_nodules": 1,
+        "detection_count": 2,
+        "top_score": 0.9994294047355652,
+        "top_box_center_to_nearest_annotation_mm": 4.74,
+        "other_boxes_score_ge_0.5_within_25mm_of_top_box_z": 0,
+        "top_box_size_mm": [
+          19.68,
+          19.74,
+          19.25
+        ],
+        "nearest_annotation_diameter_mm": 19.65,
+        "local_artifact": "dist/nodule-scroll-demo/nodule_03_20mm/detections.json",
+        "detections_sha256": "152d226f0236177ce0e4248d0a2a9b614b14ee63b64b70455b87dda7bf7d3c3d"
+      }
+    ]
+  },
+  "display": {
+    "renderer": "docs/hero/render_nodule_scroll.py",
+    "renderer_sha256": "faa82a82cbea6f70191b48adeb764517089e05846e80b23bc25e555f19b4b1c7",
+    "orientation": "Radiological axial view: patient right on image left, anterior at top. Stored voxel axes are LPS, so each frame is data[:, :, k].T with no flips.",
+    "slices": {
+      "type": "Native acquired axial slices; no through-plane interpolation",
+      "k_range": [
+        99,
+        119
+      ],
+      "count": 21,
+      "z_range_ras_mm": [
+        -87.75,
+        -37.75
+      ],
+      "slice_spacing_mm": 2.5,
+      "range_about_box_center_mm": [
+        -25.776,
+        24.224
+      ],
+      "poster_k": 109,
+      "poster_z_ras_mm": -62.75,
+      "box_center_z_ras_mm": -61.974
+    },
+    "window_hu": {
+      "center": 40,
+      "width": 400,
+      "range": [
+        -160.0,
+        240.0
+      ]
+    },
+    "body_mask": "Largest 3D CT > -300 HU component of the displayed slab, holes filled per slice; set to true black outside. Contains the predicted box center.",
+    "field_of_view": "The body reaches the first and last image columns, so the flat left and right body edges are the edge of the scan's 360 mm reconstruction field, not a crop.",
+    "source_crop_xyxy": [
+      -58.427,
+      69.622,
+      570.427,
+      478.378
+    ],
+    "source_crop_note": "Continuous source-pixel coordinates (columns = i, rows = j) of one crop for every frame: body bounds plus 8 mm, widened to 800:520; area beyond the scan is black padding.",
+    "scale_px_per_mm": 1.8093,
+    "display_resampling": "uniform in-plane Lanczos on the windowed float image",
+    "box": {
+      "drawn_detection_ranks": [
+        1
+      ],
+      "drawn_on_k": [
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113
+      ],
+      "rule": "Drawn on native slices whose z lies within the box depth",
+      "box_voxel_ijk_min": [
+        323.022,
+        310.411,
+        105.459
+      ],
+      "box_voxel_ijk_max": [
+        351.016,
+        338.48,
+        113.161
+      ],
+      "frame_stroke_outer_xyxy": [
+        483,
+        304,
+        525,
+        346
+      ],
+      "color": "#ff5a73",
+      "stroke_px": 6,
+      "style": "Pixel-aligned rectangle centered on the box edges; no antialiasing, glow, labels or text",
+      "other_detections_in_scroll_range": [],
+      "confident_threshold_checked": 0.5
+    },
+    "annotation_drawn": false,
+    "prediction_edits": false,
+    "sequence": {
+      "pattern": "ping-pong: first to last slice, then back, without repeating either end; rotated to start on the poster slice",
+      "first_frame_k": 109,
+      "hold_frames_per_slice": 4,
+      "fps": 24,
+      "frames": 160,
+      "duration_s": 6.667
+    },
+    "encode": {
+      "codec": "H.264 (libx264)",
+      "crf": 26,
+      "preset": "veryslow",
+      "pix_fmt": "yuv420p",
+      "color": "BT.709 primaries, transfer and matrix; limited range",
+      "faststart": true,
+      "audio": null,
+      "stream": "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 800x520, 559 kb/s, 24 fps, 24 tbr, 12288 tbn (default)",
+      "ffmpeg": "ffmpeg version 7.1 Copyright (c) 2000-2024 the FFmpeg developers",
+      "imageio_ffmpeg_version": "0.7.0",
+      "ffmpeg_arguments": [
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-y",
+        "-f",
+        "rawvideo",
+        "-pix_fmt",
+        "rgb24",
+        "-s",
+        "800x520",
+        "-framerate",
+        "24",
+        "-i",
+        "-",
+        "-vf",
+        "scale=out_color_matrix=bt709:out_range=tv:flags=accurate_rnd+full_chroma_int,format=yuv420p,setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709:range=tv",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "veryslow",
+        "-crf",
+        "26",
+        "-pix_fmt",
+        "yuv420p",
+        "-movflags",
+        "+faststart",
+        "-an",
+        "-map_metadata",
+        "-1",
+        "-fflags",
+        "+bitexact",
+        "-flags:v",
+        "+bitexact"
+      ],
+      "poster": "WebP, quality 85, method 6, the slice nearest the box center"
+    },
+    "decoded_check": {
+      "frames": 160,
+      "max_rgb_outside_body": 4,
+      "outside_body_region": "Body exterior of the first frame, eroded by 6 output pixels"
+    },
+    "outputs": {
+      "video": "site/assets/hero/nodule-scroll.mp4",
+      "video_sha256": "9712b48ea6b639ad755463babb582f5f7b81eaa56c5a38a1437e9429216e4a8a",
+      "video_bytes": 468454,
+      "poster": "site/assets/hero/nodule-scroll-poster.webp",
+      "poster_sha256": "8413cf8c8e19f56ef90ffa52ea9b2a34a2fc4ff00fbb8a9902bb70505d20f71a",
+      "poster_bytes": 36530,
+      "size_px": [
+        800,
+        520
+      ],
+      "local_frames": "dist/nodule-scroll-demo/frames/"
+    }
+  },
+  "interpretation": "Saved output of one research model on one public CT, shown for a software website. Not a clinical finding, diagnosis, or performance validation."
+}

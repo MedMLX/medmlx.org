@@ -1,0 +1,22 @@
+{
+  "source_figure": "paper/figures/runs/nv-reason-ct.png",
+  "source_sha256": "f72836c6d670c96365602e238c778d3d0408209217535614a2ceae7af578c51b",
+  "source_renderer": "paper/render_supplement.py:chest_report",
+  "source_configuration": "paper/configurations.py:nv-reason-ct",
+  "case": "LUNA16 …821260",
+  "crop_xyxy": [
+    18,
+    104,
+    539,
+    515
+  ],
+  "asset": "vision-language-ct.webp",
+  "report_excerpts": [
+    "Non-contrast CT.",
+    "Trachea and main bronchi are patent.",
+    "A few tiny nonspecific pulmonary nodules."
+  ],
+  "text_policy": "Verbatim excerpts of the report displayed beside this same CT in the saved figure. Line breaks are presentational. Not a new inference or clinical assessment.",
+  "animation": "Once on entering the viewport, report lines reveal over 3.6 seconds. Reduced motion keeps the complete static preview.",
+  "license": "LUNA16: CC BY 4.0; underlying LIDC-IDRI: CC BY 3.0; MedMLX report/figure composition retains project terms."
+}

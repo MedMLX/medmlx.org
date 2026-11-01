@@ -1,0 +1,31 @@
+[project]
+name = "medmlx-site"
+version = "0.0.0"
+requires-python = ">=3.13"
+
+[tool.uv]
+package = false
+
+[tool.pyright]
+include = ["devtools","server.py"]
+pythonVersion = "3.13"
+typeCheckingMode = "strict"
+enableTypeIgnoreComments = false
+reportUnnecessaryTypeIgnoreComment = "error"
+
+[dependency-groups]
+dev = [
+    "packaging>=24",
+    "pyright==1.1.414",
+    "ruff>=0.15.21",
+]
+
+[tool.ruff.lint]
+extend-select = ["TID251", "TID252", "ANN401"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"typing.Any" = {msg = "Use a precise type and parse untyped values at the boundary."}
+"typing_extensions.Any" = {msg = "Use a precise type and parse untyped values at the boundary."}

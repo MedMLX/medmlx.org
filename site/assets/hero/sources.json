@@ -1,0 +1,260 @@
+{
+  "sources": [
+    {
+      "name": "anatomy",
+      "repository": "MedMLX/totalsegmentator-mlx",
+      "tag": "v0.1.5",
+      "path": "docs/example-standard.png",
+      "crop": [
+        0,
+        0.1,
+        0.29,
+        0.98
+      ]
+    },
+    {
+      "name": "total-ct",
+      "repository": "MedMLX/totalsegmentator-mlx",
+      "tag": "v0.1.5",
+      "path": "docs/example-standard.png",
+      "crop": [
+        0.3,
+        0.11,
+        1,
+        0.98
+      ]
+    },
+    {
+      "name": "brain",
+      "repository": "MedMLX/synthseg-mlx",
+      "tag": "v0.3.3",
+      "path": "docs/example.png",
+      "crop": [
+        0,
+        0.12,
+        0.49,
+        1
+      ]
+    },
+    {
+      "name": "liver",
+      "repository": "MedMLX/nnunet-mlx",
+      "tag": "v0.6.3",
+      "path": "docs/example.png",
+      "crop": [
+        0,
+        0.1,
+        0.53,
+        0.98
+      ]
+    },
+    {
+      "name": "tumor",
+      "repository": "MedMLX/segresnet-mlx",
+      "tag": "v0.3.2",
+      "path": "docs/example.png",
+      "crop": [
+        0.26,
+        0.1,
+        0.6,
+        0.89
+      ]
+    },
+    {
+      "name": "kidney",
+      "repository": "MedMLX/unest-mlx",
+      "tag": "v0.2.6",
+      "path": "docs/showcase.png",
+      "crop": [
+        0.34,
+        0.18,
+        0.66,
+        0.83
+      ]
+    },
+    {
+      "name": "swin",
+      "repository": "MedMLX/swin-unetr-mlx",
+      "tag": "v0.2.5",
+      "path": "docs/showcase.png",
+      "crop": [
+        0.53,
+        0.15,
+        0.98,
+        0.83
+      ]
+    },
+    {
+      "name": "vista",
+      "repository": "MedMLX/mlx-segment-ct",
+      "tag": "v0.3.4",
+      "path": "docs/showcase.png",
+      "crop": [
+        0.33,
+        0.26,
+        0.625,
+        0.73
+      ]
+    },
+    {
+      "name": "prompt",
+      "repository": "MedMLX/biomedparse-mlx",
+      "tag": "v0.1.4.post1",
+      "path": "docs/example-abdomen.png",
+      "crop": [
+        0.34,
+        0.2,
+        0.64,
+        0.83
+      ]
+    },
+    {
+      "name": "xray",
+      "repository": "MedMLX/flexray-mlx",
+      "tag": "v0.2.5",
+      "path": "docs/showcase.png",
+      "crop": [
+        0.76,
+        0.22,
+        0.98,
+        0.88
+      ]
+    },
+    {
+      "name": "nodule",
+      "repository": "MedMLX/lung-nodule-mlx",
+      "tag": "v0.2.5",
+      "path": "docs/showcase.png",
+      "crop": [
+        0.26,
+        0.16,
+        0.48,
+        0.91
+      ]
+    },
+    {
+      "name": "medsam",
+      "repository": "MedMLX/medsam2-mlx",
+      "tag": "v0.2.7",
+      "path": "docs/showcase.png",
+      "crop": [
+        0.41,
+        0.18,
+        0.59,
+        0.89
+      ]
+    },
+    {
+      "name": "synthetic",
+      "repository": "MedMLX/mlx-generate-ctmr",
+      "tag": "v0.5.1",
+      "path": "docs/example.png",
+      "crop": [
+        0,
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "lesion",
+      "repository": "MedMLX/lesiondiffusion-mlx",
+      "tag": "v0.2.5",
+      "path": "docs/showcase.png",
+      "crop": [
+        0.67,
+        0.19,
+        0.97,
+        0.91
+      ]
+    },
+    {
+      "name": "pet",
+      "repository": "MedMLX/fdg-pet-ct-mlx",
+      "tag": "v0.2.5",
+      "path": "docs/showcase.png",
+      "crop": [
+        0.67,
+        0.23,
+        0.98,
+        0.84
+      ]
+    },
+    {
+      "name": "features",
+      "repository": "MedMLX/radimagenet-mlx",
+      "tag": "v0.3.2",
+      "path": "docs/showcase.png",
+      "crop": [
+        0.26,
+        0.32,
+        0.49,
+        0.87
+      ]
+    },
+    {
+      "name": "brain-coronal",
+      "repository": "MedMLX/synthseg-mlx",
+      "tag": "v0.3.3",
+      "path": "docs/example.png",
+      "crop": [
+        0.51,
+        0.12,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "radiomics-texture",
+      "kind": "computed-feature-overlay",
+      "asset": "radiomics-texture.webp",
+      "run_manifest": "radiomics-run.json",
+      "repository": "MedMLX/mlx-radiomics",
+      "version": "0.1.0.dev5",
+      "feature": "original_firstorder_Entropy"
+    }
+  ],
+  "scenes": [
+    [
+      "anatomy",
+      "total-ct",
+      "brain"
+    ],
+    [
+      "brain-coronal",
+      "liver",
+      "tumor"
+    ],
+    [
+      "swin",
+      "vista",
+      "kidney"
+    ],
+    [
+      "xray",
+      "medsam",
+      "nodule"
+    ],
+    [
+      "synthetic",
+      "lesion",
+      "pet"
+    ],
+    [
+      "radiomics-texture",
+      "prompt",
+      "features"
+    ]
+  ],
+  "video": {
+    "duration": 36,
+    "fps": 24,
+    "size": [
+      1600,
+      1000
+    ],
+    "crossfade_seconds": 1.5,
+    "color_saturation": 0.78,
+    "black_level_subtraction": 8
+  }
+}
