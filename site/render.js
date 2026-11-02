@@ -107,7 +107,7 @@ function specList(rows) {
     </dl>`;
 }
 
-/** Render the small inline Markdown subset used by reviewed model-card excerpts. */
+/** Render the small inline Markdown subset used by model-card summaries. */
 function cardText(text) {
   return text.split(/(\[[^\]]+\]\(https:\/\/[^\s)]+\)|`[^`]+`|\*\*[^*]+\*\*)/g).map(part => {
     const link = part.match(/^\[([^\]]+)\]\((https:\/\/[^\s)]+)\)$/);
@@ -125,23 +125,22 @@ function runtimeCard(item) {
     <div class="detail-grid model-card" id="model-card">
       <section class="detail-section">
         <h2>Model card</h2>
-        <p class="note">Reviewed against <a href="${item.source}">${item.distribution} ${card.version}</a>.</p>
-        ${specList(card.rows.map(([label, text]) => [label, cardText(text)]))}
-        <h2>Weights and memory</h2>
+        ${specList([...card.rows.map(([label, fact]) => [label, cardText(fact.text)]), ['Runs on', platformRequirement]])}
+        <h2>${card.noWeights ? 'Memory' : 'Downloads and memory'}</h2>
         ${card.weights.length ? html`<ul class="resource-list">
           ${card.weights.map(weight => html`<li><a href="${weight.url}">${weight.name}</a></li>`)}
         </ul>` : ''}
         ${card.measurements.length
-    ? card.measurements.map(text => html`<p>${cardText(text)}</p>`)
-    : html`<p class="note">${card.noWeights ? 'Peak memory is' : 'Weight sizes and peak memory are'} not reported in this release’s README.</p>`}
-        ${card.measurements.length ? html`<p class="note">Weight sizes are not reported in this release’s README.</p>` : ''}
+    ? card.measurements.map(fact => html`<p>${cardText(fact.text)}</p>`)
+    : html`<p class="note">${card.noWeights ? 'Peak memory use is' : 'Download size and peak memory use are'} not published for this version.</p>`}
+        ${card.measurements.length ? html`<p class="note">Download size is not published for this version.</p>` : ''}
       </section>
       <section class="detail-section">
-        <h2>Usage notes and limits</h2>
-        ${card.limitations.map(text => html`<p>${cardText(text)}</p>`)}
-        <p class="note"><a href="${item.source}#run">Full input requirements and usage</a></p>
+        ${card.limitations.length ? html`<h2>Before you run</h2>
+          ${card.limitations.map(fact => html`<p>${cardText(fact.text)}</p>`)}` : ''}
         <h2>License and terms</h2>
-        <p>${cardText(card.terms)}</p>
+        <p>${cardText(card.terms.text)}</p>
+        <p class="note"><a href="${item.source}">Developer documentation on GitHub</a></p>
       </section>
     </div>`;
 }
@@ -252,12 +251,6 @@ function taskCards() {
         <button class="media-toggle" type="button" data-media-toggle aria-label="Pause ${task.toLowerCase()} animation" hidden>${pauseIcon}</button>` : ''}</li>`;
     })}
   </ul>`;
-}
-
-const quickstartSteps = [['install', 'Install'], ['download', 'Download'], ['report', 'Run']];
-/** Render the model's install, download, and run commands as accessible tabs. */
-function quickstart(model) {
-  return tabbedTerminal('quickstart', 'Quick start', quickstartSteps.map(([step, label]) => [step, label, model.commands[step]]));
 }
 
 /** Render several commands in one panel, chosen with tabs; each tab carries its text. */
@@ -505,32 +498,23 @@ function modelPage(model) {
       </nav>
       <h1>${model.name}</h1>
       <p class="lead">${model.summary}</p>
-      <p class="meta">Model card · <code>${model.distribution} ${version}</code> · port of <a href="${model.upstream.url}">${model.upstream.name}</a></p>
+      <p class="meta">Model card · Version <a href="https://github.com/${repository}/tree/v${version}">${version}</a> · Based on <a href="${model.upstream.url}">${model.upstream.name}</a></p>
       <div class="actions">
         <a class="button" href="${guide}" data-route>Get started</a>
-        <a class="button secondary" href="${links.package}">Package on PyPI</a>
+        <a class="button secondary" href="https://github.com/${repository}/tree/v${version}">GitHub repository</a>
       </div>
     </section>
 
     <div class="container page-body">
-      <section class="detail-section quickstart-section">
-        <h2>Quick start</h2>
-        <p>Install the runtime, download its weights and generate a report.</p>
-        ${quickstart(model)}
-        <p class="note"><a href="${guide}" data-route>Follow the complete guide</a></p>
-      </section>
       <div class="detail-grid">
         <section class="detail-section">
-          <h2>Requirements</h2>
+          <h2>What you need</h2>
           ${specList(model.requirements)}
         </section>
         <section class="detail-section">
-          <h2>Outputs</h2>
-          <p>Each run writes three files to the output directory.</p>
-          <dl class="specs files">
-            ${model.outputs.map(([file, text]) => html`<div><dt><code>${file}</code></dt><dd>${text}</dd></div>`)}
-          </dl>
-          <h2>Limitations</h2>
+          <h2>What you get</h2>
+          <p>A written report about the scan, or an answer to your question. When reasoning is enabled, the result also includes the model’s reasoning.</p>
+          <h2>Before you run</h2>
           ${model.limitations.map(text => html`<p>${text}</p>`)}
         </section>
       </div>
@@ -543,9 +527,8 @@ function modelPage(model) {
       <section class="detail-section">
         <h2>Resources</h2>
         <ul class="resource-list">
-          <li><a href="https://github.com/${repository}/tree/v${version}">Reviewed release documentation · ${version}</a></li>
-          <li><a href="${links.package}">Package and usage on PyPI</a></li>
-          <li><a href="${links.weights}">Weights on Hugging Face</a></li>
+          <li><a href="https://github.com/${repository}/tree/v${version}">Developer documentation on GitHub</a></li>
+          <li><a href="${links.weights}">Model files on Hugging Face</a></li>
         </ul>
       </section>
     </div>`;
@@ -592,8 +575,8 @@ function gettingStartedPage() {
       </ol>
 
       <section class="detail-section guide-single">
-        <h2>Install one model</h2>
-        <p>Each catalog entry has its own install command for a new environment.</p>
+        <h2>Choose a model</h2>
+        <p>Each model card explains its inputs, outputs, downloads and practical requirements.</p>
         <ul class="guide-models">
           ${catalog.filter(item => featuredNames.includes(item.name)).map(item => html`
             <li><a href="${item.href}" ${item.internal ? html`data-route` : ''}>${item.name}</a><span>${item.description}</span></li>`)}
@@ -936,10 +919,9 @@ function notFoundPage() {
     </section>`;
 }
 
-/** Render a published runtime's install command, links and related runtimes. */
+/** Render a published model's card, setup link and related models. */
 function runtimePage(item) {
   const related = catalog.filter(other => other.task === item.task && other !== item);
-  const bundled = item.distribution !== 'med-vlm-mlx';
   return html`
     <section class="container page-head">
       <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -949,22 +931,15 @@ function runtimePage(item) {
       </nav>
       <h1>${item.name}</h1>
       <p class="lead">${item.description}</p>
-      <p class="meta">Model card · <code>${item.distribution} ${item.version}</code> · MLX on Apple Silicon</p>
+      <p class="meta">Version <a href="${item.source}">${item.version}</a> · Apple Silicon</p>
       <div class="actions">
-        <a class="button" href="${item.package}">Package on PyPI</a>
-        <a class="button secondary" href="${item.source}">Source on GitHub</a>
+        <a class="button" href="/get-started/" data-route>Get started</a>
+        <a class="button secondary" href="${item.source}">GitHub repository</a>
       </div>
     </section>
 
     <div class="container page-body">
       ${runtimeCard(item)}
-      <section class="detail-section quickstart-section">
-        <h2>Install</h2>
-        <p>Requires ${platformRequirement}, Python ${pythonVersion} and <a href="https://docs.astral.sh/uv/">uv</a>. This creates a new environment and installs ${item.distribution} ${item.version}.</p>
-        ${terminal(`install-${item.distribution}`, 'New environment', item.install, `${item.name} install command`)}
-        <p class="note">Usage, weights and options are in the <a href="${item.source}">package README</a>.${bundled ? html`
-          The MedMLX command on <a href="/get-started/" data-route>Get started</a> installs this runtime with every other model family.` : ''}</p>
-      </section>
       ${related.length ? html`<section class="detail-section">
         <h2>More ${item.task.toLowerCase()}</h2>
         <ul class="resource-list">

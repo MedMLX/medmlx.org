@@ -37,7 +37,7 @@ class ReleaseError(ValueError):
 
 @dataclass(frozen=True)
 class Card:
-    """Reviewed model-card excerpts and links from one tagged README."""
+    """Source excerpts supporting reviewed summaries, plus their weight links."""
 
     version: str
     excerpts: tuple[str, ...]
@@ -154,8 +154,14 @@ console.log(JSON.stringify({
   cards: Object.fromEntries(Object.entries(modelCards).map(([name, card]) => [name, {
     version: card.version,
     excerpts: [
-      ...card.rows.map(([, text]) => text), ...card.limitations, ...card.measurements,
-      ...card.weights.map(weight => weight.url), card.terms,
+      ...[...card.rows.map(([, fact]) => fact), ...card.limitations, ...card.measurements, card.terms]
+        .flatMap(fact => {
+          if (!fact.text?.trim() || !Array.isArray(fact.sources) || !fact.sources.length) {
+            throw new Error(`${name}: every model-card summary needs supporting source excerpts`);
+          }
+          return fact.sources;
+        }),
+      ...card.weights.map(weight => weight.url),
     ],
   }])),
   cardPackages: additionalRuntimes.map(runtime => runtime.distribution),

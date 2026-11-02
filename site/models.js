@@ -1,4 +1,4 @@
-import { packageUrl, platformRequirement, pythonVersion, runtimeInstallCommand } from './releases.js';
+import { packageUrl, platformRequirement, runtimeInstallCommand } from './releases.js';
 
 /** Return a standalone Reason-CT command with user values quoted for a POSIX shell. */
 export function reportCommand(parameters) {
@@ -39,12 +39,10 @@ export const models = [
     ],
     requirements: [
       ['Platform', platformRequirement],
-      ['Python', `${pythonVersion}, with uv`],
-      ['Disk', `${reasonCtWeights} for the weights`],
-      ['Memory', `${reasonCtMemory} peak MLX use, plus memory for preprocessing, macOS and other apps`],
-      ['Input', 'One 3D CT volume in NIfTI with Hounsfield unit values and valid spatial geometry'],
-      ['Precision', 'FP32 weights, activations and caches by default; BF16 profiles are documented in the release README'],
-      ['License', 'Port: Apache-2.0; NVIDIA material: OpenMDW-1.1; retained MIT and BSD notices'],
+      ['Download', `${reasonCtWeights} for the model files`],
+      ['Memory', `About ${reasonCtMemory} used by the model, plus extra for preparing the scan, macOS and other apps`],
+      ['Input', 'One 3D chest or abdomen CT scan saved as a NIfTI file'],
+      ['License', 'Software: Apache-2.0. NVIDIA model: OpenMDW-1.1. Other notices are in the repository.'],
     ],
     outputs: [
       ['report.txt', 'the generated report or answer'],
@@ -52,8 +50,8 @@ export const models = [
       ['run.json', 'execution metadata'],
     ],
     limitations: [
-      'DICOM, 2D images, video and multi-volume prompts are not supported.',
-      'The automatic crop locates the chest from enclosed air. On some whole-body scans, especially with the arms raised, it selects the head and neck instead. Crop whole-body volumes to the chest or abdomen before running.',
+      'Use one NIfTI scan at a time. DICOM files, 2D images and video are not supported.',
+      'Crop whole-body scans to the chest or abdomen before running. Automatic cropping can select the wrong region, especially when the arms are raised.',
     ],
     links: {
       package: packageUrl('mlx-reason-ct'),
@@ -72,23 +70,23 @@ export const models = [
 // standard block.
 export const additionalRuntimes = [
   { name: 'FDG PET/CT', distribution: 'fdg-pet-ct-mlx', task: 'Generation', description: 'Synthetic FDG PET from CT and organ labels, with scanner blur, scatter and count noise.' },
-  { name: 'nnU-Net', distribution: 'nnunet-mlx', task: 'Segmentation', description: 'nnU-Net v2 inference, with checkpoints for liver and pancreas CT, brain tumor MRI and PET/CT lesions.' },
+  { name: 'nnU-Net', distribution: 'nnunet-mlx', task: 'Segmentation', description: 'Segmentation of liver and pancreas CT, brain tumor MRI and PET/CT lesions.' },
   { name: 'NV-Segment-CT', distribution: 'mlx-segment-ct', task: 'Segmentation', description: 'Automatic and prompted 3D CT segmentation with NVIDIA VISTA-3D.' },
-  { name: 'SegResNet', distribution: 'segresnet-mlx', task: 'Segmentation', description: 'MONAI checkpoints for brain tumor MRI (BraTS), renal contrast-enhanced CT and whole-body CT.' },
-  { name: 'UNesT', distribution: 'unest-mlx', task: 'Segmentation', description: 'Transformer-based renal CT segmentation from MONAI.' },
-  { name: 'SwinUNETR', distribution: 'swin-unetr-mlx', task: 'Segmentation', description: 'Abdominal CT multi-organ segmentation (BTCV) from MONAI.' },
+  { name: 'SegResNet', distribution: 'segresnet-mlx', task: 'Segmentation', description: 'Segmentation of brain tumors, kidney structures and whole-body anatomy from MRI or CT.' },
+  { name: 'UNesT', distribution: 'unest-mlx', task: 'Segmentation', description: 'Kidney cortex, medulla and collecting system segmentation in contrast-enhanced CT.' },
+  { name: 'SwinUNETR', distribution: 'swin-unetr-mlx', task: 'Segmentation', description: 'Organ segmentation in abdominal CT.' },
   { name: 'MedSAM2', distribution: 'medsam2-mlx', task: 'Segmentation', description: 'Lesion or organ segmentation from a box, point or mask prompt, tracked through the volume.' },
   { name: 'BioMedParse', distribution: 'biomedparse-mlx', task: 'Segmentation', description: 'Text-prompted 3D segmentation with Microsoft BioMedParse v2.' },
-  { name: 'TotalSegmentator', distribution: 'totalsegmentator-mlx', task: 'Segmentation', description: '117 CT structures, with standard, fast and coarse modes and optional ROI or body cropping.' },
+  { name: 'TotalSegmentator', distribution: 'totalsegmentator-mlx', task: 'Segmentation', description: 'Identify 117 organs and other body structures in CT scans.' },
   { name: 'SynthSeg', distribution: 'synthseg-mlx', task: 'Segmentation', description: 'Brain segmentation and parcellation.' },
   { name: 'FleXray', distribution: 'flexray-mlx', task: 'Segmentation', description: 'Radiograph segmentation.' },
-  { name: 'FlexibleUNet', distribution: 'flexible-unet-mlx', task: 'Segmentation', description: 'Endoscopic instrument segmentation with an EfficientNet-B2 encoder, from MONAI.' },
+  { name: 'FlexibleUNet', distribution: 'flexible-unet-mlx', task: 'Segmentation', description: 'Identify surgical instruments in endoscopy images.' },
   { name: '3D RetinaNet', distribution: 'lung-nodule-mlx', task: 'Detection', description: 'MONAI RetinaNet lung nodule detection in 3D chest CT.' },
   { name: 'NV-Generate', distribution: 'mlx-generate-ctmr', task: 'Generation', description: 'Synthetic 3D CT and MRI generation with NVIDIA NV-Generate (MAISI).' },
   { name: 'LesionDiffusion', distribution: 'lesiondiffusion-mlx', task: 'Generation', description: 'Synthetic lesions in CT, with control of organ, size, placement and phenotype.' },
-  { name: 'MedGemma', distribution: 'med-vlm-mlx', task: 'Vision-language', description: 'Standalone medical image-language inference, with Python, CLI and HTTP interfaces.' },
-  { name: 'RadImageNet', distribution: 'radimagenet-mlx', task: 'Feature extraction', description: 'RadImageNet-pretrained ResNet50, DenseNet121, InceptionV3 and InceptionResNetV2 encoders.' },
-  { name: 'PyRadiomics', distribution: 'mlxradiomics', task: 'Quantitative imaging', description: 'PyRadiomics-compatible radiomics features and voxel feature maps on the Apple Silicon GPU.' },
+  { name: 'MedGemma', distribution: 'med-vlm-mlx', task: 'Vision-language', description: 'Ask questions about medical images and receive written responses on your Mac.' },
+  { name: 'RadImageNet', distribution: 'radimagenet-mlx', task: 'Feature extraction', description: 'Extract numerical image features for research with models trained on RadImageNet.' },
+  { name: 'PyRadiomics', distribution: 'mlxradiomics', task: 'Quantitative imaging', description: 'Measure image intensity, texture and shape within a selected region.' },
 ].map(({ install, ...runtime }) => ({
   ...runtime,
   package: packageUrl(runtime.distribution),

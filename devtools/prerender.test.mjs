@@ -40,27 +40,31 @@ test('every runtime card exposes its reviewed source, limits and resource eviden
     if (item.distribution === 'mlx-reason-ct') continue;
     const card = modelCards[item.distribution];
     assert.equal(card.version, item.version);
-    assert.match(body, /Usage notes and limits/);
+    if (card.limitations.length) assert.match(body, /Before you run/);
     assert.match(body, /License and terms/);
     for (const weight of card.weights) assert.ok(body.includes(weight.url));
-    if (!card.measurements.length) assert.match(body, /not reported in this release’s README/);
+    if (!card.measurements.length) assert.match(body, /not published for this version/);
   }
   const generation = String(route('/models/mlx-generate-ctmr').body);
-  assert.match(generation, /random fan-in-scaled weights/);
-  assert.match(generation, /exclude weight loading/);
+  assert.match(generation, /untrained models/);
+  assert.match(generation, /excluded model loading/);
   assert.match(generation, /27.9 GiB/);
 });
 
-test('model-card excerpts render inline Markdown while escaping source HTML', () => {
+test('model cards render summaries safely and keep supporting excerpts out of the page', () => {
   const card = modelCards['fdg-pet-ct-mlx'];
   const original = card.limitations;
   try {
-    card.limitations = ['Use `ct.nii.gz`; <img src=x onerror=alert(1)> [source](https://example.org/)'];
+    card.limitations = [{
+      text: 'Use `ct.nii.gz`; <img src=x onerror=alert(1)> [source](https://example.org/)',
+      sources: ['Implementation details retained for source verification only.'],
+    }];
     const body = String(route('/models/fdg-pet-ct-mlx').body);
     assert.match(body, /<code>ct.nii.gz<\/code>/);
     assert.match(body, /<a href="https:\/\/example.org\/">source<\/a>/);
     assert.doesNotMatch(body, /<img src=x/);
     assert.match(body, /&#60;img src=x/);
+    assert.doesNotMatch(body, /Implementation details retained/);
   } finally {
     card.limitations = original;
   }
