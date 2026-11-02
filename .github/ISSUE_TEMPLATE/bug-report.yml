@@ -1,0 +1,25 @@
+name: Report a website bug
+description: Report a problem with medmlx.org.
+title: "[Website bug]: "
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page URL
+      description: Which page on medmlx.org has the problem?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: What happened?
+      description: Describe the steps, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      description: Include your browser version and whether you are using a phone, tablet or computer.
+    validations:
+      required: true

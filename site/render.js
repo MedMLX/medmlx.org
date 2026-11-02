@@ -8,6 +8,10 @@ import {
 import { mcpCalls, mcpCommands, mcpGuideSource, mcpTools, medmlxDoc } from './mcp.js';
 import { cliCommands, cliExamples, pythonExamples, pythonFunctions, readmeSource, setupSource } from './developer.js';
 
+const communityRepository = 'https://github.com/MedMLX/.github';
+const modelRequestUrl = `${communityRepository}/issues/new?template=model-request.yml`;
+const modelRequestsUrl = `${communityRepository}/issues?q=is%3Aissue%20%22Model%20request%22%20in%3Atitle`;
+
 // Links on the About page.
 const developerLinks = [
   ['GitHub', 'https://github.com/MedMLX'],
@@ -303,6 +307,7 @@ function homePage() {
       <div class="container">
         <div class="explore-heading">
           <h2 class="section-title">Models by task</h2>
+          <p class="link-row"><a href="/community/#request-model" data-route>Request a model</a></p>
         </div>
         ${taskCards()}
       </div>
@@ -330,6 +335,7 @@ function modelsPage(search = '') {
     <section class="container page-head">
       <h1>Models</h1>
       <p class="lead">Search by task, anatomy or name. The command below installs every model family, and each entry has its own install command.</p>
+      <p class="link-row"><a href="#request-model">Missing a model? Request a port</a></p>
       ${installAll('models-install')}
     </section>
     <section class="container page-body">
@@ -373,7 +379,76 @@ function modelsPage(search = '') {
           </ul>
         </section>`)}
       </div>
+      <section id="request-model" class="model-request" aria-labelledby="request-model-title" tabindex="-1">
+        <div>
+          <h2 id="request-model-title">Request a model</h2>
+          <p>Have a medical imaging model you’d like to run on your Mac? Suggest it for a MedMLX port.</p>
+          <p>Share the model’s repository or paper and what you’d use it for. Links to weights and license details help us assess a port.</p>
+        </div>
+        <div>
+          <div class="actions">
+            <a class="button" href="${modelRequestUrl}">Request on GitHub <span aria-hidden="true">&nbsp;↗</span></a>
+            <a href="${modelRequestsUrl}">Browse requests <span aria-hidden="true">↗</span></a>
+          </div>
+          <p class="note">Requests are public and require a GitHub account. If your model is already requested, add your use case to that thread. A request does not guarantee a port or a release date.</p>
+        </div>
+      </section>
+      <p class="link-row community-link"><a href="/community/" data-route>Questions, bug reports and community discussions</a></p>
     </section>`;
+}
+
+/** Direct visitors to the shared community and the package that owns a bug. */
+function communityPage() {
+  return html`
+    <section class="container page-head community-head">
+      <h1>Community</h1>
+      <p class="lead">Ask questions, suggest models and share how you use MedMLX.</p>
+      <p>Join the conversation on GitHub.</p>
+    </section>
+    <div class="container page-body community-body">
+      <section id="request-model" class="community-request" aria-labelledby="community-request-title" tabindex="-1">
+        <div>
+          <h2 id="community-request-title">Request a model</h2>
+          <p>Which medical imaging model would you like to run on your Mac? Share its repository or paper and what you’d use it for.</p>
+        </div>
+        <div>
+          <div class="actions">
+            <a class="button" href="${modelRequestUrl}">Request a model <span aria-hidden="true">&nbsp;↗</span></a>
+            <a href="${modelRequestsUrl}">Browse requests <span aria-hidden="true">↗</span></a>
+          </div>
+          <p class="note">Already requested? Add your use case to the existing thread. Requests help us assess ports; they don’t guarantee a release.</p>
+        </div>
+      </section>
+      <section class="community-row" aria-labelledby="community-help-title">
+        <h2 id="community-help-title">Ask a question</h2>
+        <div>
+          <p>Need help with installation, choosing a model or running it on your Mac? Ask in Q&A so others can find the answer too.</p>
+          <p class="link-row"><a href="${communityRepository}/discussions/categories/q-a">Ask in Q&A</a></p>
+        </div>
+      </section>
+      <section class="community-row" aria-labelledby="community-bugs-title">
+        <h2 id="community-bugs-title">Report a bug</h2>
+        <div>
+          <p>Tell us what happened, what you expected and how to reproduce it. Include the package version, your Mac and the error message.</p>
+          <p class="link-row"><a href="https://github.com/MedMLX/medmlx/issues/new/choose">Report a MedMLX API, CLI or MCP bug</a></p>
+          <details class="community-packages">
+            <summary>Model runtimes and website</summary>
+            <ul>
+              ${catalog.map(item => html`<li><a href="https://github.com/${releases[item.distribution].repository}/issues/new/choose">${item.name}</a></li>`)}
+              <li><a href="https://github.com/MedMLX/medmlx.org/issues/new/choose">MedMLX website</a></li>
+            </ul>
+          </details>
+        </div>
+      </section>
+      <section class="community-row" aria-labelledby="community-share-title">
+        <h2 id="community-share-title">Share your work</h2>
+        <div>
+          <p>Using MedMLX in a research project, tool or workflow? Share a link and tell us what you’re doing with it.</p>
+          <p class="link-row"><a href="${communityRepository}/discussions/categories/show-and-tell">Post in Show and tell</a></p>
+        </div>
+      </section>
+      <p class="note community-note">A GitHub account is needed to post. Requests, issues and discussions are public.</p>
+    </div>`;
 }
 
 /** Render one published model's commands, requirements, limits, and resources. */
@@ -970,6 +1045,10 @@ export function route(path, search = '') {
     return page('/about/', 'About', 'MedMLX reimplements published medical imaging models in MLX for on-device AI on Apple Silicon. The article, developer links, intended use and licenses.',
       aboutPage(), [breadcrumbs([['About', '/about/']])]);
   }
+  if (path === '/community') {
+    return page('/community/', 'Community', 'Request a medical imaging model, ask questions, report bugs and share how you use MedMLX. Find the right place in the MedMLX GitHub community.',
+      communityPage(), [breadcrumbs([['Community', '/community/']])]);
+  }
   const item = catalog.find(entry => path === entry.href.slice(0, -1));
   if (item) {
     const model = models.find(entry => entry.slug === item.distribution);
@@ -982,5 +1061,5 @@ export function route(path, search = '') {
 }
 
 /** Every page the exporter writes, by canonical path. */
-export const routes = ['/', '/models/', '/get-started/', '/get-started/mlx-reason-ct/', '/mcp/', '/cli/', '/python/', '/about/',
+export const routes = ['/', '/models/', '/get-started/', '/get-started/mlx-reason-ct/', '/mcp/', '/cli/', '/python/', '/about/', '/community/',
   ...catalog.map(item => item.href)];

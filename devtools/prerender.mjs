@@ -154,6 +154,7 @@ ${indent(bibtex)}
 
 - [Get started](${siteUrl}/get-started/): install MedMLX and run a model
 - [Models](${siteUrl}/models/): all ${catalog.length} runtimes by task
+- [Community](${siteUrl}/community/): model requests, questions, bug reports and shared work
 - [Article](${articleUrl}): ${article.authors.join(', ')}. ${article.title}. medRxiv, ${article.published.slice(0, 4)}.
 
 ## Models

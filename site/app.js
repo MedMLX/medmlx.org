@@ -323,6 +323,16 @@ function renderPage({ moveFocus = false } = {}) {
     window.scrollTo(0, 0);
     main.focus({ preventScroll: true });
   }
+  scrollToFragment(moveFocus);
+}
+
+/** Reach fragment links after rendering, including links to the current section. */
+function scrollToFragment(moveFocus = false) {
+  const fragment = location.hash && document.getElementById(location.hash.slice(1));
+  if (fragment) {
+    fragment.scrollIntoView();
+    if (moveFocus) fragment.focus({ preventScroll: true });
+  }
 }
 
 /** Collapse the mobile navigation and update its accessibility state. */
@@ -378,6 +388,7 @@ document.addEventListener('click', event => {
     } else {
       closeMenu();
       main.focus({ preventScroll: true });
+      scrollToFragment(true);
     }
     return;
   }

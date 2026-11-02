@@ -24,6 +24,7 @@ ROUTES = {
     "/cli",
     "/python",
     "/about",
+    "/community",
 }
 # Written by devtools/export-site.mjs, not stored under site/.
 GENERATED = {"/llms.txt", "/catalog.json", "/sitemap.xml", "/robots.txt"}
