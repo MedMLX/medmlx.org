@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { catalogJson, llmsText, prerender, robots, sitemap } from './prerender.mjs';
 import { catalog, route, routes, siteUrl } from '../site/render.js';
+import { modelCards } from '../site/model-cards.js';
 
 const shell = readFileSync(new URL('../site/index.html', import.meta.url), 'utf8');
 const tag = (html, pattern) => html.match(pattern)?.[1];
@@ -29,6 +30,40 @@ test('every route prerenders with its own title, description, canonical URL and 
 test('every catalog entry has a page in the route list', () => {
   for (const item of catalog) assert.ok(routes.includes(item.href), item.href);
   assert.equal(new Set(routes).size, routes.length);
+});
+
+test('every runtime card exposes its reviewed source, limits and resource evidence without a browser', () => {
+  for (const item of catalog) {
+    const body = String(route(item.href.replace(/\/$/, '')).body);
+    assert.match(body, /Model card/);
+    assert.ok(body.includes(item.source), item.distribution);
+    if (item.distribution === 'mlx-reason-ct') continue;
+    const card = modelCards[item.distribution];
+    assert.equal(card.version, item.version);
+    assert.match(body, /Usage notes and limits/);
+    assert.match(body, /License and terms/);
+    for (const weight of card.weights) assert.ok(body.includes(weight.url));
+    if (!card.measurements.length) assert.match(body, /not reported in this release’s README/);
+  }
+  const generation = String(route('/models/mlx-generate-ctmr').body);
+  assert.match(generation, /random fan-in-scaled weights/);
+  assert.match(generation, /exclude weight loading/);
+  assert.match(generation, /27.9 GiB/);
+});
+
+test('model-card excerpts render inline Markdown while escaping source HTML', () => {
+  const card = modelCards['fdg-pet-ct-mlx'];
+  const original = card.limitations;
+  try {
+    card.limitations = ['Use `ct.nii.gz`; <img src=x onerror=alert(1)> [source](https://example.org/)'];
+    const body = String(route('/models/fdg-pet-ct-mlx').body);
+    assert.match(body, /<code>ct.nii.gz<\/code>/);
+    assert.match(body, /<a href="https:\/\/example.org\/">source<\/a>/);
+    assert.doesNotMatch(body, /<img src=x/);
+    assert.match(body, /&#60;img src=x/);
+  } finally {
+    card.limitations = original;
+  }
 });
 
 test('catalog URLs restore search text and task selection when revisited', () => {

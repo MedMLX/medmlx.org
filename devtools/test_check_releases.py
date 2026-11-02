@@ -9,6 +9,7 @@ from unittest.mock import patch
 from urllib.request import Request
 
 from devtools.check_releases import (
+    Card,
     Example,
     Model,
     Reference,
@@ -76,6 +77,24 @@ class ReleaseChecks(unittest.TestCase):
             ReleaseError, r"site reviews 1\.2\.3, PyPI publishes 1\.2\.4"
         ):
             self.verify()
+
+    def test_model_card_checks_context_and_release_not_just_a_memory_number(self) -> None:
+        excerpt = 'Peak MLX memory is 4 GB for a 128³ crop, excluding preprocessing.'
+        readme = README + '\nPeak MLX memory is 4 GB for a 128³ crop,\nexcluding preprocessing.\n'
+        self.sources['README.md'] = readme
+        self.info['description'] = readme
+        self.release = Release('example', '1.2.3', 'MedMLX/example', Card('1.2.3', (excerpt,)))
+        self.verify()  # README wrapping does not change the supported fact.
+        for version, text, error in [
+            ('1.2.2', excerpt, 'reviewed for the displayed release'),
+            ('1.2.3', excerpt.replace('128³', '256³'), 'excerpt is absent'),
+            ('1.2.3', 'Minimum RAM is 4 GB.', 'excerpt is absent'),
+            ('1.2.3', 'https://huggingface.co/MedMLX/unreviewed', 'excerpt is absent'),
+        ]:
+            with self.subTest(version=version, excerpt=text):
+                self.release = Release('example', '1.2.3', 'MedMLX/example', Card(version, (text,)))
+                with self.assertRaisesRegex(ReleaseError, error):
+                    self.verify()
 
     def test_yanked_release_is_rejected_even_if_its_version_matches(self) -> None:
         self.verify()  # A single yanked file does not invalidate usable files.

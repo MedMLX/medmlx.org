@@ -1,6 +1,7 @@
 // Page markup, routes and page metadata. This module has no DOM access, so the
 // exporter can prerender every route and app.js can render the same markup.
 import { models, additionalRuntimes, reportCommand } from './models.js';
+import { modelCards } from './model-cards.js';
 import {
   medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxServeCommand, medmlxSetupCommand,
   platformRequirement, pythonVersion, releases, uvInstallCommand,
@@ -10,7 +11,7 @@ import { cliCommands, cliExamples, pythonExamples, pythonFunctions, readmeSource
 
 const communityRepository = 'https://github.com/MedMLX/.github';
 const modelRequestUrl = `${communityRepository}/issues/new?template=model-request.yml`;
-const modelRequestsUrl = `${communityRepository}/issues?q=is%3Aissue%20%22Model%20request%22%20in%3Atitle`;
+const modelRequestsUrl = `${communityRepository}/issues?q=is%3Aissue%20label%3Amodel-request`;
 
 // Links on the About page.
 const developerLinks = [
@@ -104,6 +105,45 @@ function specList(rows) {
     <dl class="specs">
       ${rows.map(([term, value]) => html`<div><dt>${term}</dt><dd>${value}</dd></div>`)}
     </dl>`;
+}
+
+/** Render the small inline Markdown subset used by reviewed model-card excerpts. */
+function cardText(text) {
+  return text.split(/(\[[^\]]+\]\(https:\/\/[^\s)]+\)|`[^`]+`|\*\*[^*]+\*\*)/g).map(part => {
+    const link = part.match(/^\[([^\]]+)\]\((https:\/\/[^\s)]+)\)$/);
+    if (link) return html`<a href="${link[2]}">${link[1]}</a>`;
+    if (part.startsWith('`') && part.endsWith('`')) return html`<code>${part.slice(1, -1)}</code>`;
+    if (part.startsWith('**') && part.endsWith('**')) return html`<strong>${part.slice(2, -2)}</strong>`;
+    return part;
+  });
+}
+
+/** Show release-sourced facts, limits and measurement context for a runtime. */
+function runtimeCard(item) {
+  const card = modelCards[item.distribution];
+  return html`
+    <div class="detail-grid model-card" id="model-card">
+      <section class="detail-section">
+        <h2>Model card</h2>
+        <p class="note">Reviewed against <a href="${item.source}">${item.distribution} ${card.version}</a>.</p>
+        ${specList(card.rows.map(([label, text]) => [label, cardText(text)]))}
+        <h2>Weights and memory</h2>
+        ${card.weights.length ? html`<ul class="resource-list">
+          ${card.weights.map(weight => html`<li><a href="${weight.url}">${weight.name}</a></li>`)}
+        </ul>` : ''}
+        ${card.measurements.length
+    ? card.measurements.map(text => html`<p>${cardText(text)}</p>`)
+    : html`<p class="note">${card.noWeights ? 'Peak memory is' : 'Weight sizes and peak memory are'} not reported in this release’s README.</p>`}
+        ${card.measurements.length ? html`<p class="note">Weight sizes are not reported in this release’s README.</p>` : ''}
+      </section>
+      <section class="detail-section">
+        <h2>Usage notes and limits</h2>
+        ${card.limitations.map(text => html`<p>${cardText(text)}</p>`)}
+        <p class="note"><a href="${item.source}#run">Full input requirements and usage</a></p>
+        <h2>License and terms</h2>
+        <p>${cardText(card.terms)}</p>
+      </section>
+    </div>`;
 }
 
 /** Render a button linked to the id of the command it copies. */
@@ -403,7 +443,7 @@ function communityPage() {
     <section class="container page-head community-head">
       <h1>Community</h1>
       <p class="lead">Ask questions, suggest models and share how you use MedMLX.</p>
-      <p>Join the conversation on GitHub.</p>
+      <p><a href="${communityRepository}/discussions/1">Start here on GitHub</a> · <a href="${communityRepository}/discussions/categories/announcements">Announcements</a></p>
     </section>
     <div class="container page-body community-body">
       <section id="request-model" class="community-request" aria-labelledby="community-request-title" tabindex="-1">
@@ -454,6 +494,7 @@ function communityPage() {
 /** Render one published model's commands, requirements, limits, and resources. */
 function modelPage(model) {
   const { links } = model;
+  const { version, repository } = releases[model.distribution];
   const guide = model.slug === 'mlx-reason-ct' ? '/get-started/mlx-reason-ct/' : '/get-started/';
   return html`
     <section class="container page-head">
@@ -464,7 +505,7 @@ function modelPage(model) {
       </nav>
       <h1>${model.name}</h1>
       <p class="lead">${model.summary}</p>
-      <p class="meta">${model.task} · port of <a href="${model.upstream.url}">${model.upstream.name}</a></p>
+      <p class="meta">Model card · <code>${model.distribution} ${version}</code> · port of <a href="${model.upstream.url}">${model.upstream.name}</a></p>
       <div class="actions">
         <a class="button" href="${guide}" data-route>Get started</a>
         <a class="button secondary" href="${links.package}">Package on PyPI</a>
@@ -502,6 +543,7 @@ function modelPage(model) {
       <section class="detail-section">
         <h2>Resources</h2>
         <ul class="resource-list">
+          <li><a href="https://github.com/${repository}/tree/v${version}">Reviewed release documentation · ${version}</a></li>
           <li><a href="${links.package}">Package and usage on PyPI</a></li>
           <li><a href="${links.weights}">Weights on Hugging Face</a></li>
         </ul>
@@ -907,7 +949,7 @@ function runtimePage(item) {
       </nav>
       <h1>${item.name}</h1>
       <p class="lead">${item.description}</p>
-      <p class="meta">${item.task} · <code>${item.distribution} ${item.version}</code> · MLX on Apple Silicon</p>
+      <p class="meta">Model card · <code>${item.distribution} ${item.version}</code> · MLX on Apple Silicon</p>
       <div class="actions">
         <a class="button" href="${item.package}">Package on PyPI</a>
         <a class="button secondary" href="${item.source}">Source on GitHub</a>
@@ -915,6 +957,7 @@ function runtimePage(item) {
     </section>
 
     <div class="container page-body">
+      ${runtimeCard(item)}
       <section class="detail-section quickstart-section">
         <h2>Install</h2>
         <p>Requires ${platformRequirement}, Python ${pythonVersion} and <a href="https://docs.astral.sh/uv/">uv</a>. This creates a new environment and installs ${item.distribution} ${item.version}.</p>

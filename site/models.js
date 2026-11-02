@@ -43,6 +43,7 @@ export const models = [
       ['Disk', `${reasonCtWeights} for the weights`],
       ['Memory', `${reasonCtMemory} peak MLX use, plus memory for preprocessing, macOS and other apps`],
       ['Input', 'One 3D CT volume in NIfTI with Hounsfield unit values and valid spatial geometry'],
+      ['Precision', 'FP32 weights, activations and caches by default; BF16 profiles are documented in the release README'],
       ['License', 'Port: Apache-2.0; NVIDIA material: OpenMDW-1.1; retained MIT and BSD notices'],
     ],
     outputs: [

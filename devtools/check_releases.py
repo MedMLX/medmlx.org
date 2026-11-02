@@ -36,10 +36,19 @@ class ReleaseError(ValueError):
 
 
 @dataclass(frozen=True)
+class Card:
+    """Reviewed model-card excerpts and links from one tagged README."""
+
+    version: str
+    excerpts: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class Release:
     name: str
     version: str
     repository: str
+    card: Card | None = None
 
 
 @dataclass(frozen=True)
@@ -127,6 +136,7 @@ def load_catalog() -> tuple[str, str, list[Release], list[Example], list[Model],
             """
 import { releases, pythonVersion, macosVersion, medmlxExamples } from './site/releases.js';
 import { models, additionalRuntimes, reportCommand } from './site/models.js';
+import { modelCards } from './site/model-cards.js';
 import { mcpExamples } from './site/mcp.js';
 import { developerExamples, developerReference } from './site/developer.js';
 const runtimes = [...models, ...additionalRuntimes];
@@ -141,6 +151,14 @@ console.log(JSON.stringify({
   python: pythonVersion,
   macos: macosVersion,
   releases,
+  cards: Object.fromEntries(Object.entries(modelCards).map(([name, card]) => [name, {
+    version: card.version,
+    excerpts: [
+      ...card.rows.map(([, text]) => text), ...card.limitations, ...card.measurements,
+      ...card.weights.map(weight => weight.url), card.terms,
+    ],
+  }])),
+  cardPackages: additionalRuntimes.map(runtime => runtime.distribution),
   packages: [{ distribution: 'medmlx', package: 'https://pypi.org/project/medmlx/' },
     ...runtimes.map(runtime => ({ distribution: runtime.distribution, package: runtime.links?.package || runtime.package }))],
   examples: [
@@ -177,6 +195,9 @@ console.log(JSON.stringify({
         raise ReleaseError(f"Cannot load site catalog: {result.stderr.strip()}")
     data = mapping(json.loads(result.stdout))
     declared = mapping(data["releases"])
+    cards = mapping(data["cards"])
+    if set(cards) != {string(name) for name in sequence(data["cardPackages"])}:
+        raise ReleaseError("Every additional runtime must have a reviewed model card")
     packages = [mapping(item) for item in sequence(data["packages"])]
     names = [string(item["distribution"]) for item in packages]
     if len(names) != len(set(names)) or set(names) != set(declared):
@@ -192,6 +213,10 @@ console.log(JSON.stringify({
             name,
             string(mapping(value)["version"]),
             string(mapping(value)["repository"]),
+            Card(
+                string(mapping(cards[name])["version"]),
+                tuple(string(text) for text in sequence(mapping(cards[name])["excerpts"])),
+            ) if name in cards else None,
         )
         for name, value in declared.items()
     ]
@@ -534,6 +559,14 @@ def verify_release(
             "repository tag README differs from the published PyPI description"
         )
 
+    if release.card:
+        if release.card.version != release.version:
+            raise ReleaseError("model card must be reviewed for the displayed release version")
+        normalized = " ".join(readme.split())
+        for excerpt in release.card.excerpts:
+            if " ".join(excerpt.split()) not in normalized:
+                raise ReleaseError(f"model-card excerpt is absent from the tagged README: {excerpt}")
+
     documents = {readme_path: readme}
 
     def document(path: str) -> str | None:
@@ -733,7 +766,8 @@ def main() -> int:
         for resolution in resolutions:
             resolution.result()
     print(
-        f"Verified {len(releases)} releases, {len(examples)} examples and {len(models)} weight pins "
+        f"Verified {len(releases)} releases, {len(examples)} examples, "
+        f"{sum(release.card is not None for release in releases)} model cards and {len(models)} weight pins "
         "against PyPI, repository tags and Hugging Face; "
         f"resolved {len(requirements)} installs for macOS {macos} arm64 / Python {python}"
     )
