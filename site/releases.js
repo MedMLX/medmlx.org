@@ -24,7 +24,7 @@ export const releases = {
   'lesiondiffusion-mlx': { version: '0.2.6.post2', repository: 'MedMLX/lesiondiffusion-mlx' },
   'med-vlm-mlx': { version: '0.3.2', repository: 'MedMLX/med-vlm-mlx' },
   'radimagenet-mlx': { version: '0.3.3', repository: 'MedMLX/radimagenet-mlx' },
-  mlxradiomics: { version: '0.1.0.dev9', repository: 'MedMLX/mlx-radiomics' },
+  mlxradiomics: { version: '0.1.0.dev10', repository: 'MedMLX/mlx-radiomics' },
 };
 
 // From uv's installation docs; uv is not a reviewed MedMLX release.

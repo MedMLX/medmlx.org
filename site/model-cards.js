@@ -963,15 +963,15 @@ export const modelCards = {
     }
   },
   "mlxradiomics": {
-    "version": "0.1.0.dev9",
+    "version": "0.1.0.dev10",
     "rows": [
       [
         "Input",
         {
-          "text": "A 2D or 3D image in NIfTI or NRRD format, with a matching mask marking the region to measure.",
+          "text": "A 2D or 3D image in NIfTI or NRRD format, with a label mask marking the region to measure.",
           "sources": [
             "One 2D or 3D image: `.nii`, `.nii.gz`, `.nrrd` or `.nhdr`",
-            "Integer label mask with the image's shape, spacing, origin and direction; nothing is resampled"
+            "Integer label mask."
           ]
         }
       ],
@@ -981,8 +981,8 @@ export const modelCards = {
           "text": "Measurements of image intensity, texture and shape. Intensity and texture can also be shown as maps.",
           "sources": [
             "ROI features or voxel maps",
-            "All 116 non-deprecated PyRadiomics feature names are implemented. The default selection is the 93 intensity and texture features; request shape features by name.",
-            "| Shape | 14 | 3D ROI |"
+            "`FEATURES` lists 190 selectable outputs, including all 116 non-deprecated PyRadiomics names. The default remains the original 93 intensity and texture outputs; request additions and shape features explicitly.",
+            "| Shape | 32 | 3D ROI |"
           ]
         }
       ],
@@ -998,9 +998,9 @@ export const modelCards = {
     ],
     "limitations": [
       {
-        "text": "The image and mask must already be aligned.",
+        "text": "The image and mask must be aligned, unless the settings turn on resampling or mask correction.",
         "sources": [
-          "Integer label mask with the image's shape, spacing, origin and direction; nothing is resampled"
+          "A geometry mismatch is refused unless the params enable `correctMask` or `resampledPixelSpacing`"
         ]
       },
       {
@@ -1010,9 +1010,11 @@ export const modelCards = {
         ]
       },
       {
-        "text": "The release does not claim clinical validation.",
+        "text": "The Simoncelli and Riesz filters are experimental and exposed to a known MLX bug until a fixed MLX release is published. Other features are unaffected.",
         "sources": [
-          "Features are compared with pinned PyRadiomics on synthetic cases. No IBSI conformance or clinical validation is claimed."
+          "Simoncelli and Riesz filters are experimental.",
+          "MLX 0.32.4 has an out-of-bounds FFT write that can silently modify a neighbouring array",
+          "All other features do not use the FFT."
         ]
       }
     ],
@@ -1020,9 +1022,9 @@ export const modelCards = {
     "noWeights": true,
     "weights": [],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v0.1.0.dev9/LICENSE).",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v0.1.0.dev10/LICENSE).",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v0.1.0.dev9/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-radiomics/blob/v0.1.0.dev9/THIRD_PARTY_NOTICES.md)."
+        "[Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v0.1.0.dev10/LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md)"
       ]
     }
   }
