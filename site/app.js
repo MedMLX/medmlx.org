@@ -1,6 +1,5 @@
 // Browser behavior: routing, page metadata, media and interactive controls.
 // render.js builds the markup; the exporter prerenders the same markup.
-import { reportCommand } from './models.js';
 import { pauseIcon, playIcon, route, siteUrl, tasks } from './render.js';
 
 const main = document.querySelector('#main');
@@ -50,41 +49,6 @@ function filterCatalog({ updateQuery = false } = {}) {
     history.replaceState(history.state, '', `${location.pathname}${searchString ? `?${searchString}` : ''}${location.hash}`);
     renderedLocation = location.pathname + location.search;
   }
-}
-
-/** Validate Reason-CT form fields and update the copyable shell text. */
-function updateCommand() {
-  // Validation checks required fields and the NIfTI suffix, not file existence or geometry.
-  const form = document.querySelector('#command-form');
-  if (!form) return;
-  const fields = form.elements;
-  const input = fields.input.value.trim();
-  const modelDir = fields.modelDir.value.trim();
-  const outputDir = fields.outputDir.value.trim();
-  const checks = [
-    [fields.input, !input ? 'Enter the path to a CT volume.'
-      : !/\.nii(\.gz)?$/i.test(input) ? 'Use a NIfTI file ending in .nii or .nii.gz.' : ''],
-    [fields.modelDir, modelDir ? '' : 'Enter the model directory.'],
-    [fields.outputDir, outputDir ? '' : 'Enter an output directory.'],
-  ];
-  for (const [field, error] of checks) {
-    document.getElementById(`${field.id}-error`).textContent = error;
-    field.setAttribute('aria-invalid', String(Boolean(error)));
-  }
-
-  const code = document.querySelector('#report-command');
-  const invalid = checks.some(([, error]) => error);
-  document.querySelector('[data-copy="report-command"]').disabled = invalid;
-  if (invalid) {
-    code.textContent = '# Complete the fields above.';
-    return;
-  }
-  const args = { image_path: input, weights_path: modelDir, output_dir: outputDir };
-  if (fields.anatomy.value !== 'chest') args.anatomy_region = fields.anatomy.value;
-  const prompt = fields.prompt.value.trim();
-  if (prompt) args.prompt = prompt;
-  if (fields.thinking.checked) args.enable_thinking = true;
-  code.textContent = reportCommand(args);
 }
 
 // Routing
@@ -308,7 +272,6 @@ function renderPage({ moveFocus = false } = {}) {
   disposeTaskPreviews = setupTaskPreviews();
   disposeTaskLoops = setupTaskLoops();
   updateHead(page);
-  updateCommand();
   filterCatalog();
   for (const link of document.querySelectorAll('.site-header a[data-route]:not(.brand)')) {
     const linkPath = link.pathname.replace(/\/+$/, '') || '/';
@@ -421,7 +384,6 @@ document.addEventListener('keydown', event => {
 });
 
 document.addEventListener('input', event => {
-  if (event.target.form?.id === 'command-form') updateCommand();
   if (event.target.id === 'model-search') filterCatalog({ updateQuery: true });
 });
 

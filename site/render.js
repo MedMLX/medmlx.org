@@ -615,39 +615,9 @@ function reasonCtStartedPage() {
         </li>
         <li>
           <h2>Generate a report</h2>
-          <p>Enter the paths on your Mac and copy the command. Run it in the same directory as your model and input, with the environment active; relative paths resolve there.</p>
-          <form id="command-form" class="command-form" novalidate>
-            <div class="field">
-              <label for="ct-input">CT volume</label>
-              <input id="ct-input" name="input" value="ct.nii.gz" autocomplete="off" spellcheck="false" aria-describedby="ct-input-error">
-              <p id="ct-input-error" class="field-error"></p>
-            </div>
-            <div class="field-row">
-              <div class="field">
-                <label for="model-dir">Model directory</label>
-                <input id="model-dir" name="modelDir" value="models" autocomplete="off" spellcheck="false" aria-describedby="model-dir-error">
-                <p id="model-dir-error" class="field-error"></p>
-              </div>
-              <div class="field">
-                <label for="output-dir">Output directory</label>
-                <input id="output-dir" name="outputDir" value="outputs" autocomplete="off" spellcheck="false" aria-describedby="output-dir-error">
-                <p id="output-dir-error" class="field-error"></p>
-              </div>
-            </div>
-            <fieldset class="field">
-              <legend>Anatomy</legend>
-              <div class="choices">
-                <label><input type="radio" name="anatomy" value="chest" checked> Chest</label>
-                <label><input type="radio" name="anatomy" value="abdomen"> Abdomen</label>
-              </div>
-            </fieldset>
-            <div class="field">
-              <label for="ct-prompt">Question <span class="optional">(optional)</span></label>
-              <textarea id="ct-prompt" name="prompt" rows="2" placeholder="Leave blank for a structured report"></textarea>
-            </div>
-            <label class="checkbox"><input type="checkbox" name="thinking"> <span>Thinking mode <span class="optional">(saves the reasoning to <code>model_response.json</code>)</span></span></label>
-          </form>
-          ${terminal('report-command', 'Report', '')}
+          <p>Run this in the directory that holds the CT and the model directory, with the environment active. Relative paths resolve there.</p>
+          ${terminal('report-command', 'Report', model.commands.report)}
+          <p>For an abdomen CT add <code>--anatomy-region=abdomen</code>. To ask a question instead of getting a structured report, add <code>--prompt='your question'</code>. Add <code>--enable-thinking</code> to save the reasoning to <code>model_response.json</code>.</p>
           <p class="note">Each run writes <code>report.txt</code>, <code>model_response.json</code> and <code>run.json</code>.
             The <a href="${model.links.package}">package page</a> covers the Python API and other options.</p>
         </li>

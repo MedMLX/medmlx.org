@@ -38,7 +38,6 @@
   --rule: rgb(255 255 255 / 0.14);
   --hairline: rgb(255 255 255 / 0.08);
   --control: #6e6e73;
-  --error: #ff8b82;
   --ease: cubic-bezier(0.28, 0.11, 0.32, 1);
 
   --sans: -apple-system, BlinkMacSystemFont, 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
@@ -777,12 +776,9 @@ main:focus { outline: none; }
 .steps .terminal + p { margin-top: 1rem; }
 .guide-single { max-width: 46rem; margin-top: 24px; }
 
-.command-form { display: grid; gap: 20px; margin: 24px 0; }
-
 .field { min-width: 0; margin: 0; padding: 0; border: 0; }
-.field-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 
-.field > label, .field > legend {
+.field > label {
   display: block;
   margin-bottom: 8px;
   padding: 0;
@@ -793,7 +789,7 @@ main:focus { outline: none; }
 
 .optional { color: var(--muted); font-weight: 400; }
 
-.field input, .field textarea {
+.field input {
   display: block;
   width: 100%;
   min-height: 48px;
@@ -806,23 +802,12 @@ main:focus { outline: none; }
   transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease);
 }
 
-.field input::placeholder, .field textarea::placeholder { color: var(--muted); }
-.field textarea { resize: vertical; }
-.field input:focus-visible, .field textarea:focus-visible {
+.field input::placeholder { color: var(--muted); }
+.field input:focus-visible {
   border-color: var(--link);
   outline: 2px solid transparent;
   box-shadow: 0 0 0 4px rgb(41 151 255 / 0.35);
 }
-.field [aria-invalid='true'] { border-color: var(--error); }
-
-.field-error { margin: 6px 0 0; color: var(--error); font-size: 0.875rem; }
-.field-error:empty { display: none; }
-
-.choices { display: flex; gap: 24px; }
-.choices label, .checkbox { display: inline-flex; align-items: center; gap: 8px; }
-.checkbox { align-items: flex-start; }
-.choices input, .checkbox input { flex-shrink: 0; width: 18px; height: 18px; margin: 0; accent-color: var(--action); }
-.checkbox input { margin-top: 0.2em; }
 
 /* Footer */
 
@@ -1013,13 +998,12 @@ main:focus { outline: none; }
   .page-body { padding-bottom: 96px; }
   .tile { padding: 32px 24px; }
   .specs > div, .specs.files > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
-  .field-row { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .terminal pre { padding: 16px 20px; font-size: 0.8125rem; }
   .terminal-bar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; padding-inline: 10px; }
   .terminal-label { min-width: 0; overflow-wrap: anywhere; }
   .terminal-tabs { min-width: 0; }
   .terminal-tabs button { min-height: 44px; padding-inline: 6px; }
-  .copy-button, .film-toggle, .task-chip span, .install-details summary, .choices label { min-height: 44px; }
+  .copy-button, .film-toggle, .task-chip span, .install-details summary { min-height: 44px; }
   .media-toggle { width: 44px; height: 44px; }
   .brand, .lab-mark { min-height: 44px; align-items: center; }
   .catalog-links a { display: inline-flex; align-items: center; min-height: 44px; }
