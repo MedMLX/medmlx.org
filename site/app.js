@@ -10,7 +10,6 @@ const menuLabel = menuButton.querySelector('[data-menu-label]');
 const announcer = document.querySelector('#announcer');
 const copyResets = new WeakMap();
 let disposeHeroFilm = () => {};
-let disposeTaskPreviews = () => {};
 let disposeTaskLoops = () => {};
 let renderedLocation = '';
 let announcerReset;
@@ -52,21 +51,6 @@ function filterCatalog({ updateQuery = false } = {}) {
 }
 
 // Routing
-
-/** Type the Vision-language report excerpt once as it enters the viewport. */
-function setupTaskPreviews() {
-  const cards = document.querySelectorAll('.vision-preview');
-  if (!cards.length) return () => {};
-  const observer = new IntersectionObserver(entries => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      entry.target.classList.add('preview-visible');
-      observer.unobserve(entry.target);
-    }
-  }, { threshold: 0.25 });
-  cards.forEach(card => observer.observe(card));
-  return () => observer.disconnect();
-}
 
 /**
  * Play task-card loops only while they are on screen. Reduced motion and data
@@ -265,11 +249,9 @@ function renderPage({ moveFocus = false } = {}) {
   }
   renderedLocation = location.pathname + location.search;
   disposeHeroFilm();
-  disposeTaskPreviews();
   disposeTaskLoops();
   main.innerHTML = page.body;
   disposeHeroFilm = setupHeroFilm();
-  disposeTaskPreviews = setupTaskPreviews();
   disposeTaskLoops = setupTaskLoops();
   updateHead(page);
   filterCatalog();

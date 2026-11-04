@@ -211,26 +211,9 @@ export const tasks = [...new Set(catalog.map(item => item.task))].sort((a, b) =>
 const taskImages = { 'Feature extraction': 'features' };
 const featuredImages = { 'nnU-Net': 'liver', TotalSegmentator: 'anatomy', MedSAM2: 'medsam', BioMedParse: 'prompt' };
 // Task cards that loop a saved model run; each has <name>.mp4, <name>-poster.webp and <name>-run.json.
-const taskLoops = { Segmentation: 'abdomen-scroll', Detection: 'nodule-scroll', Generation: 'generation-grid', 'Quantitative imaging': 'radiomics-organs' };
+const taskLoops = { Segmentation: 'abdomen-scroll', Detection: 'nodule-scroll', Generation: 'generation-grid', 'Vision-language': 'vision-attention', 'Quantitative imaging': 'radiomics-organs' };
 export const pauseIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 2h3v10H3zm5 0h3v10H8z"/></svg>`;
 export const playIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M4 2l8 5-8 5z"/></svg>`;
-
-/** Pair a chest CT with excerpts from its saved MLX-Reason-CT report. */
-function visionLanguagePreview() {
-  return html`
-    <div class="vision-preview" aria-hidden="true">
-      <img class="vision-scan" src="/assets/hero/vision-language-ct.webp" width="521" height="411"
-        alt="" loading="lazy" decoding="async">
-      <div class="vision-report">
-        <span class="report-caption">Report excerpt</span>
-        <span class="report-line">Non-contrast CT.</span>
-        <span class="report-line">Trachea and main</span>
-        <span class="report-line">bronchi are patent.</span>
-        <span class="report-line">A few tiny nonspecific</span>
-        <span class="report-line">pulmonary nodules.</span>
-      </div>
-    </div>`;
-}
 
 /** Render links to catalog groups with their counts and representative models. */
 function taskCards() {
@@ -239,7 +222,7 @@ function taskCards() {
       const items = catalog.filter(item => item.task === task);
       const loop = taskLoops[task];
       return html`<li class="task-item"><a class="task-card" href="/models/?task=${encodeURIComponent(task)}" data-route>
-        ${task === 'Vision-language' ? visionLanguagePreview() : loop ? html`
+        ${loop ? html`
           <video class="task-image" muted loop playsinline preload="none" width="800" height="520" aria-hidden="true"
             poster="/assets/hero/${loop}-poster.webp" data-src="/assets/hero/${loop}.mp4"></video>` : html`
           <img class="task-image" src="/assets/hero/${taskImages[task] || 'total-ct'}.webp" width="640" height="420" alt="" loading="lazy" decoding="async">`}

@@ -1,0 +1,446 @@
+{
+ "schema_version": 1,
+ "method": "mlx-reason-ct 0.3.6 structured chest CT report on one LUNA16 CT; decoder attention for each streamed token shown on an axial slice",
+ "runtime": {
+  "package": "mlx-reason-ct",
+  "version": "0.3.6",
+  "medmlx_core_version": "0.2.6",
+  "mlx_version": "0.32.4",
+  "python_version": "3.13.17",
+  "macos_version": "27.2",
+  "device": "Apple M5 Max GPU (Device(gpu, 0))",
+  "precision": "float32",
+  "entry_points": [
+   "mlx_reason_ct.processor_mlx.Processor",
+   "mlx_reason_ct.mlx_model.NativeModel",
+   "mlx_reason_ct.api.generate"
+  ]
+ },
+ "weights": {
+  "repository": "MedMLX/MLX-Reason-CT",
+  "revision": "5e5b5202fd04ac9f63ede203ebc9327aa676ae94"
+ },
+ "source": {
+  "dataset": "LUNA16 subset0",
+  "seriesuid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.511347030803753100045216493273",
+  "source_url": "https://zenodo.org/records/3723295",
+  "license": "CC BY 4.0",
+  "nifti_sha256": "efd812ef6374c9acce382af6dee319520d7d7bd70873535763275c8fe900f6a8",
+  "reference_nodule": {
+   "world_lps_mm": [
+    60.77506053,
+    74.1239696,
+    -214.7823466
+   ],
+   "diameter_mm": 25.23,
+   "source": "LUNA16 annotations.csv consensus nodule",
+   "token_zyx": [
+    10,
+    17,
+    15
+   ]
+  }
+ },
+ "inference": {
+  "prompt": "Write a structured chest CT report",
+  "enable_thinking": false,
+  "decoding": "greedy",
+  "max_new_tokens": 512,
+  "anatomy_region": "chest",
+  "token_grid_zyx": [
+   24,
+   24,
+   24
+  ],
+  "crop_spacing_mm": [
+   2.0,
+   2.0,
+   2.0
+  ],
+  "crop_shape": [
+   192,
+   192,
+   192
+  ],
+  "attention_layers": [
+   3,
+   7,
+   11,
+   15,
+   19,
+   23,
+   27,
+   31
+  ],
+  "attention": "per generated token and layer: softmax over all keys of the newest query, restricted to the visual tokens and averaged over heads, recomputed in float32",
+  "generated_tokens": 255,
+  "seconds_total": 34.21,
+  "metrics": {
+   "generated_tokens": 255,
+   "constrained_choice_count": 0,
+   "reused_prefix_tokens": 0,
+   "cache_chunk_size": 0,
+   "terminated_by_eos": true,
+   "truncated_by_max_new_tokens": false,
+   "prompt_tokens": 13844,
+   "initial_cache_bytes": 959971328,
+   "final_cache_bytes": 976617472
+  }
+ },
+ "report_text": "TECHNIQUE: IV contrast CT.\n\nFINDINGS:\nMedical devices: None present.\n\nCHEST:\nLungs and airways: Moderate-sized left lower lobe lung mass. Small lung nodules bilaterally, including a moderate-sized right lung base nodule. Calcified likely granulomas in the right lower lobe. Central airways are patent.\nPleura: No pleural effusion or pneumothorax.\nMediastinum and hila: No mediastinal or hilar lymphadenopathy or mass.\nHeart and pericardium: Normal heart size. No pericardial effusion.\nGreat vessels: Normal caliber thoracic aorta and main pulmonary artery.\nEsophagus: No esophageal abnormality.\nChest wall and breast: No chest wall or breast mass.\nBones: No suspicious thoracic osseous lesion or acute fracture.\n\nIMPRESSION:\n\n1. Moderate-sized left lower lobe lung mass.\n2. Small bilateral lung nodules, including a moderate-sized right lung base nodule.\n3. Calcified likely granulomas in the right lower lobe.\n<answer> Lung nodule, Lung mass </answer>",
+ "excerpt": "Lungs and airways: Moderate-sized left lower lobe lung mass. Small lung nodules bilaterally, including a moderate-sized right lung base nodule.",
+ "excerpt_tokens": [
+  {
+   "piece": "L",
+   "peak_token_zyx": [
+    11,
+    11,
+    10
+   ],
+   "image_share_mean_layers": 0.176
+  },
+  {
+   "piece": "ungs",
+   "peak_token_zyx": [
+    10,
+    14,
+    6
+   ],
+   "image_share_mean_layers": 0.294
+  },
+  {
+   "piece": " and",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.503
+  },
+  {
+   "piece": " air",
+   "peak_token_zyx": [
+    10,
+    14,
+    6
+   ],
+   "image_share_mean_layers": 0.311
+  },
+  {
+   "piece": "ways",
+   "peak_token_zyx": [
+    5,
+    16,
+    8
+   ],
+   "image_share_mean_layers": 0.434
+  },
+  {
+   "piece": ":",
+   "peak_token_zyx": [
+    11,
+    12,
+    8
+   ],
+   "image_share_mean_layers": 0.414
+  },
+  {
+   "piece": " Moderate",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.682
+  },
+  {
+   "piece": "-sized",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.623
+  },
+  {
+   "piece": " left",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.722
+  },
+  {
+   "piece": " lower",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.679
+  },
+  {
+   "piece": " l",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.619
+  },
+  {
+   "piece": "obe",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.583
+  },
+  {
+   "piece": " lung",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.602
+  },
+  {
+   "piece": " mass",
+   "peak_token_zyx": [
+    11,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.5
+  },
+  {
+   "piece": ".",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.433
+  },
+  {
+   "piece": " Small",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.471
+  },
+  {
+   "piece": " lung",
+   "peak_token_zyx": [
+    11,
+    10,
+    5
+   ],
+   "image_share_mean_layers": 0.502
+  },
+  {
+   "piece": " nod",
+   "peak_token_zyx": [
+    10,
+    14,
+    6
+   ],
+   "image_share_mean_layers": 0.391
+  },
+  {
+   "piece": "ules",
+   "peak_token_zyx": [
+    11,
+    10,
+    5
+   ],
+   "image_share_mean_layers": 0.409
+  },
+  {
+   "piece": " bil",
+   "peak_token_zyx": [
+    12,
+    10,
+    5
+   ],
+   "image_share_mean_layers": 0.417
+  },
+  {
+   "piece": "ater",
+   "peak_token_zyx": [
+    10,
+    14,
+    6
+   ],
+   "image_share_mean_layers": 0.286
+  },
+  {
+   "piece": "ally",
+   "peak_token_zyx": [
+    12,
+    10,
+    5
+   ],
+   "image_share_mean_layers": 0.316
+  },
+  {
+   "piece": ",",
+   "peak_token_zyx": [
+    10,
+    14,
+    6
+   ],
+   "image_share_mean_layers": 0.401
+  },
+  {
+   "piece": " including",
+   "peak_token_zyx": [
+    10,
+    14,
+    6
+   ],
+   "image_share_mean_layers": 0.322
+  },
+  {
+   "piece": " a",
+   "peak_token_zyx": [
+    10,
+    14,
+    6
+   ],
+   "image_share_mean_layers": 0.349
+  },
+  {
+   "piece": " moderate",
+   "peak_token_zyx": [
+    11,
+    10,
+    5
+   ],
+   "image_share_mean_layers": 0.327
+  },
+  {
+   "piece": "-sized",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.178
+  },
+  {
+   "piece": " right",
+   "peak_token_zyx": [
+    10,
+    17,
+    15
+   ],
+   "image_share_mean_layers": 0.242
+  },
+  {
+   "piece": " lung",
+   "peak_token_zyx": [
+    11,
+    10,
+    6
+   ],
+   "image_share_mean_layers": 0.341
+  },
+  {
+   "piece": " base",
+   "peak_token_zyx": [
+    10,
+    14,
+    6
+   ],
+   "image_share_mean_layers": 0.238
+  },
+  {
+   "piece": " n",
+   "peak_token_zyx": [
+    10,
+    14,
+    6
+   ],
+   "image_share_mean_layers": 0.255
+  },
+  {
+   "piece": "odule",
+   "peak_token_zyx": [
+    10,
+    14,
+    6
+   ],
+   "image_share_mean_layers": 0.187
+  },
+  {
+   "piece": ".",
+   "peak_token_zyx": [
+    12,
+    10,
+    5
+   ],
+   "image_share_mean_layers": 0.174
+  }
+ ],
+ "display": {
+  "renderer": "docs/hero/render_vision_attention.py",
+  "attention": "mean over layers 3, 7, ..., 31 of the per-token visual attention, divided by its peak; 8-voxel nearest upsampling and a Gaussian blur of 3.0 voxels; magenta-to-cream ramp with a 12% floor",
+  "slice": "axial crop slice gliding 25% per frame toward the current token's peak",
+  "orientation": "radiological: patient right on image left, anterior at top",
+  "crop": "body bounding box (> -500 HU) over the visited slices, padded by 3%",
+  "ct_window_hu": {
+   "level": -400,
+   "width": 1200
+  },
+  "timing": {
+   "lead_frames": 24,
+   "frames_per_token": 5,
+   "hold_frames": 60,
+   "fade_frames": 12
+  },
+  "note": "Decoder attention shows where queries weighted the scan, not why the model wrote a word."
+ },
+ "encode": {
+  "video": {
+   "codec": "H.264 (libx264)",
+   "preset": "veryslow",
+   "crf": 26,
+   "pix_fmt": "yuv420p",
+   "color": "BT.709, limited range",
+   "fps": 24,
+   "frames": 261,
+   "size_px": [
+    800,
+    520
+   ],
+   "audio": false,
+   "movflags": "+faststart",
+   "ffmpeg": "ffmpeg version 9.0",
+   "sha256": "b8a5bbc8528d9b8d9d9840bdd4e3ffce4b3d8912f3bd2eb4c64a38a44d583d4f",
+   "bytes": 286644
+  },
+  "poster": {
+   "format": "WebP",
+   "quality": 85,
+   "method": 6,
+   "frame": 93,
+   "size_px": [
+    800,
+    520
+   ],
+   "sha256": "9eae3076a13c0752d38957580f5c1eb88e12aa37cfc2f616e494254463da89ee",
+   "bytes": 22150
+  }
+ },
+ "outputs": {
+  "video": "site/assets/hero/vision-attention.mp4",
+  "poster": "site/assets/hero/vision-attention-poster.webp"
+ },
+ "interpretation": "One automated report on one public, de-identified CT for a software visualization. Not reviewed, not a clinical finding and not a validation."
+}

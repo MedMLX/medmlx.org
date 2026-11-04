@@ -15,7 +15,7 @@ const loops = (await readdir(hero)).filter(name => name.endsWith('.mp4') && name
   .map(name => name.slice(0, -'.mp4'.length));
 
 test('the card videos are present', () => {
-  assert.deepEqual(loops.sort(), ['abdomen-scroll', 'generation-grid', 'nodule-scroll', 'radiomics-organs']);
+  assert.deepEqual(loops.sort(), ['abdomen-scroll', 'generation-grid', 'nodule-scroll', 'radiomics-organs', 'vision-attention']);
 });
 
 for (const loop of loops) {

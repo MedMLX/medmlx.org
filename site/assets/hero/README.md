@@ -45,7 +45,7 @@ the video. Routing away disposes the observer, listeners, and media source.
 
 ## Task card loops
 
-Three task cards loop real model output computed on 2026-10-31. Each has
+Five task cards loop real model output, computed on 2026-10-31 and 2026-11-04. Each has
 `<name>.mp4`, `<name>-poster.webp` (frame 0, shown for reduced motion and data
 saving; the nodule loop starts on its box-center slice), `<name>-run.json` (inputs, runtime, settings and hashes) and a renderer
 in `docs/hero/`. Raw outputs stay in `dist/<name>-demo/`.
@@ -58,21 +58,18 @@ in `docs/hero/`. Raw outputs stay in `dist/<name>-demo/`.
 - `radiomics-organs`: mlxradiomics 0.1.0.dev8 entropy maps for the liver,
   kidneys and pancreas on the same AMOS22 slice as `radiomics-texture`, with
   one shared color range. The liver map is identical to the dev5 one.
+- `generation-grid`: mlx-generate-ctmr 0.5.2.post2 volumes generated from
+  noise, three paired CTs and three MR-Brain contrasts, scrolled together. CT
+  seeds and each tile's slice range were chosen by visual review.
+- `vision-attention`: mlx-reason-ct 0.3.6 writes a structured report for a
+  LUNA16 subset0 CT with a 25 mm nodule; the lung-findings excerpt streams token
+  by token while each token's decoder attention, averaged over the full-attention layers, is
+  shown on an axial slice that follows its peak. The poster is the frame where
+  "mass" is written.
 
 The cards play these only while visible, pause off-screen or in a hidden tab,
-and each has its own pause button. The Vision-language report still types once
-on entry. The Generation and Feature extraction cards keep still images.
+and each has its own pause button. The Feature extraction card keeps a still
+image.
 
 See [credits.html](credits.html) for source-image attribution and terms.
 Media is not covered by the website's Apache-2.0 code license.
-
-## Vision-language card
-
-The card uses `vision-language-ct.webp`, a crop of the axial chest image in
-a saved NV-Reason-CT run figure (not included in this repository), alongside three
-verbatim excerpts of its paired generated report. `vision-language.json`
-records the source figure hash, crop, dataset and text. The words are HTML,
-not burned into a bitmap. The report reveals over 3.6 seconds when the card
-first enters the viewport. Reduced motion shows it complete, and route
-changes disconnect the observer. This is a presentation
-of saved output; the website does not run a model.
