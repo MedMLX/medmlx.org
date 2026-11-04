@@ -208,10 +208,10 @@ export const tasks = [...new Set(catalog.map(item => item.task))].sort((a, b) =>
   return rank(a) - rank(b) || a.localeCompare(b);
 });
 
-const taskImages = { Generation: 'synthetic', 'Feature extraction': 'features' };
+const taskImages = { 'Feature extraction': 'features' };
 const featuredImages = { 'nnU-Net': 'liver', TotalSegmentator: 'anatomy', MedSAM2: 'medsam', BioMedParse: 'prompt' };
 // Task cards that loop a saved model run; each has <name>.mp4, <name>-poster.webp and <name>-run.json.
-const taskLoops = { Segmentation: 'abdomen-scroll', Detection: 'nodule-scroll', 'Quantitative imaging': 'radiomics-organs' };
+const taskLoops = { Segmentation: 'abdomen-scroll', Detection: 'nodule-scroll', Generation: 'generation-grid', 'Quantitative imaging': 'radiomics-organs' };
 export const pauseIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 2h3v10H3zm5 0h3v10H8z"/></svg>`;
 export const playIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M4 2l8 5-8 5z"/></svg>`;
 
