@@ -124,7 +124,6 @@ main:focus { outline: none; }
 .meta, .note { color: var(--muted); font-size: 0.9375rem; letter-spacing: -0.016em; }
 .note { margin-top: 1rem; }
 .measure { max-width: 42em; }
-.nowrap { white-space: nowrap; }
 
 /* Standalone links read as "Label ›" and underline on hover. */
 .link-row { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; }
@@ -654,7 +653,6 @@ main:focus { outline: none; }
 .detail-section { padding-block: 48px; border-top: 1px solid var(--rule); }
 .detail-section h2 { font-size: 1.75rem; letter-spacing: 0.007em; }
 .detail-section h2:not(:first-child) { margin-top: 40px; }
-.quickstart-section { max-width: 52rem; }
 
 .resource-list { display: flex; flex-wrap: wrap; gap: 8px 32px; margin: 0; padding: 0; list-style: none; }
 

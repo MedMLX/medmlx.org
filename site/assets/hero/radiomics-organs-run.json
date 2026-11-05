@@ -21,7 +21,7 @@
     "precision": "float32"
   },
   "source": {
-    "source_file": "paper/inputs/figure1.npz",
+    "source_file": "figure1.npz",
     "source_sha256": "809be09f21e54691861026c9b43dcb50a2e4f2eeb13b5d9f0b4cff33909a6198",
     "image_key": "swinunetr/image",
     "labels_key": "swinunetr/labels",
