@@ -19,8 +19,8 @@ radius, and 2D neighborhoods. Its source is the retained AMOS22 CT plane and
 SwinUNETR liver label in `figure1.npz`, which is not included in this repository.
 The ROI is the largest connected component of the predicted liver label;
 the two detached components were excluded before computing radiomics.
-`radiomics-run.json` records source hashes, that ROI selection, the actual
-runtime/settings, feature-map hashes and the display transform. No feature
+`radiomics-run.json` records the source, that ROI selection, the actual
+runtime/settings, feature-map summaries and the display transform. No feature
 values are synthesized or smoothed. The CT uses a −160 to 240 HU window;
 the sequential crimson palette maps the ROI's 2nd–98th entropy percentiles.
 The legend reports bits. The film uses this image. The renderer is `docs/hero/render_radiomics.py`; local NIfTI
@@ -47,7 +47,7 @@ the video. Routing away disposes the observer, listeners, and media source.
 
 Five task cards loop real model output, computed on 2026-10-31 and 2026-11-04. Each has
 `<name>.mp4`, `<name>-poster.webp` (frame 0, shown for reduced motion and data
-saving; the nodule loop starts on its box-center slice), `<name>-run.json` (inputs, runtime, settings and hashes) and a renderer
+saving; the nodule loop starts on its box-center slice), `<name>-run.json` (inputs, runtime, settings and display) and a renderer
 in `docs/hero/`. Raw outputs stay in `dist/<name>-demo/`.
 
 - `abdomen-scroll`: swin-unetr-mlx 0.2.5 organ labels on HCC-TACE-Seg case

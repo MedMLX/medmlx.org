@@ -15,9 +15,7 @@
   "weights": {
     "repository": "MedMLX/swin-unetr-mlx",
     "file": "swinunetr.safetensors",
-    "sha256": "629d0e51cd0763e278f76ede496e495611c8b523804316f7e8d9c1354df53a56",
-    "matches_revision": "0052abb4bfb1c56bd7d52d5353267393399b8743",
-    "identity": "file sha256 equals the Git LFS oid of swinunetr.safetensors at that Hugging Face revision; read from the local cache without changes",
+    "revision": "0052abb4bfb1c56bd7d52d5353267393399b8743",
     "upstream_bundle": "MONAI/swin_unetr_btcv_segmentation"
   },
   "source": {
@@ -37,8 +35,6 @@
     "convolution_kernel": "STANDARD",
     "dicom_files": 99,
     "dicom_bytes": 52163298,
-    "dicom_listing_sha256": "832b65475a7ea68760742860b41e5334775ec7a2528cec4d6d67963fc861f9d1",
-    "dicom_listing_rule": "sha256 of \"<file name> <file sha256>\\n\" lines in GDCM slice order",
     "conversion": {
       "method": "SimpleITK ImageSeriesReader (GDCM) with rescale slope/intercept to HU, cast to int16 and written as gzip NIfTI by SimpleITK; read-back is voxel-identical. No resampling, reorientation or intensity change.",
       "simpleitk_version": "2.5.7",
@@ -72,8 +68,7 @@
         -2048,
         1158
       ]
-    },
-    "ct_nifti_sha256": "5ed6ebe1e40f787b1afb9afff4ea61d530d9c1ecaaf8f2275a4a92762e38df61"
+    }
   },
   "inference": {
     "preprocessing": "Runner defaults from the pinned MONAI bundle config: ITK read, RAS orientation, bilinear resampling to 1.5 x 1.5 x 2.0 mm, clip -175..250 HU and scale to [0, 1]; 96^3 sliding windows, batch 4, overlap 0.5, constant blending; softmax, inverse spacing and orientation, argmax on the input grid.",
@@ -105,7 +100,6 @@
       "inference": 12.2542,
       "postprocess_and_write": 4.5856
     },
-    "mask_nifti_sha256": "6192b7a0191af29e01797c926b1d08b4d880ae3b60cf7a4af0324f6d1d0a7d7a",
     "local_artifact": "dist/abdomen-scroll-demo/swin-unetr/ct/ct_trans.nii.gz"
   },
   "label_map": {
@@ -126,7 +120,6 @@
   },
   "display": {
     "renderer": "docs/hero/render_abdomen_scroll.py",
-    "renderer_sha256": "2911309ad304c8a971719ea681dd12583d6ea11bdedce6443a4b0ccedaa6ba77",
     "orientation": "Axial, radiological display: patient right on image left, anterior at top; DICOM pixel rows and columns unflipped",
     "ct_window_hu": {
       "level": 40,
@@ -320,7 +313,6 @@
       "ffmpeg": "ffmpeg version 7.1",
       "decoded_frames": 192,
       "outside_body_decoded_max_rgb": 0,
-      "sha256": "f4d189a06a92f35c5302d7b08b67da922c284861debc40dc02a0d51f363b0296",
       "bytes": 687167
     },
     "poster": {
@@ -331,7 +323,6 @@
         800,
         520
       ],
-      "sha256": "91bb68656a3bb51e2624809c832fd29b5d60a2627c6bedcb51b8bcfca2cc3bb3",
       "bytes": 32976
     }
   },

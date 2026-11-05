@@ -39,6 +39,7 @@ build: test
 	node --check site/model-cards.js
 	node --check site/releases.js
 	node --check site/mcp.js
+	node --check site/developer.js
 	node --check site/render.js
 	node --check devtools/prerender.mjs
 

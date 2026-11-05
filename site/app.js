@@ -166,8 +166,11 @@ function setupHeroFilm() {
     }
     if (!video.hasAttribute('src')) video.src = video.dataset.src;
     video.muted = true;
-    video.play().catch(() => {
-      // Autoplay can be blocked by the browser; retain the poster and play control.
+    video.play().catch(error => {
+      // A later pause() or source reset aborts a pending play(); nothing to undo.
+      if (error?.name === 'AbortError') return;
+      if (error?.name !== 'NotAllowedError') throw error;
+      // Blocked autoplay keeps the poster; the control then offers Play.
       if (!disposed) updateControl();
     });
   };

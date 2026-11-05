@@ -69,7 +69,7 @@ export const maintainers = [
   },
 ];
 export const siteUrl = 'https://medmlx.org';
-export const siteTitle = 'MedMLX — On-device medical imaging AI for Apple Silicon';
+const siteTitle = 'MedMLX — On-device medical imaging AI for Apple Silicon';
 export const siteDescription = 'On-device medical imaging AI for Apple Silicon. MedMLX reimplements published medical imaging models in MLX, and all inference runs on your Mac.';
 
 // Interpolated values are escaped recursively, except nested html`` results.

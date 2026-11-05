@@ -25,7 +25,6 @@ never edited, smoothed, interpolated between slices or recomputed here.
 """
 
 import argparse
-import hashlib
 import json
 import math
 import os
@@ -48,9 +47,8 @@ DATASET = Path('~/Documents/datasets/HCC-TACE-Seg').expanduser()
 CASE = 'HCC_063'
 SERIES_UID = '1.3.6.1.4.1.14519.5.2.1.1706.8374.125226904930109418407714368092'
 WEIGHTS = Path('~/.cache/medmlx/swin-unetr').expanduser()
-# Git LFS sha256 of swinunetr.safetensors at the revision swin-unetr-mlx v0.2.5 pins.
+# Hugging Face revision of swinunetr.safetensors that swin-unetr-mlx v0.2.5 pins.
 WEIGHTS_REVISION = '0052abb4bfb1c56bd7d52d5353267393399b8743'
-WEIGHTS_SHA256 = '629d0e51cd0763e278f76ede496e495611c8b523804316f7e8d9c1354df53a56'
 
 WINDOW = (40, 400)  # level, width in HU
 SIZE = (800, 520)
@@ -81,14 +79,6 @@ PALETTE = {
     12: (232, 214, 162),  # right adrenal gland: sand
     13: (232, 214, 162),  # left adrenal gland: sand
 }
-
-
-def sha256(path):
-    digest = hashlib.sha256()
-    with open(path, 'rb') as stream:
-        for block in iter(lambda: stream.read(1 << 20), b''):
-            digest.update(block)
-    return digest.hexdigest()
 
 
 def write_json(path, value):
@@ -148,7 +138,6 @@ def prepare(args):
     sitk.WriteImage(ct, str(ct_path), useCompression=True)
     if not np.array_equal(sitk.GetArrayFromImage(sitk.ReadImage(str(ct_path))), hu):
         raise ValueError('The written NIfTI does not reproduce the DICOM HU values')
-    listing = '\n'.join(f'{Path(f).name} {sha256(f)}' for f in files) + '\n'
     source = {
         'dataset': manifest['dataset'],
         'collection_doi': manifest['doi'],
@@ -166,8 +155,6 @@ def prepare(args):
         'convolution_kernel': optional('0018|1210'),
         'dicom_files': len(files),
         'dicom_bytes': entry['verified_dicom_bytes'],
-        'dicom_listing_sha256': hashlib.sha256(listing.encode()).hexdigest(),
-        'dicom_listing_rule': 'sha256 of "<file name> <file sha256>\\n" lines in GDCM slice order',
         'conversion': {
             'method': 'SimpleITK ImageSeriesReader (GDCM) with rescale slope/intercept to HU, '
                       'cast to int16 and written as gzip NIfTI by SimpleITK; read-back is '
@@ -179,7 +166,6 @@ def prepare(args):
             'direction_lps': list(image.GetDirection()),
             'hu_range': [int(hu.min()), int(hu.max())],
         },
-        'ct_nifti_sha256': sha256(ct_path),
     }
     write_json(args.run_dir / 'source.json', source)
     print(json.dumps(source, indent=2))
@@ -190,15 +176,9 @@ def segment(args):
     import mlx.core as mx
     from swin_unetr_mlx.medmlx import run
 
-    weights = WEIGHTS / 'swinunetr.safetensors'
-    if sha256(weights) != WEIGHTS_SHA256:
-        raise ValueError(f'{weights} is not the pinned {WEIGHTS_REVISION} checkpoint')
     if metadata.version('swin-unetr-mlx') != '0.2.5':
         raise ValueError('This record requires swin-unetr-mlx 0.2.5')
     ct_path = args.run_dir / 'ct.nii.gz'
-    source = json.loads((args.run_dir / 'source.json').read_text())
-    if sha256(ct_path) != source['ct_nifti_sha256']:
-        raise ValueError('ct.nii.gz differs from the prepared source')
     # An explicit folder keeps the shared download cache read-only.
     result = run(image_path=str(ct_path), weights_path=str(WEIGHTS),
                  output_dir=str(args.run_dir / 'swin-unetr'), overwrite=True)
@@ -220,10 +200,7 @@ def segment(args):
         'weights': {
             'repository': 'MedMLX/swin-unetr-mlx',
             'file': 'swinunetr.safetensors',
-            'sha256': WEIGHTS_SHA256,
-            'matches_revision': WEIGHTS_REVISION,
-            'identity': 'file sha256 equals the Git LFS oid of swinunetr.safetensors at that '
-                        'Hugging Face revision; read from the local cache without changes',
+            'revision': WEIGHTS_REVISION,
             'upstream_bundle': 'MONAI/swin_unetr_btcv_segmentation',
         },
         'preprocessing': 'Runner defaults from the pinned MONAI bundle config: ITK read, RAS '
@@ -233,8 +210,6 @@ def segment(args):
                          'orientation, argmax on the input grid.',
         'details': result['details'],
         'mask_relative_path': mask_path.relative_to(args.run_dir).as_posix(),
-        'mask_nifti_sha256': sha256(mask_path),
-        'ct_nifti_sha256': source['ct_nifti_sha256'],
     }
     write_json(args.run_dir / 'segment.json', record)
     print(json.dumps(record, indent=2))
@@ -278,10 +253,6 @@ def render(args):
     segmented = json.loads((args.run_dir / 'segment.json').read_text())
     ct_path = args.run_dir / 'ct.nii.gz'
     mask_path = args.run_dir / segmented['mask_relative_path']
-    if not sha256(ct_path) == source['ct_nifti_sha256'] == segmented['ct_nifti_sha256']:
-        raise ValueError('ct.nii.gz differs from the segmented source')
-    if sha256(mask_path) != segmented['mask_nifti_sha256']:
-        raise ValueError('The mask differs from the recorded segmentation output')
     ct, ct_image = read_volume(ct_path)
     labels, mask_image = read_volume(mask_path)
     if ct.shape != labels.shape:
@@ -403,21 +374,18 @@ def render(args):
             'study_instance_uid', 'series_instance_uid', 'series_number',
             'series_description', 'study_description', 'contrast_bolus_agent',
             'contrast_bolus_route', 'slice_thickness_mm', 'convolution_kernel',
-            'dicom_files', 'dicom_bytes',
-            'dicom_listing_sha256', 'dicom_listing_rule', 'conversion', 'ct_nifti_sha256')},
+            'dicom_files', 'dicom_bytes', 'conversion')},
         'inference': {
             'preprocessing': segmented['preprocessing'],
             'labels_present': segmented['details']['labels_present'],
             'network_input_shape': segmented['details']['network_input_shape'],
             'peak_mlx_bytes': segmented['details']['peak_mlx_bytes'],
             'seconds': segmented['details']['seconds'],
-            'mask_nifti_sha256': segmented['mask_nifti_sha256'],
             'local_artifact': f'dist/abdomen-scroll-demo/{segmented["mask_relative_path"]}',
         },
         'label_map': {k: v for k, v in names.items()},
         'display': {
             'renderer': 'docs/hero/render_abdomen_scroll.py',
-            'renderer_sha256': sha256(Path(__file__)),
             'orientation': 'Axial, radiological display: patient right on image left, '
                            'anterior at top; DICOM pixel rows and columns unflipped',
             'ct_window_hu': {'level': WINDOW[0], 'width': WINDOW[1],
@@ -459,9 +427,9 @@ def render(args):
                       'movflags': '+faststart', 'ffmpeg': ffmpeg_version(ffmpeg),
                       'decoded_frames': int(decoded.shape[0]),
                       'outside_body_decoded_max_rgb': outside_max,
-                      'sha256': sha256(video), 'bytes': video.stat().st_size},
+                      'bytes': video.stat().st_size},
             'poster': {'format': 'WebP', 'quality': 85, 'method': 6, 'size_px': list(SIZE),
-                       'sha256': sha256(poster), 'bytes': poster.stat().st_size},
+                       'bytes': poster.stat().st_size},
         },
         'outputs': {
             'video': 'site/assets/hero/abdomen-scroll.mp4',

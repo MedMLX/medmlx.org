@@ -12,7 +12,6 @@ smoothed, modified, or recomputed by this renderer.
 """
 
 import argparse
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -110,7 +109,6 @@ def main():
     canvas.save(args.output.with_suffix('.png'))
     display = {
         'renderer': 'docs/hero/render_radiomics.py',
-        'renderer_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         'feature': FEATURE, 'units': 'bits', 'ct_window_hu': [-160, 240],
         'color_range_percentiles': [2, 98], 'color_range_bits': [float(low), float(high)],
         'feature_range_bits': [float(feature[roi].min()), float(feature[roi].max())],
@@ -118,8 +116,6 @@ def main():
         'body_mask': 'largest CT > -300 HU component, holes filled; contains entire analysis ROI',
         'source_crop_xyxy': crop, 'display_resampling': 'uniform Lanczos',
         'numerical_smoothing': False,
-        'feature_map_sha256': hashlib.sha256(feature_path.read_bytes()).hexdigest(),
-        'output_sha256': hashlib.sha256(args.output.read_bytes()).hexdigest(),
         'output_size_px': list(canvas.size),
     }
     (args.run_dir / 'display.json').write_text(json.dumps(display, indent=2) + '\n')

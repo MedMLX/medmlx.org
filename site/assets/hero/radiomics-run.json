@@ -20,7 +20,6 @@
   },
   "source": {
     "source_file": "figure1.npz",
-    "source_sha256": "809be09f21e54691861026c9b43dcb50a2e4f2eeb13b5d9f0b4cff33909a6198",
     "image_key": "swinunetr/image",
     "labels_key": "swinunetr/labels",
     "selected_label": 6,
@@ -54,8 +53,6 @@
         ]
       }
     },
-    "ct_nifti_sha256": "f4d18d7a6eac69d620bc48b65a9ade83349aca088f6e080e87dd0226a3df3bba",
-    "liver-roi_nifti_sha256": "bcd2ce26e73500ec93b13142003360cd36fc5c23c357ae1855353fbcf884d091",
     "roi_selection": {
       "rule": "largest 4-connected component of the original predicted liver mask, computed before radiomics extraction",
       "original_roi_pixels": 14940,
@@ -63,8 +60,7 @@
       "excluded_roi_pixels": 505,
       "original_component_count": 3,
       "manual_mask_edits": false
-    },
-    "liver-roi-main_nifti_sha256": "c5239e3354e6b388d2fa402c3ac24c87767567b928e9c4dbd39e27327024716a"
+    }
   },
   "execution": {
     "batch_size": 687,
@@ -110,7 +106,6 @@
   },
   "maps": {
     "original_firstorder_Entropy": {
-      "sha256": "b1f5021b41cdde937a4e334feef6ad63c874e2c16fac0e13f849a6002a94ab43",
       "finite_roi_voxels": 14435,
       "outside_roi_zero": true,
       "range": [
@@ -120,7 +115,6 @@
       "local_artifact": "dist/radiomics-demo/computed-main/maps/original_firstorder_Entropy.nii.gz"
     },
     "original_glcm_Contrast": {
-      "sha256": "afca448197d5d5ad0a34c676c9de1fc183dd3b3bdef0a5d2dfbabad499c4751a",
       "finite_roi_voxels": 14435,
       "outside_roi_zero": true,
       "range": [
@@ -130,7 +124,6 @@
       "local_artifact": "dist/radiomics-demo/computed-main/maps/original_glcm_Contrast.nii.gz"
     },
     "original_glcm_Idmn": {
-      "sha256": "f90942caa4814f34352e8365a6f47d7c5bac1c552034827e2829fb23bd6f9d75",
       "finite_roi_voxels": 14435,
       "outside_roi_zero": true,
       "range": [
@@ -142,7 +135,6 @@
   },
   "display": {
     "renderer": "docs/hero/render_radiomics.py",
-    "renderer_sha256": "00f4bf95fed828f8d6c9d9aae58293865a1b8998d2e03b3d020c18ecb2aa4a37",
     "feature": "original_firstorder_Entropy",
     "units": "bits",
     "ct_window_hu": [
@@ -198,8 +190,6 @@
     ],
     "display_resampling": "uniform Lanczos",
     "numerical_smoothing": false,
-    "feature_map_sha256": "b1f5021b41cdde937a4e334feef6ad63c874e2c16fac0e13f849a6002a94ab43",
-    "output_sha256": "c1819edd9ad8843a028e9c646721ead8b538b4fa39d081324c7c5850f541c638",
     "output_size_px": [
       1200,
       1030

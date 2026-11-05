@@ -32,10 +32,8 @@
   "weights": {
     "repository": "MedMLX/retinanet-lung-nodule-mlx",
     "file": "network.safetensors",
-    "sha256": "6e7a51d99f5835c114c126ae9244c407551a680069c33a7d3e85c85a551d22c6",
     "size_bytes": 83669894,
     "download_revision": "d2d635fbac34254f14192ac348a05d275a949317",
-    "hub_check": "Hub LFS sha256 of network.safetensors at main (8d8a48d8adfc8a8e71c7565f961979e91f20e3ec) equals the local file",
     "weights_path": "Existing local cache folder passed explicitly and read only; the runner therefore reports weights_revision null",
     "upstream": "MONAI/lung_nodule_ct_detection bundle 0.6.10, Hugging Face revision 9d6622fda0e52be0a4155fed2e0afb9c17bcd80b",
     "license": "Apache-2.0"
@@ -51,7 +49,6 @@
     "case": "nodule_03_20mm",
     "case_file": "nifti/nodule_03_20mm.nii.gz",
     "series_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.752756872840730509471096155114",
-    "input_sha256": "20fba180797acb74b5eccc2eb7590bf6e0591ff377c32aaca97326e74fea90a8",
     "derivation": "Local read-only copy: LUNA16 MetaImage converted to HU NIfTI with a RAS affine. Not copied into this repository.",
     "shape_ijk": [
       512,
@@ -117,12 +114,10 @@
   "outputs": {
     "detections": {
       "local_artifact": "dist/nodule-scroll-demo/nodule_03_20mm/detections.json",
-      "sha256": "152d226f0236177ce0e4248d0a2a9b614b14ee63b64b70455b87dda7bf7d3c3d",
       "schema": "medmlx.detections.v1, cccwhd boxes in NIfTI RAS mm"
     },
     "bundle_detections": {
       "local_artifact": "dist/nodule-scroll-demo/nodule_03_20mm/bundle_detections.json",
-      "sha256": "2f18782369dc66e491cfddf3e12c4d7617eb0f7c48c099bf556da4f07deb2a9f",
       "schema": "MONAI bundle rows, cccwhd boxes in patient LPS mm"
     }
   },
@@ -201,8 +196,7 @@
           24.85
         ],
         "nearest_annotation_diameter_mm": 25.23,
-        "local_artifact": "dist/nodule-scroll-demo/nodule_01_25mm/detections.json",
-        "detections_sha256": "8509ea829b1a715ab3ffbb66543184ca87a15cbd5af6a6c8b17d867ac3b2b011"
+        "local_artifact": "dist/nodule-scroll-demo/nodule_01_25mm/detections.json"
       },
       {
         "case": "nodule_02_22mm",
@@ -218,8 +212,7 @@
           21.7
         ],
         "nearest_annotation_diameter_mm": 21.58,
-        "local_artifact": "dist/nodule-scroll-demo/nodule_02_22mm/detections.json",
-        "detections_sha256": "7076788dd0194308c9e64c708e7875e30f990731bb445170c5980abe835b3043"
+        "local_artifact": "dist/nodule-scroll-demo/nodule_02_22mm/detections.json"
       },
       {
         "case": "nodule_03_20mm",
@@ -235,14 +228,12 @@
           19.25
         ],
         "nearest_annotation_diameter_mm": 19.65,
-        "local_artifact": "dist/nodule-scroll-demo/nodule_03_20mm/detections.json",
-        "detections_sha256": "152d226f0236177ce0e4248d0a2a9b614b14ee63b64b70455b87dda7bf7d3c3d"
+        "local_artifact": "dist/nodule-scroll-demo/nodule_03_20mm/detections.json"
       }
     ]
   },
   "display": {
     "renderer": "docs/hero/render_nodule_scroll.py",
-    "renderer_sha256": "faa82a82cbea6f70191b48adeb764517089e05846e80b23bc25e555f19b4b1c7",
     "orientation": "Radiological axial view: patient right on image left, anterior at top. Stored voxel axes are LPS, so each frame is data[:, :, k].T with no flips.",
     "slices": {
       "type": "Native acquired axial slices; no through-plane interpolation",
@@ -385,10 +376,8 @@
     },
     "outputs": {
       "video": "site/assets/hero/nodule-scroll.mp4",
-      "video_sha256": "9712b48ea6b639ad755463babb582f5f7b81eaa56c5a38a1437e9429216e4a8a",
       "video_bytes": 468454,
       "poster": "site/assets/hero/nodule-scroll-poster.webp",
-      "poster_sha256": "8413cf8c8e19f56ef90ffa52ea9b2a34a2fc4ff00fbb8a9902bb70505d20f71a",
       "poster_bytes": 36530,
       "size_px": [
         800,

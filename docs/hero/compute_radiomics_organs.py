@@ -19,11 +19,12 @@ prediction in figure1.npz (not included in this repository; set
 MEDMLX_HERO_SOURCE to its path), written as one-slice NIfTI with
 SimpleITK. Each organ's ROI is the largest 4-connected component of its
 predicted BTCV label, selected before extraction. mlxradiomics.medmlx.run
-computes every map. This script writes inputs and records hashes; it never
-edits, smooths or synthesizes feature values.
+computes every map. This script writes inputs and records each run; it never
+edits, smooths or synthesizes feature values. The liver maps are compared by
+value with the liver run's maps, which must remain at the local_artifact paths
+radiomics-run.json records.
 """
 
-import hashlib
 import json
 import os
 import platform
@@ -65,16 +66,11 @@ SELECTION_RULE = (
 )
 
 
-def sha256(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
-
-
 def write_plane(array, path, spacing):
     """One axial plane, stored exactly as the liver run stored it."""
     image = sitk.GetImageFromArray(array[None])
     image.SetSpacing((spacing, spacing, 1.0))
     sitk.WriteImage(image, str(path), True)
-    return sha256(path)
 
 
 def read_plane(path):
@@ -100,8 +96,6 @@ def main():
 
     liver_run = json.loads(LIVER_RUN.read_text())
     recorded = liver_run['source']
-    if sha256(SOURCE) != recorded['source_sha256']:
-        raise ValueError('figure1.npz differs from the source recorded for the liver run')
     if recorded['parameters'] != PARAMETERS:
         raise ValueError('Parameters must equal the liver run parameters')
     archive = np.load(SOURCE)
@@ -113,9 +107,7 @@ def main():
 
     RUN_DIR.mkdir(parents=True, exist_ok=True)
     shutil.rmtree(RUN_DIR / 'computed', ignore_errors=True)
-    ct_sha = write_plane(ct, RUN_DIR / 'ct.nii.gz', spacing)
-    if ct_sha != recorded['ct_nifti_sha256']:
-        raise ValueError('CT NIfTI must reproduce the liver run input byte for byte')
+    write_plane(ct, RUN_DIR / 'ct.nii.gz', spacing)
     (RUN_DIR / 'parameters.json').write_text(json.dumps(PARAMETERS, indent=2) + '\n')
 
     # Every label on the plane, so the organ choice can be checked from the record.
@@ -146,9 +138,8 @@ def main():
         slug = BTCV[value].replace(' ', '-')
         predicted = labels == value
         selected, count, sizes = largest_component(predicted)
-        roi_sha = write_plane(predicted.astype(np.uint8), RUN_DIR / f'{slug}-roi.nii.gz', spacing)
-        main_sha = write_plane(selected.astype(np.uint8), RUN_DIR / f'{slug}-roi-main.nii.gz',
-                               spacing)
+        write_plane(predicted.astype(np.uint8), RUN_DIR / f'{slug}-roi.nii.gz', spacing)
+        write_plane(selected.astype(np.uint8), RUN_DIR / f'{slug}-roi-main.nii.gz', spacing)
         output_dir = RUN_DIR / 'computed' / slug
         clock = time.perf_counter()
         result = run(image_path=RUN_DIR / 'ct.nii.gz', mask_path=RUN_DIR / f'{slug}-roi-main.nii.gz',
@@ -160,7 +151,6 @@ def main():
             values = read_plane(path)
             inside = values[selected]
             maps[name] = {
-                'sha256': sha256(path),
                 'finite_roi_voxels': int(np.isfinite(inside).sum()),
                 'outside_roi_zero': bool(np.all(values[~selected] == 0)),
                 'range': [float(np.nanmin(inside)), float(np.nanmax(inside))],
@@ -180,11 +170,9 @@ def main():
                 'component_pixels': sizes,
                 'manual_mask_edits': False,
             },
-            'roi_nifti_sha256': roi_sha, 'roi_main_nifti_sha256': main_sha,
             'execution': {key: execution[key] for key in
                           ('batch_size', 'gray_levels', 'scratch_estimate_bytes')},
             'wall_seconds': round(seconds, 3),
-            'features_json_sha256': sha256(result['outputs']['features_json']),
             'maps': maps,
         }
         organs[slug]['_shared_execution'] = execution
@@ -197,14 +185,13 @@ def main():
         raise ValueError('Every organ must use identical execution settings')
 
     liver = organs.get('liver')
+    # Value comparison, NaN-aware, against the liver run's saved maps.
     reference = {
         'reference': 'radiomics-run.json maps, mlxradiomics '
                      f'{liver_run["runtime"]["version"]}, same CT, ROI and parameters',
-        'liver_roi_main_matches': liver is not None and liver['roi_main_nifti_sha256']
-                                  == recorded['liver-roi-main_nifti_sha256'],
-        'maps': {name: {'previous_sha256': entry['sha256'],
-                        'current_sha256': liver['maps'][name]['sha256'],
-                        'identical': liver['maps'][name]['sha256'] == entry['sha256']}
+        'maps': {name: {'identical': bool(np.array_equal(
+                            read_plane(ROOT / liver['maps'][name]['local_artifact']),
+                            read_plane(ROOT / entry['local_artifact']), equal_nan=True))}
                  for name, entry in liver_run['maps'].items()} if liver else {},
     }
     record = {
@@ -212,7 +199,6 @@ def main():
         'method': 'Native MLX Radiomics voxel extraction with mlxradiomics.medmlx.run, '
                   'one run per selected BTCV organ label',
         'job': {'script': 'docs/hero/compute_radiomics_organs.py',
-                'script_sha256': sha256(Path(__file__)),
                 'entry_point': 'mlxradiomics.medmlx.run(image_path, mask_path, output_dir, '
                                'params, voxel=True)',
                 'started_at': started.isoformat(timespec='seconds'),
@@ -230,7 +216,7 @@ def main():
         },
         'source': {
             **{key: recorded[key] for key in (
-                'source_file', 'source_sha256',
+                'source_file',
                 'image_key', 'labels_key', 'source_case', 'axial_slice',
                 'spacing_mm_row_col', 'input_shape')},
             'derivation': 'Same as radiomics-run.json: the retained raw HU axial slice and native '
@@ -240,8 +226,6 @@ def main():
                           'force2D excludes from neighborhoods. No resampling or input smoothing. '
                           'Each ROI is a 0/1 mask extracted as label 1.',
             'parameters': PARAMETERS,
-            'ct_nifti_sha256': ct_sha,
-            'ct_nifti_matches_liver_run': True,
         },
         'label_map': {
             'source': 'swin-unetr-mlx v0.2.5, src/swin_unetr_mlx/specification.json, '

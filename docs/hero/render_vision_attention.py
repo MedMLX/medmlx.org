@@ -31,9 +31,7 @@ weighted the scan; it is not an explanation of the report.
 """
 
 import argparse
-import hashlib
 import json
-import math
 import os
 import platform
 import subprocess
@@ -55,10 +53,6 @@ MAX_NEW_TOKENS = 512
 PRECISION = 'float32'
 REGION = 'chest'
 FULL_ATTENTION_LAYERS = tuple(range(3, 32, 4))
-
-
-def sha256(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def infer(args):
@@ -144,8 +138,7 @@ def infer(args):
     )
     record = {
         'source_ct': {'dataset': 'LUNA16 subset0', 'seriesuid': SERIES_UID,
-                      'source_url': 'https://zenodo.org/records/3723295', 'license': 'CC BY 4.0',
-                      'nifti_sha256': sha256(args.ct)},
+                      'source_url': 'https://zenodo.org/records/3723295', 'license': 'CC BY 4.0'},
         'runtime': {
             'package': 'mlx-reason-ct', 'version': metadata.version('mlx-reason-ct'),
             'medmlx_core_version': metadata.version('medmlx-core'),
@@ -391,9 +384,9 @@ def render(args):
             'video': {'codec': 'H.264 (libx264)', 'preset': 'veryslow', 'crf': CRF, 'pix_fmt': 'yuv420p',
                       'color': 'BT.709, limited range', 'fps': FPS, 'frames': len(schedule),
                       'size_px': list(SIZE), 'audio': False, 'movflags': '+faststart',
-                      'ffmpeg': ffmpeg_line, 'sha256': sha256(video), 'bytes': video.stat().st_size},
+                      'ffmpeg': ffmpeg_line, 'bytes': video.stat().st_size},
             'poster': {'format': 'WebP', 'quality': 85, 'method': 6, 'frame': poster_frame,
-                       'size_px': list(SIZE), 'sha256': sha256(poster), 'bytes': poster.stat().st_size},
+                       'size_px': list(SIZE), 'bytes': poster.stat().st_size},
         },
         'outputs': {'video': f'site/assets/hero/{NAME}.mp4', 'poster': f'site/assets/hero/{NAME}-poster.webp'},
         'interpretation': 'One automated report on one public, de-identified CT for a software '

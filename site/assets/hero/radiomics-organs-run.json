@@ -3,7 +3,6 @@
   "method": "Native MLX Radiomics voxel extraction with mlxradiomics.medmlx.run, one run per selected BTCV organ label",
   "job": {
     "script": "docs/hero/compute_radiomics_organs.py",
-    "script_sha256": "45e3f3b67dba39ebedaa348054397f0aa7bd62246972d317bade9420adf0fc26",
     "entry_point": "mlxradiomics.medmlx.run(image_path, mask_path, output_dir, params, voxel=True)",
     "started_at": "2026-10-31T21:42:39+00:00",
     "finished_at": "2026-10-31T21:42:40+00:00"
@@ -22,7 +21,6 @@
   },
   "source": {
     "source_file": "figure1.npz",
-    "source_sha256": "809be09f21e54691861026c9b43dcb50a2e4f2eeb13b5d9f0b4cff33909a6198",
     "image_key": "swinunetr/image",
     "labels_key": "swinunetr/labels",
     "source_case": "AMOS22 amos_0008",
@@ -53,9 +51,7 @@
           "Idmn"
         ]
       }
-    },
-    "ct_nifti_sha256": "f4d18d7a6eac69d620bc48b65a9ade83349aca088f6e080e87dd0226a3df3bba",
-    "ct_nifti_matches_liver_run": true
+    }
   },
   "label_map": {
     "source": "swin-unetr-mlx v0.2.5, src/swin_unetr_mlx/specification.json, inference.labels (BTCV)",
@@ -273,8 +269,6 @@
         ],
         "manual_mask_edits": false
       },
-      "roi_nifti_sha256": "c6eb3689896d428d727ea3cf6147630aba6b944f424b1445a891ce17395332c7",
-      "roi_main_nifti_sha256": "c6eb3689896d428d727ea3cf6147630aba6b944f424b1445a891ce17395332c7",
       "execution": {
         "batch_size": 2025,
         "gray_levels": 11,
@@ -283,7 +277,6 @@
       "wall_seconds": 1.05,
       "roi_local_artifact": "dist/radiomics-organs-demo/right-kidney-roi-main.nii.gz",
       "entropy_map": {
-        "sha256": "6d754969d264231792bc0edf51dd3153d5c8e138352d0c78806ebaf58b93d220",
         "finite_roi_voxels": 3282,
         "outside_roi_zero": true,
         "range": [
@@ -296,10 +289,6 @@
           2.2501273155212402,
           2.8213612031936646
         ]
-      },
-      "other_maps_sha256": {
-        "original_glcm_Contrast": "e1f30a3c75611f947fffa5c077d690287db2366164edcbfa7a89c276b05b05db",
-        "original_glcm_Idmn": "9d84f7fb530841fbd82b0dae205a563432fa834d4b51fb6de995a9b43352f26c"
       }
     },
     "left-kidney": {
@@ -316,8 +305,6 @@
         ],
         "manual_mask_edits": false
       },
-      "roi_nifti_sha256": "3588ceaebc4a8f4f873ff9f65d0b95d7061af6836ca8978775d8a64defbd703d",
-      "roi_main_nifti_sha256": "3588ceaebc4a8f4f873ff9f65d0b95d7061af6836ca8978775d8a64defbd703d",
       "execution": {
         "batch_size": 1859,
         "gray_levels": 12,
@@ -326,7 +313,6 @@
       "wall_seconds": 0.24,
       "roi_local_artifact": "dist/radiomics-organs-demo/left-kidney-roi-main.nii.gz",
       "entropy_map": {
-        "sha256": "56773f87444236611c7b3afa1496846ec6f0e2e709c803df60ea92c5ca7ecf51",
         "finite_roi_voxels": 3811,
         "outside_roi_zero": true,
         "range": [
@@ -339,10 +325,6 @@
           2.1198906898498535,
           2.9625503540039055
         ]
-      },
-      "other_maps_sha256": {
-        "original_glcm_Contrast": "9f7732e08790e88f2e49f1c40cae02f7ad9d5934874d3eabaac64b8f0eb7fb0c",
-        "original_glcm_Idmn": "0b5774295dbacc40d1e040e1e552238e51674d3a256bc1dfab11749ef04f6b45"
       }
     },
     "liver": {
@@ -361,8 +343,6 @@
         ],
         "manual_mask_edits": false
       },
-      "roi_nifti_sha256": "bcd2ce26e73500ec93b13142003360cd36fc5c23c357ae1855353fbcf884d091",
-      "roi_main_nifti_sha256": "c5239e3354e6b388d2fa402c3ac24c87767567b928e9c4dbd39e27327024716a",
       "execution": {
         "batch_size": 687,
         "gray_levels": 25,
@@ -371,7 +351,6 @@
       "wall_seconds": 0.29,
       "roi_local_artifact": "dist/radiomics-organs-demo/liver-roi-main.nii.gz",
       "entropy_map": {
-        "sha256": "b1f5021b41cdde937a4e334feef6ad63c874e2c16fac0e13f849a6002a94ab43",
         "finite_roi_voxels": 14435,
         "outside_roi_zero": true,
         "range": [
@@ -384,10 +363,6 @@
           1.9705654382705688,
           2.936603088378906
         ]
-      },
-      "other_maps_sha256": {
-        "original_glcm_Contrast": "afca448197d5d5ad0a34c676c9de1fc183dd3b3bdef0a5d2dfbabad499c4751a",
-        "original_glcm_Idmn": "f90942caa4814f34352e8365a6f47d7c5bac1c552034827e2829fb23bd6f9d75"
       }
     },
     "pancreas": {
@@ -406,8 +381,6 @@
         ],
         "manual_mask_edits": false
       },
-      "roi_nifti_sha256": "566f885ae19cd89c624f992e4e0527aee9ea95f2a1c7aa824c2cd2452b205e5c",
-      "roi_main_nifti_sha256": "4f3b29e77fff7b87555b7b57bab4c0906e316f41c0a91dec0fd03fc21cc15edd",
       "execution": {
         "batch_size": 2203,
         "gray_levels": 10,
@@ -416,7 +389,6 @@
       "wall_seconds": 0.226,
       "roi_local_artifact": "dist/radiomics-organs-demo/pancreas-roi-main.nii.gz",
       "entropy_map": {
-        "sha256": "b5797939c2f415b7713bdab44f07e993b9cd78aeb38c05b9b312ef49758b2e71",
         "finite_roi_voxels": 1357,
         "outside_roi_zero": true,
         "range": [
@@ -429,37 +401,25 @@
           2.215189218521118,
           2.74032130241394
         ]
-      },
-      "other_maps_sha256": {
-        "original_glcm_Contrast": "9c20bdf183c60f33eb526b874159e33e308aa607eb366f3fad911be7e6034c73",
-        "original_glcm_Idmn": "4cf079a0c964c65cf06a61240cb6c2ac4b59b01ef1fc1f766f33e4da5ecb8926"
       }
     }
   },
   "reference_check": {
     "reference": "radiomics-run.json maps, mlxradiomics 0.1.0.dev5, same CT, ROI and parameters",
-    "liver_roi_main_matches": true,
     "maps": {
       "original_firstorder_Entropy": {
-        "previous_sha256": "b1f5021b41cdde937a4e334feef6ad63c874e2c16fac0e13f849a6002a94ab43",
-        "current_sha256": "b1f5021b41cdde937a4e334feef6ad63c874e2c16fac0e13f849a6002a94ab43",
         "identical": true
       },
       "original_glcm_Contrast": {
-        "previous_sha256": "afca448197d5d5ad0a34c676c9de1fc183dd3b3bdef0a5d2dfbabad499c4751a",
-        "current_sha256": "afca448197d5d5ad0a34c676c9de1fc183dd3b3bdef0a5d2dfbabad499c4751a",
         "identical": true
       },
       "original_glcm_Idmn": {
-        "previous_sha256": "f90942caa4814f34352e8365a6f47d7c5bac1c552034827e2829fb23bd6f9d75",
-        "current_sha256": "f90942caa4814f34352e8365a6f47d7c5bac1c552034827e2829fb23bd6f9d75",
         "identical": true
       }
     }
   },
   "display": {
     "renderer": "docs/hero/render_radiomics_organs.py",
-    "renderer_sha256": "a1776a2a5312b6175268ba6dd3f7ac1122c1302d454939c0866f1cc626a1fd7a",
     "feature": "original_firstorder_Entropy",
     "units": "bits",
     "ct_window_hu": [
@@ -604,7 +564,6 @@
       "movflags": "+faststart",
       "ffmpeg": "ffmpeg version 7.1",
       "imageio_ffmpeg": "0.7.0",
-      "sha256": "6028c317e275c9d38b7a12c08e120f603b096e9fbf6c3ebbd30a32c38da2f33f",
       "bytes": 67710
     },
     "poster": {
@@ -616,7 +575,6 @@
         800,
         520
       ],
-      "sha256": "c65ed7fcd8958bce3985bd69e3a05c5d9e9847f1f348ffb5d627b9ec7b3bb512",
       "bytes": 29444
     }
   },

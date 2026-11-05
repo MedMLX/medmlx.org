@@ -30,7 +30,7 @@ export const releases = {
 // From uv's installation docs; uv is not a reviewed MedMLX release.
 export const uvInstallCommand = 'curl -LsSf https://astral.sh/uv/install.sh | sh';
 
-export const environmentCommand = `uv venv --python ${pythonVersion}\nsource .venv/bin/activate`;
+const environmentCommand = `uv venv --python ${pythonVersion}\nsource .venv/bin/activate`;
 export const medmlxInstallCommand = `uv tool install --python ${pythonVersion} "medmlx[all,mcp]"`;
 export const medmlxProjectCommand = 'uv add "medmlx[all,mcp]"';
 // Copied from the medmlx README; make release-check finds each in the tagged release.

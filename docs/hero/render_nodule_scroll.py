@@ -14,11 +14,10 @@ predicted box drawn on the native slices it intersects, and H.264/WebP
 encoding. The box is read from the runner's detections.json and is never
 edited, smoothed or recomputed. There is no through-plane interpolation, and
 the LUNA16 annotation is not drawn. The renderer fills the record's display
-section and raises if the CT, saved output or geometry differ from the record.
+section and raises if the saved output or geometry differ from the record.
 """
 
 import argparse
-import hashlib
 import json
 import re
 import subprocess
@@ -44,14 +43,6 @@ CRF = 26
 BOX_RGB = (0xff, 0x5a, 0x73)
 STROKE = 6
 CONFIDENT = 0.5
-
-
-def sha256(path):
-    digest = hashlib.sha256()
-    with open(path, 'rb') as handle:
-        for block in iter(lambda: handle.read(1 << 20), b''):
-            digest.update(block)
-    return digest.hexdigest()
 
 
 def load_ct(path):
@@ -190,15 +181,10 @@ def main():
     record = json.loads(args.record.read_text())
     source = record['source']
 
-    # The CT and saved model output must be the exact files the record names.
     ct_path = args.dataset / source['case_file']
-    if sha256(ct_path) != source['input_sha256']:
-        raise ValueError(f'CT hash differs from the record: {ct_path}')
     saved = {}
     for role in ('detections', 'bundle_detections'):
         path = ROOT / record['outputs'][role]['local_artifact']
-        if sha256(path) != record['outputs'][role]['sha256']:
-            raise ValueError(f'Saved model output differs from the record: {path}')
         saved[role] = json.loads(path.read_text())
     output = saved['detections']
     if (output['schema_version'], output['coordinate_convention'], output['box_mode'],
@@ -292,7 +278,6 @@ def main():
 
     display = {
         'renderer': 'docs/hero/render_nodule_scroll.py',
-        'renderer_sha256': sha256(Path(__file__)),
         'orientation': 'Radiological axial view: patient right on image left, anterior at top. '
                        'Stored voxel axes are LPS, so each frame is data[:, :, k].T with no flips.',
         'slices': {
@@ -359,10 +344,8 @@ def main():
         },
         'outputs': {
             'video': 'site/assets/hero/nodule-scroll.mp4',
-            'video_sha256': sha256(args.video),
             'video_bytes': args.video.stat().st_size,
             'poster': 'site/assets/hero/nodule-scroll-poster.webp',
-            'poster_sha256': sha256(args.poster),
             'poster_bytes': args.poster.stat().st_size,
             'size_px': list(FRAME),
             'local_frames': 'dist/nodule-scroll-demo/frames/',

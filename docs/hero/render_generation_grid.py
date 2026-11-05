@@ -26,7 +26,6 @@ ping-pong, so the loop has no jump. Generated voxels are never edited.
 """
 
 import argparse
-import hashlib
 import json
 import math
 import os
@@ -85,10 +84,6 @@ CRF = 28
 # BT.709 limited-range conversion, tagged as BT.709 primaries, transfer and matrix.
 COLOR_FILTER = ('scale=out_color_matrix=bt709:out_range=tv,'
                 'setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709:range=tv')
-
-
-def sha256(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def jsonable(value):
@@ -321,10 +316,9 @@ def render(args):
                       'pix_fmt': 'yuv420p', 'color': 'BT.709, limited range', 'fps': FPS,
                       'seconds': SECONDS, 'size_px': list(SIZE), 'audio': False,
                       'movflags': '+faststart', 'ffmpeg': ffmpeg_line,
-                      'decoded_frames': decoded_frames, 'sha256': sha256(video),
-                      'bytes': video.stat().st_size},
+                      'decoded_frames': decoded_frames, 'bytes': video.stat().st_size},
             'poster': {'format': 'WebP', 'quality': 85, 'method': 6, 'size_px': list(SIZE),
-                       'sha256': sha256(poster), 'bytes': poster.stat().st_size},
+                       'bytes': poster.stat().st_size},
         },
         'outputs': {'video': f'site/assets/hero/{NAME}.mp4',
                     'poster': f'site/assets/hero/{NAME}-poster.webp'},

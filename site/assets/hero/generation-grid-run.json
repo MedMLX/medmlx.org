@@ -3893,7 +3893,6 @@
    "movflags": "+faststart",
    "ffmpeg": "ffmpeg version 9.0",
    "decoded_frames": 192,
-   "sha256": "e5c47b394339be2ac40902b1cf9aa98875081bc29bfbcfa28ea55ee63b9659b6",
    "bytes": 1328187
   },
   "poster": {
@@ -3904,7 +3903,6 @@
     800,
     520
    ],
-   "sha256": "b1eacd9f0c87c244f04f78765255a954a6e03bd1ae89ffb5b4aa9fd1fa42ea02",
    "bytes": 45570
   }
  },

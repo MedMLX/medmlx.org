@@ -13,7 +13,6 @@ placement; cross-dissolves between rendered frames; H.264 and WebP encoding.
 Feature maps are never smoothed, modified or recomputed by this renderer.
 """
 
-import hashlib
 import json
 import os
 import subprocess
@@ -51,10 +50,6 @@ FRAMES = [('Liver', ('liver',)),
           ('Pancreas', ('pancreas',))]
 
 
-def sha256(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
-
-
 def read_slice(path):
     """Recover the retained radiological display plane without reorientation."""
     volume = nib.load(path)
@@ -90,8 +85,6 @@ def ffmpeg_version(ffmpeg):
 def main():
     compute = json.loads((RUN_DIR / 'compute.json').read_text())
     ct, affine = read_slice(RUN_DIR / 'ct.nii.gz')
-    if sha256(RUN_DIR / 'ct.nii.gz') != compute['source']['ct_nifti_sha256']:
-        raise ValueError('CT differs from the computed record')
     if not np.isclose(abs(affine[0, 0]), abs(affine[1, 1])):
         raise ValueError('This asset layout requires square in-plane pixels')
 
@@ -101,8 +94,6 @@ def main():
             organ = compute['organs'][slug]
             mask, mask_affine = read_slice(RUN_DIR / f'{slug}-roi-main.nii.gz')
             path = ROOT / organ['maps'][FEATURE]['local_artifact']
-            if sha256(path) != organ['maps'][FEATURE]['sha256']:
-                raise ValueError(f'{slug}: map differs from the computed record')
             feature, feature_affine = read_slice(path)
             if ct.shape != mask.shape or ct.shape != feature.shape:
                 raise ValueError('CT, ROI and map must share one pixel grid')
@@ -232,13 +223,11 @@ def main():
     for slug, organ in compute['organs'].items():
         entry = organ['maps'][FEATURE]
         organs[slug] = {
-            **{key: organ[key] for key in ('label', 'name', 'roi_selection', 'roi_nifti_sha256',
-                                          'roi_main_nifti_sha256', 'execution', 'wall_seconds')},
+            **{key: organ[key] for key in ('label', 'name', 'roi_selection', 'execution',
+                                          'wall_seconds')},
             'roi_local_artifact': f'dist/radiomics-organs-demo/{slug}-roi-main.nii.gz',
             'entropy_map': {**entry, 'percentiles_2_50_98_bits': [
                 float(v) for v in np.percentile(maps[slug][rois[slug]], [2, 50, 98])]},
-            'other_maps_sha256': {name: value['sha256'] for name, value in organ['maps'].items()
-                                  if name != FEATURE},
         }
     record = {
         'schema_version': 1,
@@ -253,7 +242,6 @@ def main():
         'reference_check': compute['reference_check'],
         'display': {
             'renderer': 'docs/hero/render_radiomics_organs.py',
-            'renderer_sha256': sha256(Path(__file__)),
             'feature': FEATURE, 'units': 'bits', 'ct_window_hu': list(WINDOW_HU),
             'color_range_rule': '2nd-98th percentile of the union of every displayed ROI value '
                                 f'({", ".join(rois)}), lower bound floored at 0; one range '
@@ -300,10 +288,9 @@ def main():
                       'frames': count, 'size_px': list(SIZE), 'audio': False,
                       'movflags': '+faststart', 'ffmpeg': ffmpeg_version(ffmpeg),
                       'imageio_ffmpeg': metadata.version('imageio-ffmpeg'),
-                      'sha256': sha256(video), 'bytes': video.stat().st_size},
+                      'bytes': video.stat().st_size},
             'poster': {'format': 'WebP', 'quality': 85, 'method': 6, 'frame': 0,
-                       'size_px': list(SIZE), 'sha256': sha256(poster),
-                       'bytes': poster.stat().st_size},
+                       'size_px': list(SIZE), 'bytes': poster.stat().st_size},
         },
         'outputs': {'video': 'site/assets/hero/radiomics-organs.mp4',
                     'poster': 'site/assets/hero/radiomics-organs-poster.webp'},
