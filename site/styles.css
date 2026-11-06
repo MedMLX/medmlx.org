@@ -561,6 +561,12 @@ main:focus { outline: none; }
 .page-media { position: relative; margin: 0; padding: 28px 28px 20px; border-radius: var(--radius-tile); background: var(--tile); }
 .page-media-visual { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; mix-blend-mode: lighten; }
 video.page-media-visual { aspect-ratio: 800 / 520; }
+/* Turntable: the poster shows until the sheet of angles loads; dragging steps through it. */
+.spin { position: relative; overflow: hidden; background-repeat: no-repeat; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.spin.dragging { cursor: grabbing; }
+.spin:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; border-radius: 8px; }
+.spin img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.spin.ready img { visibility: hidden; }
 .page-media figcaption { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.3em; min-height: 44px; margin-top: 6px; padding-right: 56px; color: var(--muted); font-size: 0.8125rem; }
 /* On model pages the pause button sits in the caption row, clear of every loop's labels. */
 .page-media .media-toggle { top: auto; right: 16px; bottom: 16px; }

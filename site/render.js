@@ -218,7 +218,7 @@ export const pauseIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fi
 // panel from its documentation figure. Sources are on the credits page. Models
 // without a figure that shows their output have no panel.
 const modelMedia = {
-  'nnunet-mlx': { image: 'featured-liver' }, 'totalsegmentator-mlx': { image: 'featured-anatomy' },
+  'nnunet-mlx': { image: 'featured-liver' }, 'totalsegmentator-mlx': { spin: 'totalseg-spin', frames: 120, columns: 10 },
   'medsam2-mlx': { image: 'featured-medsam' }, 'biomedparse-mlx': { image: 'featured-prompt' },
   'segresnet-mlx': { image: 'featured-segresnet' }, 'unest-mlx': { image: 'featured-kidney' },
   'swin-unetr-mlx': { loop: 'abdomen-scroll' }, 'synthseg-mlx': { image: 'featured-brain' },
@@ -233,6 +233,17 @@ export const playIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fil
 function pageMedia(distribution, name) {
   const media = modelMedia[distribution];
   if (!media) return '';
+  if (media.spin) {
+    // A turntable: one sheet of rendered angles that the viewer steps through.
+    return html`<figure class="page-media">
+      <div class="page-media-visual spin" data-spin="/assets/hero/${media.spin}.webp" data-frames="${media.frames}"
+        data-columns="${media.columns}" tabindex="0" role="img"
+        aria-label="${name} surfaces from a real segmentation. Drag, or use the arrow keys, to rotate.">
+        <img src="/assets/hero/${media.spin}-poster.webp" alt="" width="960" height="720" decoding="async" draggable="false">
+      </div>
+      <figcaption>Output from ${distribution}. Drag to rotate. <a href="/assets/hero/credits.html">Image credits</a></figcaption>
+    </figure>`;
+  }
   return html`<figure class="page-media">
     ${media.loop ? html`
       <video class="page-media-visual" muted loop playsinline preload="none" width="800" height="520" aria-hidden="true"
