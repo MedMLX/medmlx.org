@@ -5,8 +5,8 @@ export const pythonVersion = '3.13';
 export const macosVersion = '14.0';
 export const platformRequirement = `macOS ${macosVersion} or later on Apple Silicon`;
 export const releases = {
-  medmlx: { version: '0.4.4', repository: 'MedMLX/medmlx' },
-  'mlx-reason-ct': { version: '0.3.6', repository: 'MedMLX/mlx-reason-ct' },
+  medmlx: { version: '0.4.6', repository: 'MedMLX/medmlx' },
+  'mlx-reason-ct': { version: '0.4.0', repository: 'MedMLX/mlx-reason-ct' },
   'fdg-pet-ct-mlx': { version: '0.2.6', repository: 'MedMLX/fdg-pet-ct-mlx' },
   'nnunet-mlx': { version: '0.7.1', repository: 'MedMLX/nnunet-mlx' },
   'mlx-segment-ct': { version: '0.3.5', repository: 'MedMLX/mlx-segment-ct' },
@@ -15,7 +15,7 @@ export const releases = {
   'swin-unetr-mlx': { version: '0.2.6', repository: 'MedMLX/swin-unetr-mlx' },
   'medsam2-mlx': { version: '0.2.8', repository: 'MedMLX/medsam2-mlx' },
   'biomedparse-mlx': { version: '0.1.5', repository: 'MedMLX/biomedparse-mlx' },
-  'totalsegmentator-mlx': { version: '0.1.6', repository: 'MedMLX/totalsegmentator-mlx' },
+  'totalsegmentator-mlx': { version: '0.1.8', repository: 'MedMLX/totalsegmentator-mlx' },
   'synthseg-mlx': { version: '0.3.4', repository: 'MedMLX/synthseg-mlx' },
   'flexray-mlx': { version: '0.2.6', repository: 'MedMLX/flexray-mlx' },
   'flexible-unet-mlx': { version: '0.2.6', repository: 'MedMLX/flexible-unet-mlx' },

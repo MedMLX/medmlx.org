@@ -17,7 +17,7 @@ export function reportCommand(parameters) {
 // Runtimes with a detailed page have published packages and weights.
 // Copy requirements, figures and commands from each package's README and docs.
 const reasonCtWeights = '17.4 GB';
-const reasonCtMemory = '22.7 GB';
+const reasonCtMemory = '13.7 GB';
 
 export const models = [
   {
