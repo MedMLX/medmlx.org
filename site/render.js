@@ -229,7 +229,7 @@ const modelMedia = {
   'flexray-mlx': { image: 'featured-xray' }, 'lung-nodule-mlx': { loop: 'nodule-scroll' },
   'fdg-pet-ct-mlx': { image: 'featured-pet' }, 'mlx-generate-ctmr': { loop: 'generation-grid' },
   'mlx-reason-ct': { loop: 'vision-attention' }, mlxradiomics: { loop: 'radiomics-organs' },
-  'radimagenet-mlx': { loop: 'feature-scroll' }, siam: { image: 'featured-siam' },
+  'radimagenet-mlx': { loop: 'feature-scroll' }, siam: { spin: 'siam-spin', slices: 'siam-slices' },
 };
 export const playIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M4 2l8 5-8 5z"/></svg>`;
 
@@ -245,7 +245,7 @@ function pageMedia({ slug, distribution, name }) {
         data-rate="${mode === 'slices' && media.rate ? media.rate : 1}" tabindex="0" role="img"
         ${hidden ? html`hidden` : ''}
         aria-label="${name} ${mode === 'turn' ? 'surfaces from a real segmentation. Drag, or use the arrow keys, to rotate.'
-          : 'output over its CT, slice by slice. Drag up or down, or use the arrow keys, to move through the slices.'}">
+          : 'output over its scan, slice by slice. Drag up or down, or use the arrow keys, to move through the slices.'}">
         <video muted loop playsinline preload="none" width="960" height="720" disablepictureinpicture
           poster="/assets/hero/${asset}-poster.webp" data-src="/assets/hero/${asset}.mp4"></video>
       </div>`;

@@ -92,9 +92,7 @@ Vision-language card, recorded in `medsam-slice-run.json`; and
 `docs/example-abdomen.png`, flipped vertically because that figure shows
 posterior at the top (the film's `prompt.webp` is flipped the same way, as
 recorded in `sources.json`); and `segresnet-axial.webp`, the axial panel of
-segresnet-mlx v0.3.3 `docs/example.png`; and `siam-cutaway.webp`, the 3D cutaway
-panel of `showcase.png` in the MedMLX/siam weights repository at revision
-0c861ad842f262401928c910725acf5ecb60ed69. `kidney`, `brain`, `xray` and `pet`
+segresnet-mlx v0.3.3 `docs/example.png`. `kidney`, `brain`, `xray` and `pet`
 are the film panels. Figure crops carry the documentation-panel black
 level and saturation. All come from `docs/hero/render_featured.py`; the film
 keeps its own panels.
@@ -109,6 +107,17 @@ Keyframes every 10 frames let the page seek to any angle as the viewer drags.
 Surfaces are clipped at the top of the hip bones and the bottom of each frame
 fades to black. `docs/hero/render_totalseg_spin.py` renders it and writes
 `totalseg-spin-run.json`.
+
+## SIAM views
+
+`siam-spin.mp4` turns the nnunet-mlx `siam()` labels for the OpenNeuro ds000001
+sub-01 T1 through 360 angles 1° apart, at 30 fps: marching-cubes surfaces with
+translucent scalp and skull, and one octant cut from the scalp, skull, cortex,
+white matter and vessels to show the deep nuclei. `siam-slices.mp4` scrolls through
+the same labels over the T1, from the top of the head to just below the cerebellum,
+and back up; broad tissues are filled without outlines. Both come from
+`docs/hero/render_siam_views.py`, which writes `siam-spin-run.json` and
+`siam-slices-run.json`.
 
 ## Slice stacks
 

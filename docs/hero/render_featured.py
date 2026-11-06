@@ -25,9 +25,7 @@ sources.json are applied, as for the other panels.
 `panels` crops the text-prompt panel of the tagged biomedparse-mlx abdomen
 figure, inside its frame, flipped vertically to standard display orientation
 (the figure shows posterior at the top), and the axial panel of the tagged
-segresnet-mlx brain tumor figure, both with the same tone. It also crops the 3D
-cutaway panel of the SIAM figure published with the MedMLX/siam weights, read at
-a pinned Hugging Face revision because the figure is not in a tagged repository.
+segresnet-mlx brain tumor figure, both with the same tone.
 
 `medsam` runs the published medsam2-mlx runner on one LUNA16 CT, prompted with a
 box drawn around the LUNA16 annotation of its 25 mm nodule, and shows the prompt
@@ -64,10 +62,6 @@ PROMPT_CROP = (0.337, 0.2, 0.628, 0.8)
 # The axial panel of the SegResNet brain tumor figure, below its heading.
 SEGRESNET_SOURCE = ('MedMLX/segresnet-mlx', 'v0.3.3', 'docs/example.png')
 SEGRESNET_CROP = (0.008, 0.105, 0.258, 0.89)
-# The 3D cutaway panel of the SIAM showcase figure, left of the coronal slice and
-# above the legend, on the weights repository at a pinned revision.
-SIAM_SOURCE = 'https://huggingface.co/MedMLX/siam/resolve/0c861ad842f262401928c910725acf5ecb60ed69/showcase.png'
-SIAM_CROP = (0.0, 0.0, 0.37, 0.84)
 
 CASE_FILE = 'nifti/nodule_01_25mm.nii.gz'
 SERIES_UID = '1.3.6.1.4.1.14519.5.2.1.6279.6001.511347030803753100045216493273'
@@ -93,11 +87,7 @@ def documentation_tone(rgb):
 def tagged_figure(source, crop):
     """Download a documentation figure at its release tag and crop it by fractions."""
     repository, tag, path = source
-    return figure_crop(f'https://raw.githubusercontent.com/{repository}/{tag}/{path}', crop)
-
-
-def figure_crop(url, crop):
-    """Download a figure from a pinned URL and crop it by fractions."""
+    url = f'https://raw.githubusercontent.com/{repository}/{tag}/{path}'
     with urllib.request.urlopen(url, timeout=60) as response:
         figure = Image.open(BytesIO(response.read())).convert('RGBA')
     flat = Image.new('RGB', figure.size)
@@ -123,7 +113,6 @@ def panels(_args):
     """
     save_panel(np.asarray(tagged_figure(PROMPT_SOURCE, PROMPT_CROP))[::-1], 'biomedparse-panel')
     save_panel(tagged_figure(SEGRESNET_SOURCE, SEGRESNET_CROP), 'segresnet-axial')
-    save_panel(figure_crop(SIAM_SOURCE, SIAM_CROP), 'siam-cutaway')
 
 
 def anatomy(_args):
@@ -206,8 +195,7 @@ def medsam(args):
 # Card image -> source asset. Each card image puts its subject on one 4:3 canvas at
 # one fill, so wide slices and the tall 3D render appear at a consistent size.
 CARDS = {'liver': 'liver', 'anatomy': 'anatomy-torso', 'medsam': 'medsam-slice', 'prompt': 'biomedparse-panel',
-         'segresnet': 'segresnet-axial', 'siam': 'siam-cutaway', 'kidney': 'kidney', 'brain': 'brain',
-         'xray': 'xray', 'pet': 'pet'}
+         'segresnet': 'segresnet-axial', 'kidney': 'kidney', 'brain': 'brain', 'xray': 'xray', 'pet': 'pet'}
 CARD_SIZE = (960, 720)
 CARD_FILL = 0.86
 

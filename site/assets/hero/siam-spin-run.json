@@ -1,0 +1,260 @@
+{
+ "schema_version": 1,
+ "method": "marching-cubes surfaces of a saved nnunet-mlx siam() label map, rendered from 360 camera angles about the vertical axis",
+ "package": "nnunet-mlx",
+ "source": {
+  "dataset": "OpenNeuro ds000001",
+  "case": "sub-01 T1w",
+  "license": "CC0",
+  "note": "defaced"
+ },
+ "runners": [
+  {
+   "outputs": {
+    "mask": "mask.nii.gz"
+   },
+   "details": {
+    "weights_revision": "3a581a2805e5f460a6dcfe65e68a8e3bf5158521",
+    "labels": [
+     {
+      "name": "background",
+      "value": 0
+     },
+     {
+      "name": "GM",
+      "value": 1
+     },
+     {
+      "name": "WM",
+      "value": 2
+     },
+     {
+      "name": "CSF",
+      "value": 3
+     },
+     {
+      "name": "CSFv",
+      "value": 4
+     },
+     {
+      "name": "cerGM",
+      "value": 5
+     },
+     {
+      "name": "Thal",
+      "value": 6
+     },
+     {
+      "name": "Pal",
+      "value": 7
+     },
+     {
+      "name": "Put",
+      "value": 8
+     },
+     {
+      "name": "Caud",
+      "value": 9
+     },
+     {
+      "name": "Accu",
+      "value": 10
+     },
+     {
+      "name": "Amyg",
+      "value": 11
+     },
+     {
+      "name": "Hippo",
+      "value": 12
+     },
+     {
+      "name": "Dura",
+      "value": 13
+     },
+     {
+      "name": "vascular",
+      "value": 14
+     },
+     {
+      "name": "Skull",
+      "value": 15
+     },
+     {
+      "name": "Head",
+      "value": 16
+     },
+     {
+      "name": "Anomalies",
+      "value": 17
+     }
+    ],
+    "output_kind": "label_map",
+    "configuration": "3d_fullres",
+    "source_profile": "siam-0.3",
+    "arithmetic": "native",
+    "folds": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "checkpoints": [
+     {
+      "fold": 0,
+      "checkpoint": "checkpoint_final",
+      "weights_signature": [
+       566023457,
+       1793956540413790893
+      ]
+     },
+     {
+      "fold": 1,
+      "checkpoint": "checkpoint_final",
+      "weights_signature": [
+       566023457,
+       1793956508834497296
+      ]
+     },
+     {
+      "fold": 2,
+      "checkpoint": "checkpoint_final",
+      "weights_signature": [
+       566023457,
+       1793956495721168464
+      ]
+     },
+     {
+      "fold": 3,
+      "checkpoint": "checkpoint_final",
+      "weights_signature": [
+       566023457,
+       1793956537366104759
+      ]
+     },
+     {
+      "fold": 4,
+      "checkpoint": "checkpoint_final",
+      "weights_signature": [
+       566023457,
+       1793956539312865931
+      ]
+     }
+    ],
+    "mirroring_axes": [],
+    "step_fraction": 0.5,
+    "accumulation": "nnunet-fp16",
+    "backend": "metal",
+    "preprocessed_shape": [
+     1,
+     340,
+     340,
+     213
+    ],
+    "metrics": {
+     "preprocessing_s": 6.058768457965925,
+     "tile_inference_s": 38.68505604198435,
+     "restoration_export_s": 0.053062374994624406,
+     "total_wall_s": 44.93721729202662,
+     "tile_count": 40,
+     "padded_shape": [
+      340,
+      340,
+      213
+     ],
+     "patch_size": [
+      256,
+      256,
+      192
+     ],
+     "model_load_s": 0.11925245902966708,
+     "peak_memory_bytes": 16467740130
+    },
+    "package_version": "0.7.1"
+   }
+  }
+ ],
+ "display": {
+  "renderer": "docs/hero/render_siam_views.py spin",
+  "labels_drawn": [
+   "Head",
+   "Skull",
+   "GM",
+   "WM",
+   "cerGM",
+   "CSFv",
+   "Thal",
+   "Pal",
+   "Put",
+   "Caud",
+   "Accu",
+   "Amyg",
+   "Hippo",
+   "vascular"
+  ],
+  "translucent": {
+   "Head": 0.16,
+   "Skull": 0.3
+  },
+  "cut": "left, posterior and superior octant of the brain centre removed from GM, WM, vascular, Skull, Head",
+  "pieces": "connected pieces of more than 30 voxels, 60 for vessels",
+  "detached_voxels_not_drawn": 160,
+  "frames": 360,
+  "step_degrees": 1.0,
+  "start_azimuth_degrees": 228.0,
+  "elevation_degrees": 18.0,
+  "frame_px": [
+   960,
+   720
+  ],
+  "supersample": 2,
+  "bottom_fade": 0.12,
+  "projection": "parallel",
+  "lights": "turn with the camera"
+ },
+ "encode": {
+  "codec": "H.264 (libx264)",
+  "fps": 30,
+  "crf": 18,
+  "keyframe_interval": 10,
+  "frames": 360,
+  "arguments": [
+   "-c:v",
+   "libx264",
+   "-preset",
+   "veryslow",
+   "-crf",
+   "18",
+   "-pix_fmt",
+   "yuv420p",
+   "-g",
+   "10",
+   "-vf",
+   "scale=out_color_matrix=bt709:out_range=tv,setparams=range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709",
+   "-colorspace",
+   "bt709",
+   "-color_primaries",
+   "bt709",
+   "-color_trc",
+   "bt709",
+   "-color_range",
+   "tv",
+   "-movflags",
+   "+faststart",
+   "-an",
+   "-map_metadata",
+   "-1"
+  ],
+  "ffmpeg": "9.0",
+  "bytes": 3638918
+ },
+ "runtime": {
+  "vtk": "9.7.2",
+  "python_version": "3.13.17"
+ },
+ "outputs": {
+  "video": "site/assets/hero/siam-spin.mp4",
+  "poster": "site/assets/hero/siam-spin-poster.webp"
+ }
+}
