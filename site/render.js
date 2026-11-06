@@ -208,10 +208,9 @@ export const tasks = [...new Set(catalog.map(item => item.task))].sort((a, b) =>
   return rank(a) - rank(b) || a.localeCompare(b);
 });
 
-const taskImages = { 'Feature extraction': 'features' };
 const featuredImages = { 'nnU-Net': 'liver', TotalSegmentator: 'anatomy', MedSAM2: 'medsam', BioMedParse: 'prompt' };
 // Task cards that loop a saved model run; each has <name>.mp4, <name>-poster.webp and <name>-run.json.
-const taskLoops = { Segmentation: 'abdomen-scroll', Detection: 'nodule-scroll', Generation: 'generation-grid', 'Vision-language': 'vision-attention', 'Quantitative imaging': 'radiomics-organs' };
+const taskLoops = { Segmentation: 'abdomen-scroll', Detection: 'nodule-scroll', Generation: 'generation-grid', 'Vision-language': 'vision-attention', 'Quantitative imaging': 'radiomics-organs', 'Feature extraction': 'feature-scroll' };
 export const pauseIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 2h3v10H3zm5 0h3v10H8z"/></svg>`;
 export const playIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M4 2l8 5-8 5z"/></svg>`;
 
@@ -225,7 +224,7 @@ function taskCards() {
         ${loop ? html`
           <video class="task-image" muted loop playsinline preload="none" width="800" height="520" aria-hidden="true"
             poster="/assets/hero/${loop}-poster.webp" data-src="/assets/hero/${loop}.mp4"></video>` : html`
-          <img class="task-image" src="/assets/hero/${taskImages[task] || 'total-ct'}.webp" width="640" height="420" alt="" loading="lazy" decoding="async">`}
+          <img class="task-image" src="/assets/hero/total-ct.webp" width="640" height="420" alt="" loading="lazy" decoding="async">`}
         <h3>${task}</h3>
         <span class="task-count">${items.length} ${items.length === 1 ? 'package' : 'packages'}</span>
         <p>${items.slice(0, 3).map(item => item.name).join('\u00a0· ')}</p>

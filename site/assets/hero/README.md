@@ -45,7 +45,7 @@ the video. Routing away disposes the observer, listeners, and media source.
 
 ## Task card loops
 
-Five task cards loop real model output, computed on 2026-10-31 and 2026-11-04. Each has
+Six task cards loop real model output, computed from 2026-10-31 to 2026-11-05. Each has
 `<name>.mp4`, `<name>-poster.webp` (frame 0, shown for reduced motion and data
 saving; the nodule loop starts on its box-center slice), `<name>-run.json` (inputs, runtime, settings and display) and a renderer
 in `docs/hero/`. Raw outputs stay in `dist/<name>-demo/`.
@@ -66,10 +66,14 @@ in `docs/hero/`. Raw outputs stay in `dist/<name>-demo/`.
   by token while each token's decoder attention, averaged over the full-attention layers, is
   shown on an axial slice that follows its peak. The poster is the frame where
   "mass" is written.
+- `feature-scroll`: radimagenet-mlx 0.3.3 ResNet50 features for all 152 axial
+  slices of a LUNA16 subset0 CT, superior to inferior. Each slice shows its
+  7 × 7 spatial map as cells colored by the scan's first three principal
+  components; the panel adds one column per slice for the 96 most variable
+  pooled features, z-scored and ordered by the slice where each peaks.
 
 The cards play these only while visible, pause off-screen or in a hidden tab,
-and each has its own pause button. The Feature extraction card keeps a still
-image.
+and each has its own pause button.
 
 See [credits.html](credits.html) for source-image attribution and terms.
 Media is not covered by the website's Apache-2.0 code license.

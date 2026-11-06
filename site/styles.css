@@ -977,13 +977,13 @@ main:focus { outline: none; }
 
 @media (max-width: 580px) {
   .task-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .task-card { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); column-gap: 16px; padding: 20px; }
-  .task-image { grid-column: 1; grid-row: 1 / 5; align-self: center; height: 132px; margin: 0; }
-  .task-count { grid-column: 2; grid-row: 1; }
-  .task-card h3 { grid-column: 2; grid-row: 2; margin: 4px 0 8px; font-size: 1.25rem; line-height: 1.2; }
-  .task-card p { grid-column: 2; grid-row: 3; margin: 0; font-size: 0.875rem; line-height: 1.45; }
-  .task-link { grid-column: 2; grid-row: 4; display: flex; align-items: center; min-height: 44px; font-size: 0.9375rem; }
-  .task-item .media-toggle { top: 4px; left: 4px; right: auto; }
+  /* Stack the media above the text at full card width: the loops carry legends
+     and labels that are unreadable as a thumbnail. 800:520 is their frame. */
+  .task-card { padding: 20px; }
+  .task-image { height: auto; aspect-ratio: 800 / 520; margin-bottom: 16px; }
+  .task-card h3 { margin: 4px 0 8px; font-size: 1.5rem; line-height: 1.2; }
+  .task-card p { margin-bottom: 4px; font-size: 0.875rem; line-height: 1.45; }
+  .task-link { display: flex; align-items: center; min-height: 44px; font-size: 0.9375rem; }
   .explore-heading { margin-bottom: 24px; }
   .page-head h1 { font-size: clamp(2rem, 9vw, 2.75rem); overflow-wrap: anywhere; }
   .prose { font-size: 1.0625rem; letter-spacing: -0.022em; }

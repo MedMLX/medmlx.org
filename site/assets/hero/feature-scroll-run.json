@@ -1,0 +1,247 @@
+{
+ "schema_version": 1,
+ "method": "radimagenet-mlx ResNet50 pooled and spatial features for every axial slice of one LUNA16 CT, extracted with the published runner",
+ "runtime": {
+  "package": "radimagenet-mlx",
+  "version": "0.3.3",
+  "medmlx_core_version": "0.2.6",
+  "mlx_version": "0.32.4",
+  "python_version": "3.13.17",
+  "macos_version": "27.2",
+  "precision": "float32",
+  "entry_point": "radimagenet_mlx.medmlx.resnet50"
+ },
+ "weights": {
+  "repository": "MedMLX/radimagenet-mlx",
+  "file": "RadImageNet-ResNet50_notop.safetensors",
+  "revision": "e7bbe7e54ed48100a9c0573e34ce684881d32768"
+ },
+ "source": {
+  "dataset": "LUNA16 subset0",
+  "dataset_record": "Zenodo record 3723295",
+  "dataset_license": "CC BY 4.0",
+  "citations": [
+   "Setio et al., Medical Image Analysis 42 (2017) 1-13",
+   "Armato et al., Medical Physics 38(2) (2011) 915-931 (LIDC-IDRI, TCIA)"
+  ],
+  "case_file": "nifti/nodule_02_22mm.nii.gz",
+  "series_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.905371958588660410240398317235",
+  "derivation": "Local read-only copy: LUNA16 MetaImage converted to HU NIfTI. Not copied into this repository.",
+  "shape_ijk": [
+   512,
+   512,
+   152
+  ],
+  "spacing_mm_ijk": [
+   0.78125,
+   0.78125,
+   2.5
+  ]
+ },
+ "inference": {
+  "input": "one 8-bit grayscale PNG per axial slice, superior to inferior: window 40/400 HU, square body crop (rows, cols, side) [38, 30, 453] px; the runner resizes it to 224 x 224 itself",
+  "slices": 152,
+  "details": {
+   "schema_version": 3,
+   "shape": [
+    1,
+    2048
+   ],
+   "dtype": "float32",
+   "weights_revision": "e7bbe7e54ed48100a9c0573e34ce684881d32768",
+   "backbone": "resnet50",
+   "feature_layer": "avg_pool",
+   "spatial_feature_layer": "conv5_block3_out",
+   "spatial_shape": [
+    1,
+    7,
+    7,
+    2048
+   ],
+   "preprocessing": "upstream",
+   "interpolation": "nearest",
+   "backend": "mlx"
+  },
+  "local_artifact": "dist/feature-scroll-demo/features.npz"
+ },
+ "display": {
+  "renderer": "docs/hero/render_feature_scroll.py",
+  "ct_panel": "the PNG passed to the runner, Lanczos-resized to 448 px, with the 7 x 7 conv5_block3_out map drawn as cells screen-blended at 0.62 inside the body, with darkened cell borders",
+  "cell_colors": "first three principal components of all 7448 spatial vectors in the scan as RGB, each scaled by its 2nd-98th percentile",
+  "principal_component_variance_share": [
+   0.154,
+   0.1017,
+   0.0553
+  ],
+  "feature_panel": "96 of 2048 pooled features with the largest variance across slices, z-scored per feature over the scan and clipped to [-0.5, 3.0], rows ordered by the slice where each feature peaks; one column per slice",
+  "feature_indices_top_to_bottom": [
+   1886,
+   362,
+   1923,
+   96,
+   543,
+   1120,
+   749,
+   999,
+   27,
+   185,
+   1225,
+   1648,
+   1270,
+   1226,
+   1969,
+   1726,
+   399,
+   1435,
+   462,
+   1567,
+   1566,
+   1756,
+   1912,
+   750,
+   1090,
+   1774,
+   889,
+   458,
+   123,
+   685,
+   1455,
+   1926,
+   43,
+   953,
+   973,
+   137,
+   1418,
+   214,
+   914,
+   1713,
+   1278,
+   272,
+   1982,
+   498,
+   1953,
+   1992,
+   839,
+   21,
+   401,
+   351,
+   97,
+   977,
+   1373,
+   174,
+   1936,
+   329,
+   1494,
+   590,
+   1812,
+   1957,
+   2032,
+   1712,
+   1543,
+   1020,
+   587,
+   1370,
+   1164,
+   748,
+   871,
+   188,
+   244,
+   1808,
+   179,
+   847,
+   837,
+   497,
+   1959,
+   1592,
+   1484,
+   1218,
+   588,
+   679,
+   579,
+   1351,
+   817,
+   1172,
+   549,
+   459,
+   562,
+   586,
+   733,
+   1072,
+   1637,
+   1013,
+   450,
+   1374
+  ],
+  "color_palette_rgb": [
+   [
+    48,
+    9,
+    20
+   ],
+   [
+    120,
+    24,
+    43
+   ],
+   [
+    195,
+    58,
+    77
+   ],
+   [
+    239,
+    137,
+    143
+   ],
+   [
+    255,
+    233,
+    226
+   ]
+  ],
+  "numerical_smoothing": false,
+  "frame_size_px": [
+   800,
+   520
+  ],
+  "font": "Inter SemiBold 40 px, Inter Regular 30 px (SIL Open Font License)"
+ },
+ "animation": {
+  "fps": 24,
+  "frames_per_slice": 1,
+  "hold_frames": 48,
+  "dissolve_frames": 12,
+  "dissolve": "smoothstep cross-dissolve of rendered RGB frames from the last slice back to the first; the outgoing slice label fades out over the first half and the incoming label fades in over the second"
+ },
+ "encode": {
+  "video": {
+   "codec": "H.264 (libx264)",
+   "preset": "veryslow",
+   "crf": 28,
+   "pix_fmt": "yuv420p",
+   "color": "BT.709, limited range",
+   "fps": 24,
+   "frames": 212,
+   "size_px": [
+    800,
+    520
+   ],
+   "audio": false,
+   "movflags": "+faststart",
+   "ffmpeg": "ffmpeg version 9.0",
+   "bytes": 614313
+  },
+  "poster": {
+   "format": "WebP",
+   "quality": 85,
+   "method": 6,
+   "slice": 101,
+   "bytes": 37716
+  }
+ },
+ "outputs": {
+  "video": "site/assets/hero/feature-scroll.mp4",
+  "poster": "site/assets/hero/feature-scroll-poster.webp"
+ },
+ "interpretation": "Image features from one public, de-identified CT for a software visualization. The features carry no diagnostic labels."
+}
