@@ -214,7 +214,34 @@ const breakable = name => name.split(/(?<=[a-z])(?=[A-Z][a-z])/).flatMap((part, 
 // Task cards that loop a saved model run; each has <name>.mp4, <name>-poster.webp and <name>-run.json.
 const taskLoops = { Segmentation: 'abdomen-scroll', Detection: 'nodule-scroll', Generation: 'generation-grid', 'Vision-language': 'vision-attention', 'Quantitative imaging': 'radiomics-organs', 'Feature extraction': 'feature-scroll' };
 export const pauseIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 2h3v10H3zm5 0h3v10H8z"/></svg>`;
+// Model pages lead with that model's own output: a saved run that loops, or a
+// panel from its documentation figure. Sources are on the credits page. Models
+// without a figure that shows their output have no panel.
+const modelMedia = {
+  'nnunet-mlx': { image: 'featured-liver' }, 'totalsegmentator-mlx': { image: 'featured-anatomy' },
+  'medsam2-mlx': { image: 'featured-medsam' }, 'biomedparse-mlx': { image: 'featured-prompt' },
+  'segresnet-mlx': { image: 'featured-segresnet' }, 'unest-mlx': { image: 'featured-kidney' },
+  'swin-unetr-mlx': { loop: 'abdomen-scroll' }, 'synthseg-mlx': { image: 'featured-brain' },
+  'flexray-mlx': { image: 'featured-xray' }, 'lung-nodule-mlx': { loop: 'nodule-scroll' },
+  'fdg-pet-ct-mlx': { image: 'featured-pet' }, 'mlx-generate-ctmr': { loop: 'generation-grid' },
+  'mlx-reason-ct': { loop: 'vision-attention' }, mlxradiomics: { loop: 'radiomics-organs' },
+  'radimagenet-mlx': { loop: 'feature-scroll' },
+};
 export const playIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M4 2l8 5-8 5z"/></svg>`;
+
+/** Render a model page's output panel, or nothing for a model without one. */
+function pageMedia(distribution, name) {
+  const media = modelMedia[distribution];
+  if (!media) return '';
+  return html`<figure class="page-media">
+    ${media.loop ? html`
+      <video class="page-media-visual" muted loop playsinline preload="none" width="800" height="520" aria-hidden="true"
+        poster="/assets/hero/${media.loop}-poster.webp" data-src="/assets/hero/${media.loop}.mp4"></video>
+      <button class="media-toggle" type="button" data-media-toggle aria-label="Pause ${name} output animation" hidden>${pauseIcon}</button>` : html`
+      <img class="page-media-visual" src="/assets/hero/${media.image}.webp" alt="" width="960" height="720" decoding="async">`}
+    <figcaption>Output from ${distribution}. <a href="/assets/hero/credits.html">Image credits</a></figcaption>
+  </figure>`;
+}
 
 /** Render links to catalog groups with their counts and representative models. */
 function taskCards() {
@@ -474,19 +501,22 @@ function modelPage(model) {
   const { version, repository } = releases[model.distribution];
   const guide = model.slug === 'mlx-reason-ct' ? '/get-started/mlx-reason-ct/' : '/get-started/';
   return html`
-    <section class="container page-head">
+    <section class="container page-head${modelMedia[model.distribution] ? ' with-media' : ''}">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/models/" data-route>Models</a> <span aria-hidden="true">/</span>
         <a href="/models/?task=${encodeURIComponent(model.task)}" data-route>${model.task}</a> <span aria-hidden="true">/</span>
         <span aria-current="page">${model.name}</span>
       </nav>
-      <h1>${model.name}</h1>
-      <p class="lead">${model.summary}</p>
-      <p class="meta">Model card · Version <a href="https://github.com/${repository}/tree/v${version}">${version}</a> · Based on <a href="${model.upstream.url}">${model.upstream.name}</a></p>
-      <div class="actions">
-        <a class="button" href="${guide}" data-route>Get started</a>
-        <a class="button secondary" href="https://github.com/${repository}/tree/v${version}">GitHub repository</a>
+      <div class="page-head-copy">
+        <h1>${model.name}</h1>
+        <p class="lead">${model.summary}</p>
+        <p class="meta">Model card · Version <a href="https://github.com/${repository}/tree/v${version}">${version}</a> · Based on <a href="${model.upstream.url}">${model.upstream.name}</a></p>
+        <div class="actions">
+          <a class="button" href="${guide}" data-route>Get started</a>
+          <a class="button secondary" href="https://github.com/${repository}/tree/v${version}">GitHub repository</a>
+        </div>
       </div>
+      ${pageMedia(model.distribution, model.name)}
     </section>
 
     <div class="container page-body">
@@ -589,7 +619,7 @@ function reasonCtStartedPage() {
         </li>
         <li>
           <h2>Download the weights</h2>
-          <p>The pinned revision is ${model.resourceSizes.weights}. A run peaks at ${model.resourceSizes.peakMemory} of MLX memory, in addition to what preprocessing, macOS and other apps use.</p>
+          <p>The pinned revision is ${model.resourceSizes.weights}. A run peaks at ${model.resourceSizes.peakMemory} of MLX memory, plus what preprocessing uses.</p>
           ${terminal('download-command', 'Download', model.commands.download)}
         </li>
         <li>
@@ -877,19 +907,22 @@ function notFoundPage() {
 function runtimePage(item) {
   const related = catalog.filter(other => other.task === item.task && other !== item);
   return html`
-    <section class="container page-head">
+    <section class="container page-head${modelMedia[item.distribution] ? ' with-media' : ''}">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/models/" data-route>Models</a> <span aria-hidden="true">/</span>
         <a href="/models/?task=${encodeURIComponent(item.task)}" data-route>${item.task}</a> <span aria-hidden="true">/</span>
         <span aria-current="page">${item.name}</span>
       </nav>
-      <h1>${item.name}</h1>
-      <p class="lead">${item.description}</p>
-      <p class="meta">Version <a href="${item.source}">${item.version}</a> · Apple Silicon</p>
-      <div class="actions">
-        <a class="button" href="/get-started/" data-route>Get started</a>
-        <a class="button secondary" href="${item.source}">GitHub repository</a>
+      <div class="page-head-copy">
+        <h1>${item.name}</h1>
+        <p class="lead">${item.description}</p>
+        <p class="meta">Version <a href="${item.source}">${item.version}</a> · Apple Silicon</p>
+        <div class="actions">
+          <a class="button" href="/get-started/" data-route>Get started</a>
+          <a class="button secondary" href="${item.source}">GitHub repository</a>
+        </div>
       </div>
+      ${pageMedia(item.distribution, item.name)}
     </section>
 
     <div class="container page-body">

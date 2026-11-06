@@ -554,6 +554,18 @@ main:focus { outline: none; }
 .page-head .lead { max-width: 32em; color: var(--secondary); font-size: clamp(1.3125rem, 1.1rem + 0.6vw, 1.75rem); line-height: 1.29; letter-spacing: 0.007em; }
 .page-body { padding-bottom: 140px; }
 
+/* Model pages: the model's own output beside the title, the same tile as the homepage. */
+.page-head.with-media { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr); gap: 0 56px; align-items: center; padding-block: 96px 64px; }
+.page-head.with-media .breadcrumb { grid-column: 1 / -1; }
+.page-head.with-media h1 { font-size: clamp(2.75rem, 1.6rem + 3vw, 4.5rem); }
+.page-media { position: relative; margin: 0; padding: 28px 28px 20px; border-radius: var(--radius-tile); background: var(--tile); }
+.page-media-visual { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; mix-blend-mode: lighten; }
+video.page-media-visual { aspect-ratio: 800 / 520; }
+.page-media figcaption { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.3em; min-height: 44px; margin-top: 6px; padding-right: 56px; color: var(--muted); font-size: 0.8125rem; }
+/* On model pages the pause button sits in the caption row, clear of every loop's labels. */
+.page-media .media-toggle { top: auto; right: 16px; bottom: 16px; }
+.page-media figcaption a { color: var(--secondary); }
+
 .breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 24px; color: var(--muted); font-size: 0.875rem; }
 .breadcrumb a { color: var(--secondary); }
 
@@ -813,6 +825,11 @@ main:focus { outline: none; }
   .section { padding-block: 96px; }
   .statement-section { padding-block: 104px 96px; }
   .tile { padding: 40px 28px; }
+
+  /* One column: the output panel follows the breadcrumb, ahead of the title. */
+  .page-head.with-media { grid-template-columns: minmax(0, 1fr); padding-block: 40px 40px; }
+  .page-media { order: 1; margin-bottom: 36px; padding: 20px 20px 16px; }
+  .page-head-copy { order: 2; }
 }
 
 @media (max-width: 720px) {

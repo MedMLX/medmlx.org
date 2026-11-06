@@ -53,11 +53,11 @@ function filterCatalog({ updateQuery = false } = {}) {
 // Routing
 
 /**
- * Play task-card loops only while they are on screen. Reduced motion and data
+ * Play task-card and model-page loops only while they are on screen. Reduced motion and data
  * saving keep the poster, and each loop has its own pause button.
  */
 function setupTaskLoops() {
-  const items = [...document.querySelectorAll('.task-item')].filter(item => item.querySelector('video'));
+  const items = [...document.querySelectorAll('.task-item, .page-media')].filter(item => item.querySelector('video'));
   if (!items.length) return () => {};
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const visible = new Set();
@@ -97,7 +97,7 @@ function setupTaskLoops() {
     }
   };
   const onClick = event => {
-    const item = event.target.closest('[data-media-toggle]')?.closest('.task-item');
+    const item = event.target.closest('[data-media-toggle]')?.closest('.task-item, .page-media');
     if (!item) return;
     if (paused.has(item)) paused.delete(item);
     else paused.add(item);

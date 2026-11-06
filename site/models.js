@@ -40,7 +40,7 @@ export const models = [
     requirements: [
       ['Platform', platformRequirement],
       ['Download', `${reasonCtWeights} for the model files`],
-      ['Memory', `About ${reasonCtMemory} used by the model, plus extra for preparing the scan, macOS and other apps`],
+      ['Memory', `About ${reasonCtMemory} used by the model, plus extra for preparing the scan`],
       ['Input', 'One 3D chest or abdomen CT scan saved as a NIfTI file'],
       ['License', 'Software: Apache-2.0. NVIDIA model: OpenMDW-1.1. Other notices are in the repository.'],
     ],

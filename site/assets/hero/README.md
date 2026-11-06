@@ -79,7 +79,8 @@ and each has its own pause button.
 
 ## Featured model images
 
-The four featured model cards use `featured-<card>.webp`: each subject centered
+The featured model cards and the model pages use `featured-<card>.webp`
+(model pages without one show a task loop or no panel): each subject centered
 on one black 960 × 720 canvas at 86% fill, so wide slices and the tall 3D render
 appear at a consistent size. Their sources are `liver.webp`;
 `anatomy-torso.webp`, the torso of the 3D surface panel of totalsegmentator-mlx
@@ -88,7 +89,11 @@ stops there and its lowest 20% fades to black); `medsam-slice.webp`, a
 medsam2-mlx 0.2.8 box-prompted mask on the LUNA16 CT used by the
 Vision-language card, recorded in `medsam-slice-run.json`; and
 `biomedparse-panel.webp`, the text-prompt panel of biomedparse-mlx v0.1.5
-`docs/example-abdomen.png`. Figure crops carry the documentation-panel black
+`docs/example-abdomen.png`, flipped vertically because that figure shows
+posterior at the top (the film's `prompt.webp` is flipped the same way, as
+recorded in `sources.json`); and `segresnet-axial.webp`, the axial panel of
+segresnet-mlx v0.3.3 `docs/example.png`. `kidney`, `brain`, `xray` and `pet`
+are the film panels. Figure crops carry the documentation-panel black
 level and saturation. All come from `docs/hero/render_featured.py`; the film
 keeps its own panels.
 

@@ -12,7 +12,7 @@
 
 Run from the repository root:
     uv run docs/hero/render_featured.py anatomy
-    uv run docs/hero/render_featured.py prompt
+    uv run docs/hero/render_featured.py panels
     uv run docs/hero/render_featured.py medsam --dataset <LUNA16 folder>
     uv run docs/hero/render_featured.py cards
 
@@ -22,14 +22,17 @@ on its right and lower edges, so the crop stops above the hips and the lowest
 20% fades to black. The documentation-panel black level and saturation from
 sources.json are applied, as for the other panels.
 
-`prompt` crops the text-prompt panel of the tagged biomedparse-mlx abdomen
-figure, inside its frame, with the same tone.
+`panels` crops the text-prompt panel of the tagged biomedparse-mlx abdomen
+figure, inside its frame, flipped vertically to standard display orientation
+(the figure shows posterior at the top), and the axial panel of the tagged
+segresnet-mlx brain tumor figure, both with the same tone.
 
 `medsam` runs the published medsam2-mlx runner on one LUNA16 CT, prompted with a
 box drawn around the LUNA16 annotation of its 25 mm nodule, and shows the prompt
 slice with the predicted mask and the box. The mask is never edited or smoothed.
 
-`cards` writes the four featured-*.webp card images on one canvas and scale.
+`cards` writes the featured-*.webp images, used by the homepage featured cards and the
+model pages, on one canvas and scale.
 """
 
 import argparse
@@ -56,6 +59,9 @@ ANATOMY_FADE = 0.2
 # The middle "Four text prompts" panel of the BioMedParse figure, inside its frame.
 PROMPT_SOURCE = ('MedMLX/biomedparse-mlx', 'v0.1.5', 'docs/example-abdomen.png')
 PROMPT_CROP = (0.337, 0.2, 0.628, 0.8)
+# The axial panel of the SegResNet brain tumor figure, below its heading.
+SEGRESNET_SOURCE = ('MedMLX/segresnet-mlx', 'v0.3.3', 'docs/example.png')
+SEGRESNET_CROP = (0.008, 0.105, 0.258, 0.89)
 
 CASE_FILE = 'nifti/nodule_01_25mm.nii.gz'
 SERIES_UID = '1.3.6.1.4.1.14519.5.2.1.6279.6001.511347030803753100045216493273'
@@ -92,11 +98,21 @@ def tagged_figure(source, crop):
     return flat.crop(box)
 
 
-def prompt(_args):
-    """The BioMedParse text-prompt panel, with the documentation-panel tone."""
-    rgb = documentation_tone(np.asarray(tagged_figure(PROMPT_SOURCE, PROMPT_CROP), dtype=np.float64))
+def save_panel(panel, name):
+    rgb = documentation_tone(np.asarray(panel, dtype=np.float64))
     Image.fromarray(np.uint8(np.clip(np.round(rgb), 0, 255))).save(
-        ASSETS / 'biomedparse-panel.webp', quality=88, method=6)
+        ASSETS / f'{name}.webp', quality=88, method=6)
+
+
+def panels(_args):
+    """Model-page panels cropped from tagged figures, with the documentation-panel tone.
+
+    The BioMedParse figure shows the slice with posterior at the top (spine up,
+    kidneys behind it). A vertical flip gives the standard display, anterior at the
+    top, and keeps patient right on image left.
+    """
+    save_panel(np.asarray(tagged_figure(PROMPT_SOURCE, PROMPT_CROP))[::-1], 'biomedparse-panel')
+    save_panel(tagged_figure(SEGRESNET_SOURCE, SEGRESNET_CROP), 'segresnet-axial')
 
 
 def anatomy(_args):
@@ -178,7 +194,8 @@ def medsam(args):
 
 # Card image -> source asset. Each card image puts its subject on one 4:3 canvas at
 # one fill, so wide slices and the tall 3D render appear at a consistent size.
-CARDS = {'liver': 'liver', 'anatomy': 'anatomy-torso', 'medsam': 'medsam-slice', 'prompt': 'biomedparse-panel'}
+CARDS = {'liver': 'liver', 'anatomy': 'anatomy-torso', 'medsam': 'medsam-slice', 'prompt': 'biomedparse-panel',
+         'segresnet': 'segresnet-axial', 'kidney': 'kidney', 'brain': 'brain', 'xray': 'xray', 'pet': 'pet'}
 CARD_SIZE = (960, 720)
 CARD_FILL = 0.86
 
@@ -210,10 +227,10 @@ def cards(_args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
-    parser.add_argument('stage', choices=['anatomy', 'prompt', 'medsam', 'cards'])
+    parser.add_argument('stage', choices=['anatomy', 'panels', 'medsam', 'cards'])
     parser.add_argument('--dataset', type=Path, default=Path.home() / 'Documents/datasets/LUNA16')
     args = parser.parse_args()
-    {'anatomy': anatomy, 'prompt': prompt, 'medsam': medsam, 'cards': cards}[args.stage](args)
+    {'anatomy': anatomy, 'panels': panels, 'medsam': medsam, 'cards': cards}[args.stage](args)
 
 
 if __name__ == '__main__':

@@ -106,7 +106,9 @@
         0.2,
         0.64,
         0.83
-      ]
+      ],
+      "flip_vertical": true,
+      "flip_reason": "the figure shows posterior at the top; flipped to standard display, anterior at the top"
     },
     {
       "name": "xray",
