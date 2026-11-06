@@ -208,7 +208,9 @@ export const tasks = [...new Set(catalog.map(item => item.task))].sort((a, b) =>
   return rank(a) - rank(b) || a.localeCompare(b);
 });
 
-const featuredImages = { 'nnU-Net': 'liver', TotalSegmentator: 'anatomy', MedSAM2: 'medsam', BioMedParse: 'prompt' };
+const featuredImages = { 'nnU-Net': 'featured-liver', TotalSegmentator: 'featured-anatomy', MedSAM2: 'featured-medsam', BioMedParse: 'featured-prompt' };
+/** Let a camel-case name wrap between its words (Total|Segmentator) rather than overflow. */
+const breakable = name => name.split(/(?<=[a-z])(?=[A-Z][a-z])/).flatMap((part, i) => (i ? [html`<wbr>`, part] : [part]));
 // Task cards that loop a saved model run; each has <name>.mp4, <name>-poster.webp and <name>-run.json.
 const taskLoops = { Segmentation: 'abdomen-scroll', Detection: 'nodule-scroll', Generation: 'generation-grid', 'Vision-language': 'vision-attention', 'Quantitative imaging': 'radiomics-organs', 'Feature extraction': 'feature-scroll' };
 export const pauseIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 2h3v10H3zm5 0h3v10H8z"/></svg>`;
@@ -311,7 +313,7 @@ function homePage() {
               <a class="featured-image" href="${item.href}" ${item.internal ? html`data-route` : ''} tabindex="-1" aria-hidden="true">
                 <img src="/assets/hero/${featuredImages[item.name]}.webp" width="480" height="360" alt="" loading="lazy" decoding="async">
               </a>
-              <h3><a href="${item.href}" ${item.internal ? html`data-route` : ''}>${item.name}</a></h3>
+              <h3><a href="${item.href}" ${item.internal ? html`data-route` : ''}>${breakable(item.name)}</a></h3>
               <p>${item.description}</p>
             </li>`)}
         </ul>

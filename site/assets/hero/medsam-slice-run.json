@@ -1,0 +1,130 @@
+{
+ "schema_version": 1,
+ "method": "medsam2-mlx 0.2.8 box prompt on one LUNA16 CT, propagated through the volume",
+ "runtime": {
+  "package": "medsam2-mlx",
+  "version": "0.2.8",
+  "medmlx_core_version": "0.2.6",
+  "mlx_version": "0.32.4",
+  "python_version": "3.13.17",
+  "macos_version": "27.2",
+  "entry_point": "medsam2_mlx.medmlx.run"
+ },
+ "weights": {
+  "repository": "MedMLX/medsam2-ct-lesion-mlx",
+  "revision": "cbba870969a07ef0692f72fc2a419254585cdc6a"
+ },
+ "source": {
+  "dataset": "LUNA16 subset0",
+  "dataset_record": "Zenodo record 3723295",
+  "dataset_license": "CC BY 4.0",
+  "case_file": "nifti/nodule_01_25mm.nii.gz",
+  "series_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.511347030803753100045216493273",
+  "reference_nodule": {
+   "world_lps_mm": [
+    60.77506053,
+    74.1239696,
+    -214.7823466
+   ],
+   "diameter_mm": 25.23320204,
+   "source": "LUNA16 annotations.csv consensus nodule"
+  }
+ },
+ "prompt": {
+  "box_xyxy": [
+   324,
+   362,
+   367,
+   405
+  ],
+  "frame_idx": 67,
+  "rule": "square box of 1.2 x the annotated diameter centered on the annotation, on the slice nearest its center"
+ },
+ "inference": {
+  "weights_revision": "cbba870969a07ef0692f72fc2a419254585cdc6a",
+  "num_frames": 147,
+  "height": 512,
+  "width": 512,
+  "mask_voxels": 7271,
+  "frames_with_mask": [
+   62,
+   63,
+   64,
+   65,
+   66,
+   67,
+   68,
+   69,
+   70,
+   71,
+   72
+  ],
+  "object_ids": [
+   1
+  ],
+  "prompts": [
+   {
+    "frame_idx": 67,
+    "obj_id": 1,
+    "prompt_mode": "box",
+    "box_xyxy": [
+     324.0,
+     362.0,
+     367.0,
+     405.0
+    ],
+    "points_xy": [],
+    "point_labels": [],
+    "mask_supplied": false,
+    "clear_old_points": true,
+    "normalize_coords": true
+   }
+  ],
+  "mask_path": null,
+  "hu_window": [
+   -1350.0,
+   150.0
+  ],
+  "propagation": "both",
+  "slice_range": null,
+  "postprocessing_applied": true,
+  "coordinate_space": "image_voxel",
+  "output_shape": [
+   512,
+   512,
+   147
+  ],
+  "output_dtype": "uint16",
+  "output_units": "label_index",
+  "backend": "mlx"
+ },
+ "display": {
+  "renderer": "docs/hero/render_featured.py",
+  "slice": 67,
+  "ct_window_hu": [
+   -160.0,
+   240.0
+  ],
+  "mask_rgb": [
+   240,
+   206,
+   120
+  ],
+  "mask_opacity": 0.7,
+  "box_rgb": [
+   86,
+   196,
+   214
+  ],
+  "body_mask": "largest CT > -500 HU component, holes filled; black outside",
+  "crop_xyxy_px": [
+   17,
+   91,
+   490,
+   465
+  ],
+  "resampling": "Lanczos x2",
+  "orientation": "radiological: patient right on image left, anterior at top"
+ },
+ "interpretation": "One prompted segmentation of one public, de-identified CT for a software visualization. Not reviewed and not a clinical result."
+}

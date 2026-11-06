@@ -60,20 +60,37 @@ in `docs/hero/`. Raw outputs stay in `dist/<name>-demo/`.
   one shared color range. The liver map is identical to the dev5 one.
 - `generation-grid`: mlx-generate-ctmr 0.5.2.post2 volumes generated from
   noise, three paired CTs and three MR-Brain contrasts, scrolled together. CT
-  seeds and each tile's slice range were chosen by visual review.
+  seeds and each tile's slice range were chosen by visual review; ranges stop
+  where a section shrinks inside its fixed tile crop. Tiles share one width.
 - `vision-attention`: mlx-reason-ct 0.3.6 writes a structured report for a
   LUNA16 subset0 CT with a 25 mm nodule; the lung-findings excerpt streams token
   by token while each token's decoder attention, averaged over the full-attention layers, is
   shown on an axial slice that follows its peak. The poster is the frame where
   "mass" is written.
-- `feature-scroll`: radimagenet-mlx 0.3.3 ResNet50 features for all 152 axial
-  slices of a LUNA16 subset0 CT, superior to inferior. Each slice shows its
+- `feature-scroll`: radimagenet-mlx 0.3.3 ResNet50 features for 150 axial
+  slices of a LUNA16 subset0 CT, superior to inferior (the top 2 slices, at the
+  shoulder joints, are left out). Each slice shows its
   7 × 7 spatial map as cells colored by the scan's first three principal
   components; the panel adds one column per slice for the 96 most variable
   pooled features, z-scored and ordered by the slice where each peaks.
 
 The cards play these only while visible, pause off-screen or in a hidden tab,
 and each has its own pause button.
+
+## Featured model images
+
+The four featured model cards use `featured-<card>.webp`: each subject centered
+on one black 960 × 720 canvas at 86% fill, so wide slices and the tall 3D render
+appear at a consistent size. Their sources are `liver.webp`;
+`anatomy-torso.webp`, the torso of the 3D surface panel of totalsegmentator-mlx
+v0.1.6 `docs/example.png` (the render is clipped flat at the hips, so the crop
+stops there and its lowest 20% fades to black); `medsam-slice.webp`, a
+medsam2-mlx 0.2.8 box-prompted mask on the LUNA16 CT used by the
+Vision-language card, recorded in `medsam-slice-run.json`; and
+`biomedparse-panel.webp`, the text-prompt panel of biomedparse-mlx v0.1.5
+`docs/example-abdomen.png`. Figure crops carry the documentation-panel black
+level and saturation. All come from `docs/hero/render_featured.py`; the film
+keeps its own panels.
 
 See [credits.html](credits.html) for source-image attribution and terms.
 Media is not covered by the website's Apache-2.0 code license.

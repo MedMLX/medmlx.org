@@ -22,7 +22,7 @@ to the published `radimagenet_mlx.medmlx.resnet50` runner. The runner's pooled
 
 `render` performs display transforms only. The left panel shows the slice the
 model read with its 7 x 7 spatial map drawn as cells, colored by the first
-three principal components of all spatial vectors in the scan. The right panel
+three principal components of all spatial vectors in the shown slices. The right panel
 grows one column per slice: the 96 pooled features with the largest variance
 across slices, z-scored per feature and ordered by the slice where each one
 peaks. Feature values are never smoothed, interpolated between slices or
@@ -64,6 +64,9 @@ EMPTY_RGB = (22, 22, 24)
 TEXT_RGB, MUTED_RGB = (236, 236, 240), (161, 161, 166)
 FPS, FRAMES_PER_SLICE, HOLD, DISSOLVE = 24, 1, 48, 12
 POSTER_SLICE = 100
+# Stored slices run superior to inferior, the order the card scrolls. The first 2
+# (the top of the scan, at the shoulder joints) are left out.
+FIRST_SHOWN = 2
 CRF = 28
 MAX_VIDEO_BYTES = 700_000
 # BT.709 matrix for the RGB conversion, and BT.709 tags on every encoded frame.
@@ -181,9 +184,10 @@ def render(args):
     data = np.load(RUN_DIR / 'features.npz')
     extracted = json.loads((RUN_DIR / 'extract.json').read_text())
     pooled, spatial = data['pooled'], data['spatial']
-    count = len(pooled)
-    if spatial.shape != (count, 7, 7, 2048) or pooled.shape != (count, 2048):
+    if spatial.shape != (len(pooled), 7, 7, 2048) or pooled.shape != (len(pooled), 2048):
         raise ValueError('Expected ResNet50 pooled and 7 x 7 spatial features for every slice')
+    kept = np.arange(FIRST_SHOWN, len(pooled))
+    pooled, spatial, count = pooled[kept], spatial[kept], len(kept)
     cells, explained = principal_colors(spatial)
     z, chosen = feature_columns(pooled)
     heat = ramp(np.clip((z.T - Z_RANGE[0]) / (Z_RANGE[1] - Z_RANGE[0]), 0, 1))
@@ -204,7 +208,7 @@ def render(args):
 
     def frame(n, label=True):
         canvas = Image.new('RGB', SIZE, 'black')
-        gray = np.asarray(Image.open(RUN_DIR / 'slices' / f'{n:03d}.png'), dtype=np.float64)
+        gray = np.asarray(Image.open(RUN_DIR / 'slices' / f'{kept[n]:03d}.png'), dtype=np.float64)
         side = gray.shape[0]
         # Each 7 x 7 cell covers the same 1/7 of the PNG that it covers of the
         # runner's nearest-neighbour 224 x 224 input.
@@ -309,11 +313,15 @@ def render(args):
                      f'window {WINDOW["center"]}/{WINDOW["width"]} HU, square body crop '
                      f'(rows, cols, side) {extracted["crop_rows_cols_side"]} px; the runner '
                      'resizes it to 224 x 224 itself',
-            'slices': count, 'details': extracted['details'],
+            'slices': extracted['slices'], 'details': extracted['details'],
             'local_artifact': 'dist/feature-scroll-demo/features.npz',
         },
         'display': {
             'renderer': 'docs/hero/render_feature_scroll.py',
+            'slices_shown': f'{count} of {extracted["slices"]}, superior to inferior; the '
+                            f'{FIRST_SHOWN} most superior slices (shoulder joints) are not '
+                            'shown, and principal components and '
+                            'feature statistics use the shown slices only',
             'ct_panel': 'the PNG passed to the runner, Lanczos-resized to '
                         f'{CT_SIDE} px, with the 7 x 7 conv5_block3_out map drawn as cells '
                         f'screen-blended at {CELL_OPACITY} inside the body, with darkened cell borders',

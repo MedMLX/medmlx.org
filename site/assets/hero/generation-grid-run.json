@@ -16,9 +16,9 @@
   {
    "box_px": [
     0,
-    26,
-    307,
-    193
+    29,
+    259,
+    175
    ],
    "title": "CT, abdomen",
    "kwargs": {
@@ -1081,7 +1081,7 @@
    },
    "displayed_slice_px": [
     145,
-    230
+    214
    ],
    "spacing_mm_ras": [
     1.5,
@@ -1093,17 +1093,17 @@
     240.0
    ],
    "shown_slices": [
-    60,
+    80,
     196
    ],
    "local_artifact": "dist/generation-grid-demo/ct-abdomen/seed-3/out/stages/ct_qc/attempt-1/synthetic_ct.nii.gz"
   },
   {
    "box_px": [
-    311,
-    26,
-    240,
-    193
+    271,
+    13,
+    258,
+    208
    ],
    "title": "CT, hepatic tumor",
    "kwargs": {
@@ -2292,7 +2292,7 @@
     }
    },
    "displayed_slice_px": [
-    207,
+    206,
     256
    ],
    "spacing_mm_ras": [
@@ -2305,17 +2305,17 @@
     240.0
    ],
    "shown_slices": [
-    0,
-    236
+    10,
+    190
    ],
    "local_artifact": "dist/generation-grid-demo/ct-hepatic-tumor/seed-3/out/stages/ct_qc/attempt-1/synthetic_ct.nii.gz"
   },
   {
    "box_px": [
-    555,
-    26,
-    245,
-    193
+    541,
+    15,
+    259,
+    204
    ],
    "title": "CT, lung tumor",
    "kwargs": {
@@ -3548,15 +3548,15 @@
    ],
    "shown_slices": [
     40,
-    200
+    170
    ],
    "local_artifact": "dist/generation-grid-demo/ct-lung-tumor/seed-1/out/stages/ct_qc/attempt-1/synthetic_ct.nii.gz"
   },
   {
    "box_px": [
     0,
-    223,
-    261,
+    235,
+    259,
     271
    ],
    "title": "MR-Brain, T1",
@@ -3633,7 +3633,7 @@
    },
    "displayed_slice_px": [
     220,
-    212
+    210
    ],
    "spacing_mm_ras": [
     0.94,
@@ -3645,17 +3645,17 @@
     991.0
    ],
    "shown_slices": [
-    25,
-    110
+    40,
+    92
    ],
    "local_artifact": "dist/generation-grid-demo/mr-brain-t1/seed-0/out/synthetic_mr_brain.nii.gz"
   },
   {
    "box_px": [
-    265,
-    223,
-    276,
-    271
+    271,
+    244,
+    258,
+    252
    ],
    "title": "MR-Brain, T2",
    "kwargs": {
@@ -3730,8 +3730,8 @@
     "weights_revision": "315f0f62655e0ef5a010a80a04a9ce6482bd9af5"
    },
    "displayed_slice_px": [
-    228,
-    232
+    220,
+    226
    ],
    "spacing_mm_ras": [
     0.94,
@@ -3743,17 +3743,17 @@
     924.0
    ],
    "shown_slices": [
-    25,
-    110
+    40,
+    92
    ],
    "local_artifact": "dist/generation-grid-demo/mr-brain-t2/seed-0/out/synthetic_mr_brain.nii.gz"
   },
   {
    "box_px": [
-    545,
-    223,
-    255,
-    271
+    541,
+    233,
+    259,
+    274
    ],
    "title": "MR-Brain, FLAIR",
    "kwargs": {
@@ -3841,8 +3841,8 @@
     1010.0
    ],
    "shown_slices": [
-    25,
-    110
+    40,
+    92
    ],
    "local_artifact": "dist/generation-grid-demo/mr-brain-flair/seed-0/out/synthetic_mr_brain.nii.gz"
   }
@@ -3872,8 +3872,8 @@
      "mr-brain-flair"
     ]
    ],
-   "gap_px": 4,
-   "rule": "justified rows: tiles in a row share one height and keep their aspect"
+   "gap_px": 12,
+   "rule": "equal columns: every tile has one width and keeps its aspect, centered in a row as tall as its tallest tile; one gap between tiles and rows"
   }
  },
  "encode": {
@@ -3893,7 +3893,7 @@
    "movflags": "+faststart",
    "ffmpeg": "ffmpeg version 9.0",
    "decoded_frames": 192,
-   "bytes": 1328187
+   "bytes": 1215794
   },
   "poster": {
    "format": "WebP",
@@ -3903,7 +3903,7 @@
     800,
     520
    ],
-   "bytes": 45570
+   "bytes": 47104
   }
  },
  "outputs": {

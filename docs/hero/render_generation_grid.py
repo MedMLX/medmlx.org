@@ -68,14 +68,15 @@ TILES = [
 CHOSEN_SEEDS = {'ct-abdomen': 3, 'ct-hepatic-tumor': 3, 'ct-lung-tumor': 1}
 # Axial slices shown per tile (RAS z, inclusive), chosen by visual review: each
 # range drops the volume ends where generated anatomy degrades (truncated pelvis
-# and lung base, garbled neck, MR skull base and vertex).
-SLICE_RANGE = {'ct-abdomen': (60, 196), 'ct-hepatic-tumor': (0, 236), 'ct-lung-tumor': (40, 200),
-               'mr-brain-t1': (25, 110), 'mr-brain-t2': (25, 110), 'mr-brain-flair': (25, 110)}
+# and lung base, garbled neck, MR skull base) and the levels where the section
+# shrinks inside its fixed tile crop (low pelvis, shoulders, MR vertex).
+SLICE_RANGE = {'ct-abdomen': (80, 196), 'ct-hepatic-tumor': (10, 190), 'ct-lung-tumor': (40, 170),
+               'mr-brain-t1': (40, 92), 'mr-brain-t2': (40, 92), 'mr-brain-flair': (40, 92)}
 # Tiles shown, one list per row. Generated tiles left out here stay in the run folder.
 LAYOUT = [['ct-abdomen', 'ct-hepatic-tumor', 'ct-lung-tumor'],
           ['mr-brain-t1', 'mr-brain-t2', 'mr-brain-flair']]
 SIZE = (800, 520)
-GAP = 4
+GAP = 12
 CT_WINDOW = (40, 400)  # level, width in HU
 MR_PERCENTILES = (1.0, 99.5)  # of nonzero voxels, per volume
 FPS = 24
@@ -188,21 +189,25 @@ def aspect(slices, spacing):
 
 
 def tile_boxes(aspects):
-    """Justified rows: each row's tiles share one height and fill the frame width.
+    """Equal columns: every tile has one width, with one gap between tiles and rows.
 
-    Rows are scaled down together, and centered, when they would overflow the
-    frame height, so every tile box has its image's aspect and no inner padding.
+    Each row is as tall as its tallest tile at that width, and shorter tiles are
+    centered in it, so the CT and MR rows line up column by column. Everything is
+    scaled down together, and centered, when the rows would overflow the frame.
     """
-    heights = [(SIZE[0] - GAP * (len(row) - 1)) / sum(row) for row in aspects]
+    columns = max(len(row) for row in aspects)
+    width = (SIZE[0] - GAP * (columns - 1)) / columns
+    heights = [width / min(row) for row in aspects]
     scale = min(1.0, (SIZE[1] - GAP * (len(aspects) - 1)) / sum(heights))
-    heights = [h * scale for h in heights]
+    width, heights = width * scale, [h * scale for h in heights]
     y = (SIZE[1] - sum(heights) - GAP * (len(aspects) - 1)) / 2
     boxes = []
     for row, height in zip(aspects, heights, strict=True):
-        widths = [a * height for a in row]
-        x = (SIZE[0] - sum(widths) - GAP * (len(row) - 1)) / 2
-        for width in widths:
-            boxes.append((round(x), round(y), round(x + width) - round(x), round(y + height) - round(y)))
+        x = (SIZE[0] - width * len(row) - GAP * (len(row) - 1)) / 2
+        for a in row:
+            tile_h = width / a
+            top = y + (height - tile_h) / 2
+            boxes.append((round(x), round(top), round(x + width) - round(x), round(top + tile_h) - round(top)))
             x += width + GAP
         y += height + GAP
     return boxes
@@ -309,7 +314,7 @@ def render(args):
             'crop': 'per tile, bounding box of pixels above display black over the shown slices, padded by 4% of the slice size',
             'resampling': 'Lanczos to physical in-plane aspect, centered on black',
             'layout': {'rows': LAYOUT, 'gap_px': GAP,
-                       'rule': 'justified rows: tiles in a row share one height and keep their aspect'},
+                       'rule': 'equal columns: every tile has one width and keeps its aspect, centered in a row as tall as its tallest tile; one gap between tiles and rows'},
         },
         'encode': {
             'video': {'codec': 'H.264 (libx264)', 'preset': 'veryslow', 'crf': CRF,
