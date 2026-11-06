@@ -924,7 +924,9 @@ main:focus { outline: none; }
 
   .featured-models::-webkit-scrollbar { display: none; }
   .featured-models li { scroll-snap-align: start; }
-  .featured-image { height: 160px; }
+  /* The card images are 4:3; matching that box gives each image the card's full width. */
+  .featured-image { height: auto; aspect-ratio: 4 / 3; }
+  .featured-image img { padding: 16px 16px 4px; }
   .featured-models li { padding-bottom: 24px; }
   .featured-models h3 { margin-inline: 24px; }
   .featured-models p { margin-inline: 24px; line-height: 1.5; }
