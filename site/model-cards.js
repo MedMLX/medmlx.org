@@ -773,7 +773,7 @@ export const modelCards = {
     }
   },
   "lesiondiffusion-mlx": {
-    "version": "0.2.6.post2",
+    "version": "0.2.7",
     "rows": [
       [
         "Input",
@@ -816,16 +816,16 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "A version 0.2.5 test peaked at **18.74 GB** for a 160×160×128 crop at 1 mm resolution, with 200 generation steps.",
+        "text": "Tests peaked at **3.29 GB** with the default settings and **3.46 GB** in source mode, for a 160×160×128 crop at 1 mm resolution with 200 generation steps.",
         "sources": [
-          "**18.74 GB** peak MLX memory for `lesiondiffusion` in source mode on a 160×160×128, 1 mm RAS crop.",
-          "The v0.2.5 memory measurement used the AMOS case 0008 crop and 200 diffusion steps with `inference_mode=\"source\"`: FP32 LMNet and text encoder, FP16 LINet and VQ."
+          "**3.46 GB** peak MLX memory for `lesiondiffusion` in source mode and **3.29 GB** in the default conditioned mode on a 160×160×128, 1 mm RAS crop.",
+          "Both measurements used an AMOS case 0008 crop and 200 diffusion steps: FP32 LMNet and text encoders, FP16 LINet and VQ."
         ]
       },
       {
-        "text": "That test used a different setting from the default. Memory use for the default settings and larger scans has not been measured. Allow extra memory for input preparation and other apps.",
+        "text": "Memory use for larger scans has not been measured. Allow extra memory for input preparation and other apps.",
         "sources": [
-          "It does not measure the default conditioned mode or larger volumes. Peak MLX memory excludes host preprocessing and other applications."
+          "They do not measure larger volumes. Peak MLX memory excludes host preprocessing and other applications."
         ]
       }
     ],
@@ -837,14 +837,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.6.post2/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.7/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.6.post2/LICENSE). See [third-party notices](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.6.post2/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.7/LICENSE). See [third-party notices](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.7/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "med-vlm-mlx": {
-    "version": "0.3.2",
+    "version": "0.3.3",
     "rows": [
       [
         "Input",
@@ -898,7 +898,7 @@ export const modelCards = {
     "terms": {
       "text": "Software: MIT, with Apache-2.0 adaptations. Model use is covered by the [Health AI Developer Foundations terms](https://developers.google.com/health-ai-developer-foundations/terms).",
       "sources": [
-        "MIT, with Apache-2.0 adaptations. See [LICENSE](https://github.com/MedMLX/med-vlm-mlx/blob/v0.3.2/LICENSE) and [third-party notices](https://github.com/MedMLX/med-vlm-mlx/blob/v0.3.2/THIRD_PARTY_NOTICES.md). MedGemma weights are subject to the [Health AI Developer Foundations terms](https://developers.google.com/health-ai-developer-foundations/terms)."
+        "MIT, with Apache-2.0 adaptations. See [LICENSE](https://github.com/MedMLX/med-vlm-mlx/blob/v0.3.3/LICENSE) and [third-party notices](https://github.com/MedMLX/med-vlm-mlx/blob/v0.3.3/THIRD_PARTY_NOTICES.md). MedGemma weights are subject to the [Health AI Developer Foundations terms](https://developers.google.com/health-ai-developer-foundations/terms)."
       ]
     }
   },

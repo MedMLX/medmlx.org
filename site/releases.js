@@ -5,7 +5,7 @@ export const pythonVersion = '3.13';
 export const macosVersion = '14.0';
 export const platformRequirement = `macOS ${macosVersion} or later on Apple Silicon`;
 export const releases = {
-  medmlx: { version: '0.4.2', repository: 'MedMLX/medmlx' },
+  medmlx: { version: '0.4.4', repository: 'MedMLX/medmlx' },
   'mlx-reason-ct': { version: '0.3.6', repository: 'MedMLX/mlx-reason-ct' },
   'fdg-pet-ct-mlx': { version: '0.2.6', repository: 'MedMLX/fdg-pet-ct-mlx' },
   'nnunet-mlx': { version: '0.6.4', repository: 'MedMLX/nnunet-mlx' },
@@ -21,8 +21,8 @@ export const releases = {
   'flexible-unet-mlx': { version: '0.2.6', repository: 'MedMLX/flexible-unet-mlx' },
   'lung-nodule-mlx': { version: '0.2.6', repository: 'MedMLX/lung-nodule-mlx' },
   'mlx-generate-ctmr': { version: '0.5.2.post2', repository: 'MedMLX/mlx-generate-ctmr' },
-  'lesiondiffusion-mlx': { version: '0.2.6.post2', repository: 'MedMLX/lesiondiffusion-mlx' },
-  'med-vlm-mlx': { version: '0.3.2', repository: 'MedMLX/med-vlm-mlx' },
+  'lesiondiffusion-mlx': { version: '0.2.7', repository: 'MedMLX/lesiondiffusion-mlx' },
+  'med-vlm-mlx': { version: '0.3.3', repository: 'MedMLX/med-vlm-mlx' },
   'radimagenet-mlx': { version: '0.3.3', repository: 'MedMLX/radimagenet-mlx' },
   mlxradiomics: { version: '0.1.0.dev10', repository: 'MedMLX/mlx-radiomics' },
 };
