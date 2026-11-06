@@ -1,0 +1,671 @@
+{
+ "schema_version": 1,
+ "method": "totalsegmentator-mlx label map over its source CT, shown as axial slices",
+ "package": "totalsegmentator-mlx",
+ "package_version": "0.1.6",
+ "source": {
+  "dataset": "autoPET-III-Lite",
+  "case": "fdg_0117d7f11f",
+  "license": "CC BY-NC 4.0"
+ },
+ "segmentation": "standard mode, labels on the model's 1.5 mm grid",
+ "runners": [],
+ "display": {
+  "renderer": "docs/hero/render_slice_stacks.py",
+  "ct_window_hu": [
+   -160,
+   240
+  ],
+  "slices": [
+   123,
+   383
+  ],
+  "slice_count": 261,
+  "order": "superior to inferior, then back up",
+  "grid_spacing_mm": [
+   1.5,
+   1.5,
+   1.5
+  ],
+  "crop_rows_cols": [
+   161,
+   364,
+   125,
+   415
+  ],
+  "canvas_px": [
+   960,
+   720
+  ],
+  "slice_px": [
+   883,
+   618
+  ],
+  "fill_opacity": 0.42,
+  "context_fill_opacity": {
+   "lung": 0.16,
+   "bone": 0.28,
+   "muscle": 0.28
+  },
+  "outline_px": 2,
+  "labels_shown": {
+   "spleen": [
+    128,
+    88,
+    206
+   ],
+   "kidney_right": [
+    242,
+    150,
+    36
+   ],
+   "kidney_left": [
+    242,
+    150,
+    36
+   ],
+   "gallbladder": [
+    28,
+    164,
+    138
+   ],
+   "liver": [
+    146,
+    62,
+    46
+   ],
+   "stomach": [
+    214,
+    86,
+    160
+   ],
+   "pancreas": [
+    250,
+    210,
+    60
+   ],
+   "adrenal_gland_right": [
+    184,
+    228,
+    60
+   ],
+   "adrenal_gland_left": [
+    184,
+    228,
+    60
+   ],
+   "lung_upper_lobe_left": [
+    150,
+    196,
+    236
+   ],
+   "lung_lower_lobe_left": [
+    150,
+    196,
+    236
+   ],
+   "lung_upper_lobe_right": [
+    150,
+    196,
+    236
+   ],
+   "lung_middle_lobe_right": [
+    150,
+    196,
+    236
+   ],
+   "lung_lower_lobe_right": [
+    150,
+    196,
+    236
+   ],
+   "esophagus": [
+    240,
+    150,
+    200
+   ],
+   "trachea": [
+    170,
+    216,
+    238
+   ],
+   "thyroid_gland": [
+    222,
+    92,
+    150
+   ],
+   "small_bowel": [
+    150,
+    186,
+    120
+   ],
+   "duodenum": [
+    246,
+    164,
+    200
+   ],
+   "colon": [
+    204,
+    184,
+    72
+   ],
+   "urinary_bladder": [
+    244,
+    226,
+    118
+   ],
+   "sacrum": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_S1": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_L5": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_L4": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_L3": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_L2": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_L1": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T12": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T11": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T10": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T9": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T8": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T7": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T6": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T5": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T4": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T3": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T2": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_T1": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_C7": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_C6": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_C5": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_C4": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_C3": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_C2": [
+    232,
+    218,
+    186
+   ],
+   "vertebrae_C1": [
+    232,
+    218,
+    186
+   ],
+   "heart": [
+    164,
+    36,
+    62
+   ],
+   "aorta": [
+    224,
+    48,
+    52
+   ],
+   "pulmonary_vein": [
+    232,
+    104,
+    150
+   ],
+   "brachiocephalic_trunk": [
+    224,
+    48,
+    52
+   ],
+   "subclavian_artery_right": [
+    224,
+    48,
+    52
+   ],
+   "subclavian_artery_left": [
+    224,
+    48,
+    52
+   ],
+   "common_carotid_artery_right": [
+    224,
+    48,
+    52
+   ],
+   "common_carotid_artery_left": [
+    224,
+    48,
+    52
+   ],
+   "brachiocephalic_vein_left": [
+    48,
+    102,
+    224
+   ],
+   "brachiocephalic_vein_right": [
+    48,
+    102,
+    224
+   ],
+   "atrial_appendage_left": [
+    164,
+    36,
+    62
+   ],
+   "superior_vena_cava": [
+    48,
+    102,
+    224
+   ],
+   "inferior_vena_cava": [
+    48,
+    102,
+    224
+   ],
+   "portal_vein_and_splenic_vein": [
+    56,
+    196,
+    232
+   ],
+   "iliac_artery_left": [
+    224,
+    48,
+    52
+   ],
+   "iliac_artery_right": [
+    224,
+    48,
+    52
+   ],
+   "iliac_vena_left": [
+    48,
+    102,
+    224
+   ],
+   "iliac_vena_right": [
+    48,
+    102,
+    224
+   ],
+   "humerus_left": [
+    232,
+    218,
+    186
+   ],
+   "humerus_right": [
+    232,
+    218,
+    186
+   ],
+   "scapula_left": [
+    232,
+    218,
+    186
+   ],
+   "scapula_right": [
+    232,
+    218,
+    186
+   ],
+   "clavicula_left": [
+    232,
+    218,
+    186
+   ],
+   "clavicula_right": [
+    232,
+    218,
+    186
+   ],
+   "femur_left": [
+    232,
+    218,
+    186
+   ],
+   "femur_right": [
+    232,
+    218,
+    186
+   ],
+   "hip_left": [
+    232,
+    218,
+    186
+   ],
+   "hip_right": [
+    232,
+    218,
+    186
+   ],
+   "spinal_cord": [
+    255,
+    214,
+    48
+   ],
+   "gluteus_maximus_left": [
+    198,
+    130,
+    118
+   ],
+   "gluteus_maximus_right": [
+    198,
+    130,
+    118
+   ],
+   "gluteus_medius_left": [
+    198,
+    130,
+    118
+   ],
+   "gluteus_medius_right": [
+    198,
+    130,
+    118
+   ],
+   "gluteus_minimus_left": [
+    198,
+    130,
+    118
+   ],
+   "gluteus_minimus_right": [
+    198,
+    130,
+    118
+   ],
+   "autochthon_left": [
+    198,
+    130,
+    118
+   ],
+   "autochthon_right": [
+    198,
+    130,
+    118
+   ],
+   "iliopsoas_left": [
+    198,
+    130,
+    118
+   ],
+   "iliopsoas_right": [
+    198,
+    130,
+    118
+   ],
+   "brain": [
+    240,
+    200,
+    196
+   ],
+   "skull": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_1": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_2": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_3": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_4": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_5": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_6": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_7": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_8": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_9": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_10": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_11": [
+    232,
+    218,
+    186
+   ],
+   "rib_left_12": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_1": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_2": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_3": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_4": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_5": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_6": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_7": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_8": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_9": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_10": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_11": [
+    232,
+    218,
+    186
+   ],
+   "rib_right_12": [
+    232,
+    218,
+    186
+   ],
+   "sternum": [
+    232,
+    218,
+    186
+   ],
+   "costal_cartilages": [
+    220,
+    214,
+    198
+   ]
+  },
+  "mask_resampling": "bilinear indicator, thresholded at 0.5; labels not edited",
+  "poster_slice": 318,
+  "orientation": "radiological: patient right on image left, anterior at top"
+ },
+ "encode": {
+  "codec": "H.264 (libx264)",
+  "fps": 24,
+  "crf": 20,
+  "keyframe_interval": 8,
+  "frames": 520,
+  "arguments": [
+   "-c:v",
+   "libx264",
+   "-preset",
+   "veryslow",
+   "-crf",
+   "20",
+   "-pix_fmt",
+   "yuv420p",
+   "-g",
+   "8",
+   "-vf",
+   "scale=out_color_matrix=bt709:out_range=tv,setparams=range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709",
+   "-colorspace",
+   "bt709",
+   "-color_primaries",
+   "bt709",
+   "-color_trc",
+   "bt709",
+   "-color_range",
+   "tv",
+   "-movflags",
+   "+faststart",
+   "-an",
+   "-map_metadata",
+   "-1"
+  ],
+  "ffmpeg": "9.0",
+  "bytes": 7983890
+ },
+ "runtime": {
+  "python_version": "3.13.17",
+  "numpy": "2.5.4"
+ },
+ "outputs": {
+  "video": "site/assets/hero/totalseg-slices.mp4",
+  "poster": "site/assets/hero/totalseg-slices-poster.webp"
+ }
+}

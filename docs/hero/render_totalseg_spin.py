@@ -42,6 +42,7 @@ import imageio_ffmpeg
 import nibabel as nib
 import numpy as np
 import vtk
+from anatomy import lookup
 from PIL import Image
 from scipy.ndimage import gaussian_filter, zoom
 from vtk.util.numpy_support import numpy_to_vtk
@@ -90,43 +91,9 @@ SSAO_RADIUS, SSAO_BIAS, SSAO_KERNEL = 8.0, 2.0, 128  # mm, mm, samples
 LIGHTS = (((-900.0, 1100.0, 1100.0), 2.8), ((1100.0, 800.0, 200.0), 0.45),
           ((500.0, -1100.0, 800.0), 1.2))
 
-BONE, MUSCLE, ARTERY, VEIN, LUNG = (232, 218, 186), (198, 130, 118), (224, 48, 52), (48, 102, 224), (150, 196, 236)
-# One colour per structure; the first matching keyword wins, so specific names come first.
-PALETTE = [
-    (('hepatic vessel', 'portal', 'splenic vein'), (56, 196, 232)),
-    (('pulmonary_vein',), (232, 104, 150)),
-    (('liver',), (146, 62, 46)),
-    (('spleen',), (128, 88, 206)),
-    (('adrenal',), (184, 228, 60)),
-    (('kidney',), (242, 150, 36)),
-    (('gallbladder',), (28, 164, 138)),
-    (('pancrea',), (250, 210, 60)),
-    (('esophag',), (240, 150, 200)),
-    (('stomach',), (214, 86, 160)),
-    (('duodenum',), (246, 164, 200)),
-    (('small_bowel',), (150, 186, 120)),
-    (('colon', 'rectum'), (204, 184, 72)),
-    (('bladder',), (244, 226, 118)),
-    (('prostate',), (150, 120, 224)),
-    (('thyroid',), (222, 92, 150)),
-    (('trachea',), (170, 216, 238)),
-    (('heart', 'atrial', 'ventricle', 'myocard'), (164, 36, 62)),
-    (('aorta', 'artery', 'trunk', 'carotid', 'subclavian'), ARTERY),
-    (('vena', 'vein'), VEIN),
-    (('spinal', 'cord'), (255, 214, 48)),
-    (('brain',), (240, 200, 196)),
-    (('lung',), LUNG),
-    (('gluteus', 'autochthon', 'iliopsoas', 'muscle'), MUSCLE),
-    (('costal', 'cartilage'), (220, 214, 198)),
-    (('vertebra', 'rib', 'sacrum', 'hip', 'femur', 'humerus', 'scapula', 'clavic', 'sternum',
-      'skull', 'spine', 'coccyx'), BONE),
-]
-
-
 def colour(name):
     """Palette colour scaled to the tissue's chroma."""
-    key = name.lower()
-    rgb = next((value for words, value in PALETTE if any(w in key for w in words)), None)
+    rgb = lookup(name)
     if rgb is None:
         raise KeyError(f'No colour for {name}')
     chroma = MATERIALS[tissue(name)][3]
@@ -281,8 +248,8 @@ def main():
     # BT.709 matrix for the RGB conversion, and BT.709 tags on every encoded frame.
     encode = ['-c:v', 'libx264', '-preset', 'veryslow', '-crf', str(CRF), '-pix_fmt', 'yuv420p',
               '-g', str(KEYFRAME_INTERVAL), '-vf',
-              'scale=out_color_matrix=bt709:out_range=tv,'
-              'setparams=range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709',
+              ('scale=out_color_matrix=bt709:out_range=tv,'
+               'setparams=range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709'),
               '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709',
               '-color_range', 'tv', '-movflags', '+faststart', '-an', '-map_metadata', '-1']
     process = subprocess.Popen([ffmpeg, '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24',

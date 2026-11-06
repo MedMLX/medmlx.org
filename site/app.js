@@ -11,7 +11,7 @@ const announcer = document.querySelector('#announcer');
 const copyResets = new WeakMap();
 let disposeHeroFilm = () => {};
 let disposeTaskLoops = () => {};
-let disposeSpins = () => {};
+let disposeScrubs = () => {};
 let renderedLocation = '';
 let announcerReset;
 
@@ -117,6 +117,32 @@ function setupTaskLoops() {
   motion.addEventListener('change', sync);
   document.addEventListener('visibilitychange', sync);
   document.addEventListener('click', onClick);
+  // On model pages a loop is also a scrubber: dragging pauses it and moves through it,
+  // a full-width drag covering the whole loop. Its button resumes playback.
+  let drag = null;
+  const onDown = event => {
+    const item = event.target.closest('.page-media');
+    if (!item || !items.includes(item) || event.target.closest('[data-media-toggle]')) return;
+    const video = item.querySelector('video');
+    if (!video.hasAttribute('src')) video.src = video.dataset.src;
+    paused.add(item);
+    sync();
+    drag = { item, video, x: event.clientX, time: video.currentTime, id: event.pointerId };
+    item.setPointerCapture(event.pointerId);
+  };
+  const onMove = event => {
+    if (!drag || event.pointerId !== drag.id || !drag.video.duration) return;
+    const { duration } = drag.video;
+    const shift = (event.clientX - drag.x) / drag.item.clientWidth * duration;
+    drag.video.currentTime = (((drag.time + shift) % duration) + duration) % duration;
+  };
+  const onUp = event => {
+    if (drag && event.pointerId === drag.id) drag = null;
+  };
+  document.addEventListener('pointerdown', onDown);
+  document.addEventListener('pointermove', onMove);
+  document.addEventListener('pointerup', onUp);
+  document.addEventListener('pointercancel', onUp);
   sync();
   return () => {
     disposed = true;
@@ -124,6 +150,10 @@ function setupTaskLoops() {
     motion.removeEventListener('change', sync);
     document.removeEventListener('visibilitychange', sync);
     document.removeEventListener('click', onClick);
+    document.removeEventListener('pointerdown', onDown);
+    document.removeEventListener('pointermove', onMove);
+    document.removeEventListener('pointerup', onUp);
+    document.removeEventListener('pointercancel', onUp);
     for (const item of items) {
       const video = item.querySelector('video');
       video.pause();
@@ -134,75 +164,124 @@ function setupTaskLoops() {
 }
 
 /**
- * Turntables: a looping video, one degree per frame, that plays while on screen
- * and that dragging or the arrow keys turn frame by frame. Touching it stops the
+ * Interactive model views. A turntable is a looping video, one angle per frame; a
+ * slice stack is a video that runs down the slices and back up. Each plays while on
+ * screen, and dragging or the arrow keys move it frame by frame, which stops the
  * playback. Reduced motion and data saving keep the poster until someone drags.
+ * A view switch shows one view of a figure at a time.
  */
-function setupSpins() {
-  const spins = [...document.querySelectorAll('[data-spin]')];
-  if (!spins.length) return () => {};
+function setupScrubs() {
+  const views = [...document.querySelectorAll('[data-scrub]')];
+  if (!views.length) return () => {};
+  let disposed = false;
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const cleanups = [];
-  for (const spin of spins) {
-    const video = spin.querySelector('video');
-    const frames = Number(spin.dataset.frames);
+  const syncs = new Map();
+  for (const view of views) {
+    const video = view.querySelector('video');
+    const turn = view.dataset.scrub === 'turn';
+    const fps = Number(view.dataset.fps);
     let touched = false;
     let visible = false;
     let drag = null;
+    // The static host ignores range requests, so a streamed video cannot seek beyond
+    // what it has buffered. Each view downloads its video whole and plays it from a
+    // local object URL, where every frame can be sought.
+    let objectUrl = '';
+    let pending = null;
     const load = () => {
-      if (!video.hasAttribute('src')) video.src = video.dataset.src;
+      if (video.hasAttribute('src') || pending) return;
+      pending = fetch(video.dataset.src)
+        .then(response => {
+          if (!response.ok) throw new Error(`${response.status} ${video.dataset.src}`);
+          return response.blob();
+        })
+        .then(blob => {
+          if (disposed) return;
+          objectUrl = URL.createObjectURL(blob);
+          video.src = objectUrl;
+          video.addEventListener('loadedmetadata', sync, { once: true });
+        });
     };
-    const fps = () => frames / (video.duration || frames / 30);
-    const current = () => Math.round(video.currentTime * fps()) % frames;
+    // Distinct frames: every angle, or each slice once (the video also runs back up).
+    const count = () => {
+      const total = Math.round((video.duration || 0) * fps);
+      return turn ? total : (total + 2) / 2;
+    };
+    const current = () => {
+      const total = Math.round((video.duration || 0) * fps);
+      const frame = Math.floor(video.currentTime * fps) % Math.max(total, 1);
+      const n = count();
+      return turn || frame < n ? frame : 2 * (n - 1) - frame;
+    };
     const show = index => {
       load();
-      const frame = ((index % frames) + frames) % frames;
+      const n = count();
+      if (!n || !video.hasAttribute('src')) return;
+      const frame = turn ? ((index % n) + n) % n : Math.min(Math.max(index, 0), n - 1);
       // Seek to the middle of the frame so rounding never lands on its neighbour.
-      if (video.readyState >= 1) video.currentTime = (frame + 0.5) / fps();
+      video.currentTime = (frame + 0.5) / fps;
     };
     const sync = () => {
       const still = motion.matches || navigator.connection?.saveData;
-      if (visible && !touched && !still && !document.hidden) {
+      if (visible && !view.hidden && !touched && !still && !document.hidden) {
         load();
-        video.play().catch(() => {});
+        if (video.hasAttribute('src')) {
+          // The view's default playback speed; dragging is unaffected.
+          video.playbackRate = Number(view.dataset.rate) || 1;
+          video.play().catch(() => {});
+        }
       } else {
         video.pause();
       }
     };
+    syncs.set(view, sync);
     const stop = () => { touched = true; sync(); };
     const down = event => {
       stop();
-      drag = { x: event.clientX, frame: current(), id: event.pointerId };
-      spin.setPointerCapture(event.pointerId);
-      spin.classList.add('dragging');
+      load();
+      drag = { x: event.clientX, y: event.clientY, frame: current(), id: event.pointerId };
+      view.setPointerCapture(event.pointerId);
+      view.classList.add('dragging');
     };
     const move = event => {
-      if (!drag || event.pointerId !== drag.id) return;
-      // Dragging across the whole viewer turns the anatomy about 300 degrees.
-      const perFrame = spin.clientWidth / (frames * 0.83);
-      show(drag.frame - Math.round((event.clientX - drag.x) / perFrame));
+      if (!drag || event.pointerId !== drag.id || !count()) return;
+      if (turn) {
+        // A drag across the whole view turns about 300 degrees.
+        const perFrame = view.clientWidth / (count() * 0.83);
+        show(drag.frame - Math.round((event.clientX - drag.x) / perFrame));
+        return;
+      }
+      // Slices follow the larger movement: down moves inferior, as in a scan viewer.
+      // One and a half view heights cross every slice.
+      const dx = event.clientX - drag.x;
+      const dy = event.clientY - drag.y;
+      const perFrame = Math.max(view.clientHeight * 1.5 / count(), 1.5);
+      show(drag.frame + Math.round((Math.abs(dy) >= Math.abs(dx) ? dy : dx) / perFrame));
     };
     const up = event => {
       if (drag && event.pointerId === drag.id) drag = null;
-      spin.classList.remove('dragging');
+      view.classList.remove('dragging');
     };
     const key = event => {
-      const step = event.key === 'ArrowLeft' ? 3 : event.key === 'ArrowRight' ? -3 : 0;
+      const forward = turn ? ['ArrowLeft'] : ['ArrowRight', 'ArrowDown'];
+      const back = turn ? ['ArrowRight'] : ['ArrowLeft', 'ArrowUp'];
+      const step = forward.includes(event.key) ? 1 : back.includes(event.key) ? -1 : 0;
       if (!step) return;
       event.preventDefault();
       stop();
-      show(current() + step);
+      show(current() + step * (turn ? 3 : 1));
     };
     const observer = new IntersectionObserver(entries => {
       for (const entry of entries) visible = entry.isIntersecting;
       sync();
     }, { threshold: 0.25 });
-    observer.observe(spin);
-    spin.addEventListener('pointerdown', down);
-    spin.addEventListener('pointermove', move);
-    spin.addEventListener('pointerup', up);
-    spin.addEventListener('pointercancel', up);
-    spin.addEventListener('keydown', key);
+    observer.observe(view);
+    view.addEventListener('pointerdown', down);
+    view.addEventListener('pointermove', move);
+    view.addEventListener('pointerup', up);
+    view.addEventListener('pointercancel', up);
+    view.addEventListener('keydown', key);
     motion.addEventListener('change', sync);
     document.addEventListener('visibilitychange', sync);
     cleanups.push(() => {
@@ -212,9 +291,27 @@ function setupSpins() {
       video.pause();
       video.removeAttribute('src');
       video.load();
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
     });
   }
-  return () => cleanups.forEach(cleanup => cleanup());
+  const onSwitch = event => {
+    const button = event.target.closest('[data-view]');
+    const figure = button?.closest('.page-media');
+    if (!figure) return;
+    for (const other of figure.querySelectorAll('[data-view]')) {
+      other.setAttribute('aria-pressed', String(other === button));
+    }
+    for (const view of figure.querySelectorAll('[data-scrub]')) {
+      view.hidden = view.dataset.scrub !== button.dataset.view;
+      syncs.get(view)();
+    }
+  };
+  document.addEventListener('click', onSwitch);
+  cleanups.push(() => document.removeEventListener('click', onSwitch));
+  return () => {
+    disposed = true;
+    cleanups.forEach(cleanup => cleanup());
+  };
 }
 
 /** Play the decorative film only when visible, with a still for reduced motion. */
@@ -340,11 +437,11 @@ function renderPage({ moveFocus = false } = {}) {
   renderedLocation = location.pathname + location.search;
   disposeHeroFilm();
   disposeTaskLoops();
-  disposeSpins();
+  disposeScrubs();
   main.innerHTML = page.body;
   disposeHeroFilm = setupHeroFilm();
   disposeTaskLoops = setupTaskLoops();
-  disposeSpins = setupSpins();
+  disposeScrubs = setupScrubs();
   updateHead(page);
   filterCatalog();
   for (const link of document.querySelectorAll('.site-header a[data-route]:not(.brand)')) {

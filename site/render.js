@@ -218,8 +218,8 @@ export const pauseIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fi
 // panel from its documentation figure. Sources are on the credits page. Models
 // without a figure that shows their output have no panel.
 const modelMedia = {
-  'nnunet-mlx': { image: 'featured-liver' }, 'totalsegmentator-mlx': { spin: 'totalseg-spin', frames: 360 },
-  'medsam2-mlx': { image: 'featured-medsam' }, 'biomedparse-mlx': { image: 'featured-prompt' },
+  'nnunet-mlx': { image: 'featured-liver' }, 'totalsegmentator-mlx': { spin: 'totalseg-spin', slices: 'totalseg-slices' },
+  'medsam2-mlx': { slices: 'medsam2-slices' }, 'biomedparse-mlx': { image: 'featured-prompt' },
   'segresnet-mlx': { image: 'featured-segresnet' }, 'unest-mlx': { image: 'featured-kidney' },
   'swin-unetr-mlx': { loop: 'abdomen-scroll' }, 'synthseg-mlx': { image: 'featured-brain' },
   'flexray-mlx': { image: 'featured-xray' }, 'lung-nodule-mlx': { loop: 'nodule-scroll' },
@@ -233,15 +233,30 @@ export const playIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fil
 function pageMedia(distribution, name) {
   const media = modelMedia[distribution];
   if (!media) return '';
-  if (media.spin) {
-    // A turntable: a looping video, one degree per frame, that dragging scrubs.
-    return html`<figure class="page-media">
-      <div class="page-media-visual spin" data-spin data-frames="${media.frames}" tabindex="0" role="img"
-        aria-label="${name} surfaces from a real segmentation. Drag, or use the arrow keys, to rotate.">
+  // Interactive views: a turntable that dragging turns, and a slice stack that dragging
+  // scrolls. Each is a video whose frames are angles or slices.
+  const scrub = (mode, asset, hidden) => html`
+      <div class="page-media-visual scrub" data-scrub="${mode}" data-fps="${mode === 'turn' ? 30 : 24}"
+        data-rate="${mode === 'slices' && media.rate ? media.rate : 1}" tabindex="0" role="img"
+        ${hidden ? html`hidden` : ''}
+        aria-label="${name} ${mode === 'turn' ? 'surfaces from a real segmentation. Drag, or use the arrow keys, to rotate.'
+          : 'output over its CT, slice by slice. Drag up or down, or use the arrow keys, to move through the slices.'}">
         <video muted loop playsinline preload="none" width="960" height="720" disablepictureinpicture
-          poster="/assets/hero/${media.spin}-poster.webp" data-src="/assets/hero/${media.spin}.mp4"></video>
-      </div>
-      <figcaption>Output from ${distribution}. Drag to rotate. <a href="/assets/hero/credits.html">Image credits</a></figcaption>
+          poster="/assets/hero/${asset}-poster.webp" data-src="/assets/hero/${asset}.mp4"></video>
+      </div>`;
+  if (media.spin || media.slices) {
+    const both = media.spin && media.slices;
+    return html`<figure class="page-media">
+      ${media.spin ? scrub('turn', media.spin, false) : ''}
+      ${media.slices ? scrub('slices', media.slices, Boolean(media.spin)) : ''}
+      <figcaption>
+        ${both ? html`<span class="view-switch" role="group" aria-label="View">
+          <button type="button" data-view="turn" aria-pressed="true">3D</button>
+          <button type="button" data-view="slices" aria-pressed="false">Slices</button>
+        </span>` : ''}
+        <span>Output from ${distribution}. ${both ? 'Drag to explore.' : media.spin ? 'Drag to rotate.' : 'Drag up or down through the slices.'}</span>
+        <a href="/assets/hero/credits.html">Image credits</a>
+      </figcaption>
     </figure>`;
   }
   return html`<figure class="page-media">
@@ -250,7 +265,7 @@ function pageMedia(distribution, name) {
         poster="/assets/hero/${media.loop}-poster.webp" data-src="/assets/hero/${media.loop}.mp4"></video>
       <button class="media-toggle" type="button" data-media-toggle aria-label="Pause ${name} output animation" hidden>${pauseIcon}</button>` : html`
       <img class="page-media-visual" src="/assets/hero/${media.image}.webp" alt="" width="960" height="720" decoding="async">`}
-    <figcaption>Output from ${distribution}. <a href="/assets/hero/credits.html">Image credits</a></figcaption>
+    <figcaption>Output from ${distribution}.${media.loop ? ' Drag to scrub.' : ''} <a href="/assets/hero/credits.html">Image credits</a></figcaption>
   </figure>`;
 }
 

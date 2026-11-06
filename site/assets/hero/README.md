@@ -108,5 +108,15 @@ Surfaces are clipped at the top of the hip bones and the bottom of each frame
 fades to black. `docs/hero/render_totalseg_spin.py` renders it and writes
 `totalseg-spin-run.json`.
 
+## Slice stacks
+
+`<stack>.mp4` for `totalseg-slices` and `medsam2-slices` scrolls
+through the axial slices that hold a runtime's labels, over the source CT, and back
+up, at 24 fps with keyframes every 8 frames so the model pages can seek to any slice
+as the viewer drags. Labels are translucent fills with solid outlines in the shared
+palette (`docs/hero/anatomy.py`); lungs, bone and muscle are filled lightly.
+`docs/hero/render_slice_stacks.py` renders each from a saved label map and writes
+`<stack>-run.json`. The model pages' other loops can be dragged to scrub as well.
+
 See [credits.html](credits.html) for source-image attribution and terms.
 Media is not covered by the website's Apache-2.0 code license.
