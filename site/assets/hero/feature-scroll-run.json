@@ -66,13 +66,13 @@
  },
  "display": {
   "renderer": "docs/hero/render_feature_scroll.py",
-  "slices_shown": "150 of 152, superior to inferior; the 2 most superior slices (shoulder joints) are not shown, and principal components and feature statistics use the shown slices only",
+  "slices_shown": "148 of 152, superior to inferior; the 4 most superior slices (shoulder joints) are not shown, and principal components and feature statistics use the shown slices only",
   "ct_panel": "the PNG passed to the runner, Lanczos-resized to 448 px, with the 7 x 7 conv5_block3_out map drawn as cells screen-blended at 0.62 inside the body, with darkened cell borders",
-  "cell_colors": "first three principal components of all 7350 spatial vectors in the scan as RGB, each scaled by its 2nd-98th percentile",
+  "cell_colors": "first three principal components of all 7252 spatial vectors in the scan as RGB, each scaled by its 2nd-98th percentile",
   "principal_component_variance_share": [
-   0.1543,
-   0.1022,
-   0.0556
+   0.1545,
+   0.1025,
+   0.0557
   ],
   "feature_panel": "96 of 2048 pooled features with the largest variance across slices, z-scored per feature over the scan and clipped to [-0.5, 3.0], rows ordered by the slice where each feature peaks; one column per slice",
   "feature_indices_top_to_bottom": [
@@ -222,7 +222,7 @@
    "pix_fmt": "yuv420p",
    "color": "BT.709, limited range",
    "fps": 24,
-   "frames": 210,
+   "frames": 208,
    "size_px": [
     800,
     520
@@ -230,14 +230,14 @@
    "audio": false,
    "movflags": "+faststart",
    "ffmpeg": "ffmpeg version 9.0",
-   "bytes": 555441
+   "bytes": 547477
   },
   "poster": {
    "format": "WebP",
    "quality": 85,
    "method": 6,
    "slice": 101,
-   "bytes": 37636
+   "bytes": 37628
   }
  },
  "outputs": {

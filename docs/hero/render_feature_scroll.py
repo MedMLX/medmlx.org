@@ -64,9 +64,9 @@ EMPTY_RGB = (22, 22, 24)
 TEXT_RGB, MUTED_RGB = (236, 236, 240), (161, 161, 166)
 FPS, FRAMES_PER_SLICE, HOLD, DISSOLVE = 24, 1, 48, 12
 POSTER_SLICE = 100
-# Stored slices run superior to inferior, the order the card scrolls. The first 2
+# Stored slices run superior to inferior, the order the card scrolls. The first 4
 # (the top of the scan, at the shoulder joints) are left out.
-FIRST_SHOWN = 2
+FIRST_SHOWN = 4
 CRF = 28
 MAX_VIDEO_BYTES = 700_000
 # BT.709 matrix for the RGB conversion, and BT.709 tags on every encoded frame.

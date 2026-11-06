@@ -67,8 +67,8 @@ in `docs/hero/`. Raw outputs stay in `dist/<name>-demo/`.
   by token while each token's decoder attention, averaged over the full-attention layers, is
   shown on an axial slice that follows its peak. The poster is the frame where
   "mass" is written.
-- `feature-scroll`: radimagenet-mlx 0.3.3 ResNet50 features for 150 axial
-  slices of a LUNA16 subset0 CT, superior to inferior (the top 2 slices, at the
+- `feature-scroll`: radimagenet-mlx 0.3.3 ResNet50 features for 148 axial
+  slices of a LUNA16 subset0 CT, superior to inferior (the top 4 slices, at the
   shoulder joints, are left out). Each slice shows its
   7 × 7 spatial map as cells colored by the scan's first three principal
   components; the panel adds one column per slice for the 96 most variable
