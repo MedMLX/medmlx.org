@@ -99,13 +99,13 @@ keeps its own panels.
 
 ## TotalSegmentator turntable
 
-`totalseg-spin.webp` is a 10 × 12 sheet of 960 × 720 frames: the
+`totalseg-spin.mp4` is a 12-second, 30 fps H.264 loop at 960 × 720: the
 totalsegmentator-mlx standard-mode labels for autoPET-III-Lite case
-fdg_0117d7f11f, on the model's 1.5 mm grid, drawn as marching-cubes surfaces
-and rendered from 120 angles 3° apart, with the lights turning with the camera.
+fdg_0117d7f11f, on the model's 1.5 mm grid, drawn as marching-cubes surfaces and
+rendered from 360 angles 1° apart, with the lights turning with the camera.
+Keyframes every 10 frames let the page seek to any angle as the viewer drags.
 Surfaces are clipped at the top of the hip bones and the bottom of each frame
-fades to black. The TotalSegmentator page steps through the sheet as the viewer
-drags. `docs/hero/render_totalseg_spin.py` renders it and writes
+fades to black. `docs/hero/render_totalseg_spin.py` renders it and writes
 `totalseg-spin-run.json`.
 
 See [credits.html](credits.html) for source-image attribution and terms.

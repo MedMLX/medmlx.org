@@ -136,14 +136,13 @@
    "lung": 0.16
   },
   "clip": "every surface clipped at the top of the hip bones (276.0 mm above the grid origin); the field of view cuts the hips flat",
-  "frames": 120,
-  "step_degrees": 3.0,
+  "frames": 360,
+  "step_degrees": 1.0,
   "start_azimuth_degrees": 22.0,
   "frame_px": [
    960,
    720
   ],
-  "sheet_columns": 10,
   "supersample": 2,
   "bottom_fade": 0.14,
   "projection": "parallel",
@@ -154,9 +153,21 @@
   "totalsegmentator_mlx": "0.1.6",
   "python_version": "3.13.17"
  },
+ "encode": {
+  "codec": "H.264 (libx264)",
+  "preset": "veryslow",
+  "crf": 18,
+  "fps": 30,
+  "keyframe_interval": 10,
+  "pix_fmt": "yuv420p",
+  "color": "BT.709, limited range",
+  "frames": 360,
+  "audio": false,
+  "movflags": "+faststart",
+  "bytes": 3276070
+ },
  "outputs": {
-  "sheet": "site/assets/hero/totalseg-spin.webp",
-  "poster": "site/assets/hero/totalseg-spin-poster.webp",
-  "sheet_bytes": 5813806
+  "video": "site/assets/hero/totalseg-spin.mp4",
+  "poster": "site/assets/hero/totalseg-spin-poster.webp"
  }
 }

@@ -58,7 +58,9 @@ function filterCatalog({ updateQuery = false } = {}) {
  * saving keep the poster, and each loop has its own pause button.
  */
 function setupTaskLoops() {
-  const items = [...document.querySelectorAll('.task-item, .page-media')].filter(item => item.querySelector('video'));
+  // Only loops with a pause button; turntables have their own controls.
+  const items = [...document.querySelectorAll('.task-item, .page-media')]
+    .filter(item => item.querySelector('video') && item.querySelector('[data-media-toggle]'));
   if (!items.length) return () => {};
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const visible = new Set();
@@ -132,9 +134,9 @@ function setupTaskLoops() {
 }
 
 /**
- * Turntables: a sheet of rendered angles, stepped by dragging or the arrow keys.
- * The sheet loads once the viewer is near the screen. Until someone touches it, it
- * turns slowly while visible, unless reduced motion or data saving is set.
+ * Turntables: a looping video, one degree per frame, that plays while on screen
+ * and that dragging or the arrow keys turn frame by frame. Touching it stops the
+ * playback. Reduced motion and data saving keep the poster until someone drags.
  */
 function setupSpins() {
   const spins = [...document.querySelectorAll('[data-spin]')];
@@ -142,46 +144,35 @@ function setupSpins() {
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const cleanups = [];
   for (const spin of spins) {
+    const video = spin.querySelector('video');
     const frames = Number(spin.dataset.frames);
-    const columns = Number(spin.dataset.columns);
-    const rows = Math.ceil(frames / columns);
-    let frame = 0;
-    let ready = false;
     let touched = false;
     let visible = false;
-    let timer = 0;
     let drag = null;
-    const show = index => {
-      frame = ((index % frames) + frames) % frames;
-      if (!ready) return;
-      const x = columns > 1 ? (frame % columns) / (columns - 1) * 100 : 0;
-      const y = rows > 1 ? Math.floor(frame / columns) / (rows - 1) * 100 : 0;
-      spin.style.backgroundPosition = `${x}% ${y}%`;
+    const load = () => {
+      if (!video.hasAttribute('src')) video.src = video.dataset.src;
     };
-    const idle = () => {
-      clearInterval(timer);
-      timer = 0;
-      if (ready && visible && !touched && !document.hidden && !motion.matches && !navigator.connection?.saveData) {
-        timer = setInterval(() => show(frame + 1), 70);
+    const fps = () => frames / (video.duration || frames / 30);
+    const current = () => Math.round(video.currentTime * fps()) % frames;
+    const show = index => {
+      load();
+      const frame = ((index % frames) + frames) % frames;
+      // Seek to the middle of the frame so rounding never lands on its neighbour.
+      if (video.readyState >= 1) video.currentTime = (frame + 0.5) / fps();
+    };
+    const sync = () => {
+      const still = motion.matches || navigator.connection?.saveData;
+      if (visible && !touched && !still && !document.hidden) {
+        load();
+        video.play().catch(() => {});
+      } else {
+        video.pause();
       }
     };
-    const load = () => {
-      const sheet = new Image();
-      sheet.decoding = 'async';
-      sheet.onload = () => {
-        spin.style.backgroundImage = `url("${spin.dataset.spin}")`;
-        spin.style.backgroundSize = `${columns * 100}% ${rows * 100}%`;
-        ready = true;
-        spin.classList.add('ready');
-        show(frame);
-        idle();
-      };
-      sheet.src = spin.dataset.spin;
-    };
-    const stopIdle = () => { touched = true; idle(); };
+    const stop = () => { touched = true; sync(); };
     const down = event => {
-      stopIdle();
-      drag = { x: event.clientX, frame, id: event.pointerId };
+      stop();
+      drag = { x: event.clientX, frame: current(), id: event.pointerId };
       spin.setPointerCapture(event.pointerId);
       spin.classList.add('dragging');
     };
@@ -196,33 +187,31 @@ function setupSpins() {
       spin.classList.remove('dragging');
     };
     const key = event => {
-      const step = event.key === 'ArrowLeft' ? 1 : event.key === 'ArrowRight' ? -1 : 0;
+      const step = event.key === 'ArrowLeft' ? 3 : event.key === 'ArrowRight' ? -3 : 0;
       if (!step) return;
       event.preventDefault();
-      stopIdle();
-      show(frame + step);
+      stop();
+      show(current() + step);
     };
-    let loaded = false;
     const observer = new IntersectionObserver(entries => {
-      for (const entry of entries) {
-        visible = entry.isIntersecting;
-        if (visible && !loaded) { loaded = true; load(); }
-      }
-      idle();
-    }, { rootMargin: '200px 0px' });
+      for (const entry of entries) visible = entry.isIntersecting;
+      sync();
+    }, { threshold: 0.25 });
     observer.observe(spin);
     spin.addEventListener('pointerdown', down);
     spin.addEventListener('pointermove', move);
     spin.addEventListener('pointerup', up);
     spin.addEventListener('pointercancel', up);
     spin.addEventListener('keydown', key);
-    motion.addEventListener('change', idle);
-    document.addEventListener('visibilitychange', idle);
+    motion.addEventListener('change', sync);
+    document.addEventListener('visibilitychange', sync);
     cleanups.push(() => {
-      clearInterval(timer);
       observer.disconnect();
-      motion.removeEventListener('change', idle);
-      document.removeEventListener('visibilitychange', idle);
+      motion.removeEventListener('change', sync);
+      document.removeEventListener('visibilitychange', sync);
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
     });
   }
   return () => cleanups.forEach(cleanup => cleanup());

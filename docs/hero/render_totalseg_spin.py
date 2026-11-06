@@ -7,6 +7,7 @@
 #     "numpy>=2",
 #     "pillow>=12",
 #     "scipy>=1.16",
+#     "imageio-ffmpeg>=0.6",
 # ]
 # ///
 """Render the drag-to-rotate TotalSegmentator view on its model page.
@@ -23,18 +24,21 @@ shown with a per-tissue PBR material under fixed studio lights, as in that figur
 The camera then turns a full circle about the vertical axis in FRAMES equal steps,
 starting from the figure's view. Every surface is clipped at the top of the hip
 bones, because the scan's field of view cuts the hips and thighs flat, and the
-lowest part of each frame fades to black. The frames are packed into one WebP
-sheet that the page steps through as the viewer drags.
+lowest part of each frame fades to black. The frames are encoded as one looping
+H.264 video, one degree per frame, with frequent keyframes so the page can seek to
+any angle as the viewer drags.
 """
 
 import argparse
 import colorsys
 import json
 import platform
+import subprocess
 import sys
 from importlib.metadata import version
 from pathlib import Path
 
+import imageio_ffmpeg
 import nibabel as nib
 import numpy as np
 import vtk
@@ -46,7 +50,7 @@ ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / 'site/assets/hero'
 RUN_DIR = ROOT / 'dist/totalseg-spin-demo'
 
-FRAMES, COLUMNS = 120, 10
+FRAMES, FPS, KEYFRAME_INTERVAL, CRF = 360, 30, 10, 18
 FRAME = (960, 720)
 START_AZIMUTH = 22.0  # degrees from straight anterior, the documentation figure's view
 FADE = 0.14  # fraction of the frame height that fades to black at the bottom
@@ -271,8 +275,19 @@ def main():
     ramp = int(FADE * FRAME[1])
     t = np.linspace(0, 1, ramp)
     fade[-ramp:] = (1 - t * t * (3 - 2 * t))
-    sheet = Image.new('RGB', (FRAME[0] * COLUMNS, FRAME[1] * -(-FRAMES // COLUMNS)))
     RUN_DIR.mkdir(parents=True, exist_ok=True)
+    video = ASSETS / 'totalseg-spin.mp4'
+    ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+    # BT.709 matrix for the RGB conversion, and BT.709 tags on every encoded frame.
+    encode = ['-c:v', 'libx264', '-preset', 'veryslow', '-crf', str(CRF), '-pix_fmt', 'yuv420p',
+              '-g', str(KEYFRAME_INTERVAL), '-vf',
+              'scale=out_color_matrix=bt709:out_range=tv,'
+              'setparams=range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709',
+              '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709',
+              '-color_range', 'tv', '-movflags', '+faststart', '-an', '-map_metadata', '-1']
+    process = subprocess.Popen([ffmpeg, '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24',
+                                '-s', f'{FRAME[0]}x{FRAME[1]}', '-r', str(FPS), '-i', '-', *encode,
+                                str(video)], stdin=subprocess.PIPE)
     for index in range(FRAMES):
         # Turn toward the patient's left from the figure's view; superior stays up.
         turn = np.radians(START_AZIMUTH + 360.0 * index / FRAMES)
@@ -295,11 +310,12 @@ def main():
         rgb = np.asarray(frame, dtype=np.float64) * fade[:, None, None]
         frame = Image.fromarray(np.uint8(np.round(rgb)))
         if index == 0:
-            frame.save(RUN_DIR / 'frame-000.png')
-        sheet.paste(frame, ((index % COLUMNS) * FRAME[0], (index // COLUMNS) * FRAME[1]))
+            frame.save(ASSETS / 'totalseg-spin-poster.webp', quality=88, method=6)
+        process.stdin.write(frame.tobytes())
         print(f'{index + 1}/{FRAMES}', end='\r', flush=True)
-    sheet.save(ASSETS / 'totalseg-spin.webp', quality=90, method=6)
-    Image.open(RUN_DIR / 'frame-000.png').save(ASSETS / 'totalseg-spin-poster.webp', quality=88, method=6)
+    process.stdin.close()
+    if process.wait() != 0:
+        raise RuntimeError('ffmpeg failed')
 
     record = {
         'schema_version': 1,
@@ -317,17 +333,20 @@ def main():
             'clip': 'every surface clipped at the top of the hip bones '
                     f'({clip_z:.1f} mm above the grid origin); the field of view cuts the hips flat',
             'frames': FRAMES, 'step_degrees': 360 / FRAMES, 'start_azimuth_degrees': START_AZIMUTH,
-            'frame_px': list(FRAME), 'sheet_columns': COLUMNS, 'supersample': SUPERSAMPLE,
+            'frame_px': list(FRAME), 'supersample': SUPERSAMPLE,
             'bottom_fade': FADE, 'projection': 'parallel', 'lights': 'turn with the camera',
         },
         'runtime': {'vtk': version('vtk'), 'totalsegmentator_mlx': version('totalsegmentator-mlx'),
                     'python_version': platform.python_version()},
-        'outputs': {'sheet': 'site/assets/hero/totalseg-spin.webp',
-                    'poster': 'site/assets/hero/totalseg-spin-poster.webp',
-                    'sheet_bytes': (ASSETS / 'totalseg-spin.webp').stat().st_size},
+        'encode': {'codec': 'H.264 (libx264)', 'preset': 'veryslow', 'crf': CRF, 'fps': FPS,
+                   'keyframe_interval': KEYFRAME_INTERVAL, 'pix_fmt': 'yuv420p',
+                   'color': 'BT.709, limited range', 'frames': FRAMES, 'audio': False,
+                   'movflags': '+faststart', 'bytes': video.stat().st_size},
+        'outputs': {'video': 'site/assets/hero/totalseg-spin.mp4',
+                    'poster': 'site/assets/hero/totalseg-spin-poster.webp'},
     }
     (ASSETS / 'totalseg-spin-run.json').write_text(json.dumps(record, indent=1) + '\n')
-    print(f'\nwrote {FRAMES} frames; sheet {record["outputs"]["sheet_bytes"]} bytes', file=sys.stderr)
+    print(f'\nwrote {FRAMES} frames; video {record["encode"]["bytes"]} bytes', file=sys.stderr)
 
 
 if __name__ == '__main__':
