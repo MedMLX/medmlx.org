@@ -92,7 +92,9 @@ Vision-language card, recorded in `medsam-slice-run.json`; and
 `docs/example-abdomen.png`, flipped vertically because that figure shows
 posterior at the top (the film's `prompt.webp` is flipped the same way, as
 recorded in `sources.json`); and `segresnet-axial.webp`, the axial panel of
-segresnet-mlx v0.3.3 `docs/example.png`. `kidney`, `brain`, `xray` and `pet`
+segresnet-mlx v0.3.3 `docs/example.png`; and `siam-cutaway.webp`, the 3D cutaway
+panel of `showcase.png` in the MedMLX/siam weights repository at revision
+0c861ad842f262401928c910725acf5ecb60ed69. `kidney`, `brain`, `xray` and `pet`
 are the film panels. Figure crops carry the documentation-panel black
 level and saturation. All come from `docs/hero/render_featured.py`; the film
 keeps its own panels.

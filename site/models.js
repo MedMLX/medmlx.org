@@ -67,10 +67,21 @@ export const models = [
 
 // Additional runtimes link to their published packages. Each install command is the
 // README block at the release tag; `install` holds the README's exceptions to the
-// standard block.
+// standard block. A named model with its own page inside a package sets `slug`, its
+// page and model-card key (otherwise the distribution), and `upstream`, the original
+// work credited at the top of that page.
 export const additionalRuntimes = [
   { name: 'FDG PET/CT', distribution: 'fdg-pet-ct-mlx', task: 'Generation', description: 'Synthetic FDG PET from CT and organ labels, with scanner blur, scatter and count noise.' },
   { name: 'nnU-Net', distribution: 'nnunet-mlx', task: 'Segmentation', description: 'Segmentation of liver and pancreas CT, brain tumor MRI and PET/CT lesions.' },
+  {
+    slug: 'siam', name: 'SIAM', distribution: 'nnunet-mlx', task: 'Segmentation',
+    description: 'Contrast-agnostic segmentation of the whole head from any MRI contrast or CT: brain tissues, deep nuclei, CSF, dura, vessels, skull and scalp, with an anomaly label.',
+    upstream: {
+      name: 'SIAM v0.3', authors: 'Valabregue et al.',
+      repository: 'https://github.com/romainVala/SIAM', paper: 'https://arxiv.org/abs/2605.02737',
+      citation: 'Valabregue, R., Khemir, I., Bardinet, E., Rousseau, F., Auzias, G. & Dorent, R. (2026). SIAM: Head and Brain MRI Segmentation from Few High-Quality Templates via Synthetic Training. arXiv:2605.02737.',
+    },
+  },
   { name: 'NV-Segment-CT', distribution: 'mlx-segment-ct', task: 'Segmentation', description: 'Automatic and prompted 3D CT segmentation with NVIDIA VISTA-3D.' },
   { name: 'SegResNet', distribution: 'segresnet-mlx', task: 'Segmentation', description: 'Segmentation of brain tumors, kidney structures and whole-body anatomy from MRI or CT.' },
   { name: 'UNesT', distribution: 'unest-mlx', task: 'Segmentation', description: 'Kidney cortex, medulla and collecting system segmentation in contrast-enhanced CT.' },
@@ -88,6 +99,7 @@ export const additionalRuntimes = [
   { name: 'RadImageNet', distribution: 'radimagenet-mlx', task: 'Feature extraction', description: 'Extract numerical image features for research with models trained on RadImageNet.' },
   { name: 'PyRadiomics', distribution: 'mlxradiomics', task: 'Quantitative imaging', description: 'Measure image intensity, texture and shape within a selected region.' },
 ].map(({ install, ...runtime }) => ({
+  slug: runtime.distribution,
   ...runtime,
   package: packageUrl(runtime.distribution),
   install: runtimeInstallCommand(runtime.distribution, install),

@@ -65,7 +65,7 @@ export const modelCards = {
     }
   },
   "nnunet-mlx": {
-    "version": "0.6.4",
+    "version": "0.7.1",
     "rows": [
       [
         "Input",
@@ -91,7 +91,7 @@ export const modelCards = {
       {
         "text": "Models that use several scans need them aligned and supplied in the required order.",
         "sources": [
-          "| `nnunet-autopet` | `nnunet_mlx.medmlx.autopet(image_paths=[ct, pet])` | Co-registered CT and SUV PET, in that order |",
+          "| `nnunet-autopet` | `nnunet_mlx.named_models.autopet(image_paths=[ct, pet])` | Co-registered CT and SUV PET, in that order |",
           "| `nnunet-brats2021` | `nnunet_mlx.named_models.brats(t1_path=..., t1ce_path=..., t2_path=..., flair_path=...)` | Four co-registered MRI |",
           "Supply input channels in the model’s expected order."
         ]
@@ -121,12 +121,98 @@ export const modelCards = {
       {
         "name": "Brain tumor MRI",
         "url": "https://huggingface.co/MedMLX/nnunet-brats-mlx"
+      },
+      {
+        "name": "Head tissue MRI or CT (SIAM)",
+        "url": "https://huggingface.co/MedMLX/siam"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.6.4/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.6.4/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.6.4/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+      ]
+    }
+  },
+  "siam": {
+    "version": "0.7.1",
+    "rows": [
+      [
+        "Input",
+        {
+          "text": "One 3D head scan saved as a NIfTI file: MRI of any contrast, or CT.",
+          "sources": [
+            "| `siam` | `nnunet_mlx.named_models.siam(image_path=...)` | One head MRI of any contrast, or CT | [MedMLX/siam](https://huggingface.co/MedMLX/siam) |",
+            "NIfTI channels"
+          ]
+        }
+      ],
+      [
+        "Output",
+        {
+          "text": "A label map on the input scan’s grid. Its 17 labels cover grey and white matter, CSF and ventricles, cerebellar grey matter, five deep nuclei, hippocampus and amygdala, dura, vessels, skull and scalp, plus **Anomalies** (17) for pathology such as tumors.",
+          "sources": [
+            "Its 17 labels cover grey and white matter, CSF and ventricles, cerebellar grey matter, deep nuclei, hippocampus and amygdala, dura, vessels, skull and scalp, plus `Anomalies` (17) for pathology.",
+            "returns labels on the input grid"
+          ]
+        }
+      ],
+      [
+        "Training",
+        {
+          "text": "Trained by its authors on synthetic images; one model covers any MRI contrast or CT.",
+          "sources": [
+            "SIAM v0.3 is the contrast-agnostic head tissue model by Valabregue et al. ([repository](https://github.com/romainVala/SIAM), [paper](https://arxiv.org/abs/2605.02737)), trained on synthetic images."
+          ]
+        }
+      ],
+      [
+        "Run",
+        {
+          "text": "In Python, `nnunet_mlx.named_models.siam(image_path=..., output_dir=...)` returns the label map as `outputs[\"mask\"]`. In MedMLX the model is `siam`.",
+          "sources": [
+            "| `siam` | `nnunet_mlx.named_models.siam(image_path=...)` | One head MRI of any contrast, or CT | [MedMLX/siam](https://huggingface.co/MedMLX/siam) |",
+            "All runners take `output_dir`, `weights_path` and `overwrite`, and return the label map as `outputs[\"mask\"]`.",
+            "`nnunet-autopet`, `siam` and `mrsegmentator` for you."
+          ]
+        }
+      ]
+    ],
+    "limitations": [
+      {
+        "text": "The five folds are averaged without mirroring, as the original `siam-pred` does; `fold=` runs one fold. For small heads, `voxel_size=` matches SIAM’s `-voxelsize`.",
+        "sources": [
+          "Like `siam-pred`, the runner predicts on the volume reoriented to RAS without interpolation, averages the five folds without mirroring, and returns labels on the input grid; `voxel_size=` reproduces `-voxelsize` for small heads and `fold=` selects one fold."
+        ]
+      },
+      {
+        "text": "Matching the original model does not establish its segmentation accuracy on your scans.",
+        "sources": [
+          "Profiles cover inference only, not training or segmentation quality."
+        ]
+      }
+    ],
+    "measurements": [
+      {
+        "text": "A typical head MRI needs about **16 GB** of memory, more for larger fields of view.",
+        "sources": [
+          "A typical head MRI needs about 16 GB of memory, more for larger fields of view."
+        ]
+      }
+    ],
+    "noWeights": false,
+    "weights": [
+      {
+        "name": "SIAM v0.3 weights",
+        "url": "https://huggingface.co/MedMLX/siam",
+        "revision": "0c861ad842f262401928c910725acf5ecb60ed69",
+        "size": "2.8 GB"
+      }
+    ],
+    "terms": {
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/LICENSE). SIAM weights: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), by Valabregue et al., converted from the [original release](https://zenodo.org/records/17733431).",
+      "sources": [
+        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },

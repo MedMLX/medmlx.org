@@ -126,7 +126,9 @@ def fetch_text(url: str) -> str:
         raise ReleaseError(f"Cannot fetch {url}: {error}") from error
 
 
-def load_catalog() -> tuple[str, str, list[Release], list[Example], list[Model], list[Reference]]:
+def load_catalog() -> tuple[
+    str, str, list[Release], list[Example], list[Model], list[Reference], list[tuple[str, str, str]]
+]:
     """Read the same modules that render the website, without a browser."""
     result = subprocess.run(
         [
@@ -147,26 +149,39 @@ const formCommands = {
     anatomy_region: 'abdomen', prompt: 'Describe the CT.', enable_thinking: true,
   })],
 };
+// Cards are keyed by catalog slug. A package with several pages (nnU-Net and SIAM)
+// has one card per page, all checked against the same tagged README.
+const cards = {};
+for (const runtime of additionalRuntimes) {
+  const card = modelCards[runtime.slug];
+  if (!card) throw new Error(`${runtime.slug}: every additional runtime needs a reviewed model card`);
+  const merged = cards[runtime.distribution] ||= { version: card.version, excerpts: [] };
+  if (merged.version !== card.version) throw new Error(`${runtime.slug}: cards for one package must review one version`);
+  merged.excerpts.push(
+    ...[...card.rows.map(([, fact]) => fact), ...card.limitations, ...card.measurements, card.terms]
+      .flatMap(fact => {
+        if (!fact.text?.trim() || !Array.isArray(fact.sources) || !fact.sources.length) {
+          throw new Error(`${runtime.slug}: every model-card summary needs supporting source excerpts`);
+        }
+        return fact.sources;
+      }),
+    ...card.weights.map(weight => weight.url),
+  );
+}
+const slugs = new Set(additionalRuntimes.map(runtime => runtime.slug));
+const orphan = Object.keys(modelCards).find(slug => !slugs.has(slug));
+if (orphan) throw new Error(`${orphan}: model card has no catalog entry`);
 console.log(JSON.stringify({
   python: pythonVersion,
   macos: macosVersion,
   releases,
-  cards: Object.fromEntries(Object.entries(modelCards).map(([name, card]) => [name, {
-    version: card.version,
-    excerpts: [
-      ...[...card.rows.map(([, fact]) => fact), ...card.limitations, ...card.measurements, card.terms]
-        .flatMap(fact => {
-          if (!fact.text?.trim() || !Array.isArray(fact.sources) || !fact.sources.length) {
-            throw new Error(`${name}: every model-card summary needs supporting source excerpts`);
-          }
-          return fact.sources;
-        }),
-      ...card.weights.map(weight => weight.url),
-    ],
-  }])),
+  cards,
   cardPackages: additionalRuntimes.map(runtime => runtime.distribution),
+  weightPins: Object.values(modelCards).flatMap(card => card.weights.filter(weight => weight.revision)
+    .map(({ url, revision, size }) => ({ url, revision, size }))),
   packages: [{ distribution: 'medmlx', package: 'https://pypi.org/project/medmlx/' },
-    ...runtimes.map(runtime => ({ distribution: runtime.distribution, package: runtime.links?.package || runtime.package }))],
+    ...new Map(runtimes.map(runtime => [runtime.distribution,
+      { distribution: runtime.distribution, package: runtime.links?.package || runtime.package }])).values()],
   examples: [
     ...medmlxExamples,
     ...mcpExamples.map(({ distribution, path, command }) => ({ distribution, path, command })),
@@ -256,7 +271,12 @@ console.log(JSON.stringify({
         for value in sequence(data["references"])
         for item in [mapping(value)]
     ]
-    return string(data["python"]), string(data["macos"]), releases, examples, models, references
+    pins = [
+        (string(item["url"]), string(item["revision"]), string(item["size"]))
+        for value in sequence(data["weightPins"])
+        for item in [mapping(value)]
+    ]
+    return string(data["python"]), string(data["macos"]), releases, examples, models, references, pins
 
 
 def command_tokens(command: str) -> list[str]:
@@ -513,6 +533,22 @@ def verify_weights(model: Model, fetch: Callable[[str], str]) -> None:
         )
 
 
+def verify_revision(url: str, revision: str, size: str, fetch: Callable[[str], str]) -> None:
+    """Check a model card's pinned Hugging Face commit exists and holds the listed size."""
+    prefix = "https://huggingface.co/"
+    if not url.startswith(prefix) or not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise ReleaseError(f"{url}: a pinned revision needs a Hugging Face link and a full commit")
+    repository = url.removeprefix(prefix)
+    data = mapping(json.loads(fetch(
+        f"https://huggingface.co/api/models/{repository}/revision/{revision}?blobs=true"
+    )))
+    if data.get("sha") != revision:
+        raise ReleaseError(f"Hugging Face does not serve {repository}@{revision}")
+    published = size_label(sum(integer(mapping(item).get("size")) for item in sequence(data["siblings"])))
+    if published != size:
+        raise ReleaseError(f"site lists {size} of weights; {repository}@{revision[:12]} holds {published}")
+
+
 def verify_release(
     release: Release,
     python: str,
@@ -743,8 +779,13 @@ def main() -> int:
     if len(sys.argv) != 1:
         print("Usage: python devtools/check_releases.py", file=sys.stderr)
         return 2
-    python, macos, releases, examples, models, references = load_catalog()
+    python, macos, releases, examples, models, references, pins = load_catalog()
     failures: list[str] = []
+    for url, revision, size in pins:
+        try:
+            verify_revision(url, revision, size, fetch_text)
+        except ValueError as error:
+            failures.append(str(error))
     with ThreadPoolExecutor(max_workers=6) as pool:
         checks = [
             (
@@ -773,7 +814,7 @@ def main() -> int:
             resolution.result()
     print(
         f"Verified {len(releases)} releases, {len(examples)} examples, "
-        f"{sum(release.card is not None for release in releases)} model cards and {len(models)} weight pins "
+        f"{sum(release.card is not None for release in releases)} model cards and {len(models) + len(pins)} weight pins "
         "against PyPI, repository tags and Hugging Face; "
         f"resolved {len(requirements)} installs for macOS {macos} arm64 / Python {python}"
     )

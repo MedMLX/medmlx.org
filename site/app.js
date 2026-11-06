@@ -24,18 +24,20 @@ function filterCatalog({ updateQuery = false } = {}) {
   if (!search) return;
   const task = document.querySelector('input[name="task"]:checked')?.value || '';
   const query = search.value.trim().toLowerCase();
-  let count = 0;
+  // A package can have several entries (nnU-Net and SIAM), so count distinct packages.
+  const packages = new Set();
   for (const group of document.querySelectorAll('.catalog-group')) {
-    let groupCount = 0;
+    const groupPackages = new Set();
     for (const item of group.querySelectorAll('.catalog-item')) {
       const visible = (!task || group.dataset.task === task) && item.dataset.search.includes(query);
       item.hidden = !visible;
-      if (visible) groupCount++;
+      if (visible) groupPackages.add(item.dataset.package);
     }
-    group.hidden = groupCount === 0;
-    group.querySelector('.catalog-count').textContent = groupCount;
-    count += groupCount;
+    group.hidden = groupPackages.size === 0;
+    group.querySelector('.catalog-count').textContent = groupPackages.size;
+    groupPackages.forEach(name => packages.add(name));
   }
+  const count = packages.size;
   document.querySelector('#catalog-status').textContent = `${count} ${count === 1 ? 'package' : 'packages'}`;
   document.querySelector('#catalog-empty').hidden = count !== 0;
   if (updateQuery) {

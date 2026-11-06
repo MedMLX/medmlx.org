@@ -37,8 +37,8 @@ test('every runtime card exposes its reviewed source, limits and resource eviden
     const body = String(route(item.href.replace(/\/$/, '')).body);
     assert.match(body, /Model card/);
     assert.ok(body.includes(item.source), item.distribution);
-    if (item.distribution === 'mlx-reason-ct') continue;
-    const card = modelCards[item.distribution];
+    if (item.slug === 'mlx-reason-ct') continue;
+    const card = modelCards[item.slug];
     assert.equal(card.version, item.version);
     if (card.limitations.length) assert.match(body, /Before you run/);
     assert.match(body, /License and terms/);

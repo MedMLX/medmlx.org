@@ -552,6 +552,8 @@ main:focus { outline: none; }
 .page-head { padding-block: 120px 64px; }
 .page-head h1 { max-width: 16em; margin-bottom: 24px; }
 .page-head .lead { max-width: 32em; color: var(--secondary); font-size: clamp(1.3125rem, 1.1rem + 0.6vw, 1.75rem); line-height: 1.29; letter-spacing: 0.007em; }
+/* Credit for the original work behind a ported model, under the lead. */
+.page-head .credit { max-width: 36em; margin: 16px 0 0; color: var(--foreground); font-size: 1.0625rem; letter-spacing: -0.016em; }
 .page-body { padding-bottom: 140px; }
 
 /* Model pages: the model's own output beside the title, the same tile as the homepage. */

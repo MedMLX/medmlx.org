@@ -120,7 +120,7 @@ function cardText(text) {
 
 /** Show release-sourced facts, limits and measurement context for a runtime. */
 function runtimeCard(item) {
-  const card = modelCards[item.distribution];
+  const card = modelCards[item.slug];
   return html`
     <div class="detail-grid model-card" id="model-card">
       <section class="detail-section">
@@ -128,16 +128,20 @@ function runtimeCard(item) {
         ${specList([...card.rows.map(([label, fact]) => [label, cardText(fact.text)]), ['Runs on', platformRequirement]])}
         <h2>${card.noWeights ? 'Memory' : 'Downloads and memory'}</h2>
         ${card.weights.length ? html`<ul class="resource-list">
-          ${card.weights.map(weight => html`<li><a href="${weight.url}">${weight.name}</a></li>`)}
+          ${card.weights.map(weight => html`<li><a href="${weight.url}">${weight.name}</a>${weight.size ? ` · ${weight.size}` : ''}${weight.revision
+    ? html` · revision <a href="${weight.url}/tree/${weight.revision}"><code>${weight.revision.slice(0, 7)}</code></a>` : ''}</li>`)}
         </ul>` : ''}
         ${card.measurements.length
     ? card.measurements.map(fact => html`<p>${cardText(fact.text)}</p>`)
     : html`<p class="note">${card.noWeights ? 'Peak memory use is' : 'Download size and peak memory use are'} not published for this version.</p>`}
-        ${card.measurements.length ? html`<p class="note">Download size is not published for this version.</p>` : ''}
+        ${card.measurements.length && !card.weights.some(weight => weight.size)
+    ? html`<p class="note">Download size is not published for this version.</p>` : ''}
       </section>
       <section class="detail-section">
         ${card.limitations.length ? html`<h2>Before you run</h2>
           ${card.limitations.map(fact => html`<p>${cardText(fact.text)}</p>`)}` : ''}
+        ${item.upstream ? html`<h2>Cite the original work</h2>
+          <p>${item.upstream.citation} <a href="${item.upstream.paper}">Paper</a> · <a href="${item.upstream.repository}">Original repository</a></p>` : ''}
         <h2>License and terms</h2>
         <p>${cardText(card.terms.text)}</p>
         <p class="note"><a href="${item.source}">Developer documentation on GitHub</a></p>
@@ -193,7 +197,7 @@ export const catalog = [
 ].map(item => {
   const { repository, version } = releases[item.distribution];
   return {
-    ...item, version, href: `/models/${item.distribution}/`, internal: true,
+    slug: item.distribution, ...item, version, href: `/models/${item.slug || item.distribution}/`, internal: true,
     source: `https://github.com/${repository}/tree/v${version}`,
   };
 }).sort((a, b) => {
@@ -225,14 +229,15 @@ const modelMedia = {
   'flexray-mlx': { image: 'featured-xray' }, 'lung-nodule-mlx': { loop: 'nodule-scroll' },
   'fdg-pet-ct-mlx': { image: 'featured-pet' }, 'mlx-generate-ctmr': { loop: 'generation-grid' },
   'mlx-reason-ct': { loop: 'vision-attention' }, mlxradiomics: { loop: 'radiomics-organs' },
-  'radimagenet-mlx': { loop: 'feature-scroll' },
+  'radimagenet-mlx': { loop: 'feature-scroll' }, siam: { image: 'featured-siam' },
 };
 export const playIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M4 2l8 5-8 5z"/></svg>`;
 
 /** Render a model page's output panel, or nothing for a model without one. */
-function pageMedia(distribution, name) {
-  const media = modelMedia[distribution];
+function pageMedia({ slug, distribution, name }) {
+  const media = modelMedia[slug];
   if (!media) return '';
+  const source = slug === distribution ? distribution : `${name} in ${distribution}`;
   // Interactive views: a turntable that dragging turns, and a slice stack that dragging
   // scrolls. Each is a video whose frames are angles or slices.
   const scrub = (mode, asset, hidden) => html`
@@ -254,7 +259,7 @@ function pageMedia(distribution, name) {
           <button type="button" data-view="turn" aria-pressed="true">3D</button>
           <button type="button" data-view="slices" aria-pressed="false">Slices</button>
         </span>` : ''}
-        <span>Output from ${distribution}. ${both ? 'Drag to explore.' : media.spin ? 'Drag to rotate.' : 'Drag up or down through the slices.'}</span>
+        <span>Output from ${source}. ${both ? 'Drag to explore.' : media.spin ? 'Drag to rotate.' : 'Drag up or down through the slices.'}</span>
         <a href="/assets/hero/credits.html">Image credits</a>
       </figcaption>
     </figure>`;
@@ -265,7 +270,7 @@ function pageMedia(distribution, name) {
         poster="/assets/hero/${media.loop}-poster.webp" data-src="/assets/hero/${media.loop}.mp4"></video>
       <button class="media-toggle" type="button" data-media-toggle aria-label="Pause ${name} output animation" hidden>${pauseIcon}</button>` : html`
       <img class="page-media-visual" src="/assets/hero/${media.image}.webp" alt="" width="960" height="720" decoding="async">`}
-    <figcaption>Output from ${distribution}.${media.loop ? ' Drag to scrub.' : ''} <a href="/assets/hero/credits.html">Image credits</a></figcaption>
+    <figcaption>Output from ${source}.${media.loop ? ' Drag to scrub.' : ''} <a href="/assets/hero/credits.html">Image credits</a></figcaption>
   </figure>`;
 }
 
@@ -274,6 +279,7 @@ function taskCards() {
   return html`<ul class="task-grid">
     ${tasks.map(task => {
       const items = catalog.filter(item => item.task === task);
+      const packages = new Set(items.map(item => item.distribution)).size;
       const loop = taskLoops[task];
       return html`<li class="task-item"><a class="task-card" href="/models/?task=${encodeURIComponent(task)}" data-route>
         ${loop ? html`
@@ -281,7 +287,7 @@ function taskCards() {
             poster="/assets/hero/${loop}-poster.webp" data-src="/assets/hero/${loop}.mp4"></video>` : html`
           <img class="task-image" src="/assets/hero/total-ct.webp" width="640" height="420" alt="" loading="lazy" decoding="async">`}
         <h3>${task}</h3>
-        <span class="task-count">${items.length} ${items.length === 1 ? 'package' : 'packages'}</span>
+        <span class="task-count">${packages} ${packages === 1 ? 'package' : 'packages'}</span>
         <p>${items.slice(0, 3).map(item => item.name).join('\u00a0· ')}</p>
         <span class="task-link">Explore <span aria-hidden="true">›</span></span>
       </a>${loop ? html`
@@ -427,7 +433,7 @@ function modelsPage(search = '') {
           <h2>${task} <span class="catalog-count"></span></h2>
           <ul class="catalog-list">
             ${catalog.filter(item => item.task === task).map(item => html`
-              <li class="catalog-item" data-search="${`${item.name} ${item.task} ${item.distribution} ${item.description}`.toLowerCase()}">
+              <li class="catalog-item" data-package="${item.distribution}" data-search="${`${item.name} ${item.task} ${item.distribution} ${item.description}`.toLowerCase()}">
                 <div class="catalog-body">
                   <h3>${item.internal
                     ? html`<a href="${item.href}" data-route>${item.name}</a>`
@@ -443,7 +449,7 @@ function modelsPage(search = '') {
                 </div>
                 <details class="install-details">
                   <summary>Install on its own</summary>
-                  ${terminal(`install-${item.distribution}`, 'New environment', item.install, `${item.name} install command`)}
+                  ${terminal(`install-${item.slug}`, 'New environment', item.install, `${item.name} install command`)}
                 </details>
               </li>`)}
           </ul>
@@ -527,7 +533,7 @@ function modelPage(model) {
   const { version, repository } = releases[model.distribution];
   const guide = model.slug === 'mlx-reason-ct' ? '/get-started/mlx-reason-ct/' : '/get-started/';
   return html`
-    <section class="container page-head${modelMedia[model.distribution] ? ' with-media' : ''}">
+    <section class="container page-head${modelMedia[model.slug] ? ' with-media' : ''}">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/models/" data-route>Models</a> <span aria-hidden="true">/</span>
         <a href="/models/?task=${encodeURIComponent(model.task)}" data-route>${model.task}</a> <span aria-hidden="true">/</span>
@@ -542,7 +548,7 @@ function modelPage(model) {
           <a class="button secondary" href="https://github.com/${repository}/tree/v${version}">GitHub repository</a>
         </div>
       </div>
-      ${pageMedia(model.distribution, model.name)}
+      ${pageMedia(model)}
     </section>
 
     <div class="container page-body">
@@ -933,7 +939,7 @@ function notFoundPage() {
 function runtimePage(item) {
   const related = catalog.filter(other => other.task === item.task && other !== item);
   return html`
-    <section class="container page-head${modelMedia[item.distribution] ? ' with-media' : ''}">
+    <section class="container page-head${modelMedia[item.slug] ? ' with-media' : ''}">
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/models/" data-route>Models</a> <span aria-hidden="true">/</span>
         <a href="/models/?task=${encodeURIComponent(item.task)}" data-route>${item.task}</a> <span aria-hidden="true">/</span>
@@ -942,13 +948,15 @@ function runtimePage(item) {
       <div class="page-head-copy">
         <h1>${item.name}</h1>
         <p class="lead">${item.description}</p>
-        <p class="meta">Version <a href="${item.source}">${item.version}</a> · Apple Silicon</p>
+        ${item.upstream ? html`<p class="credit">Original model: ${item.upstream.name} by ${item.upstream.authors} ·
+          <a href="${item.upstream.repository}">Repository</a> · <a href="${item.upstream.paper}">Paper</a></p>` : ''}
+        <p class="meta">${item.slug === item.distribution ? 'Version' : `Runs in ${item.distribution}`} <a href="${item.source}">${item.version}</a> · Apple Silicon</p>
         <div class="actions">
           <a class="button" href="/get-started/" data-route>Get started</a>
           <a class="button secondary" href="${item.source}">GitHub repository</a>
         </div>
       </div>
-      ${pageMedia(item.distribution, item.name)}
+      ${pageMedia(item)}
     </section>
 
     <div class="container page-body">
@@ -1020,6 +1028,7 @@ function runtimeData(item) {
     runtimePlatform: `MLX, ${platformRequirement}`,
     version: item.version,
     isPartOf: { '@id': `${siteUrl}/#medmlx` },
+    ...(item.upstream ? { isBasedOn: [item.upstream.repository, item.upstream.paper] } : {}),
   };
 }
 
@@ -1082,7 +1091,7 @@ export function route(path, search = '') {
   }
   const item = catalog.find(entry => path === entry.href.slice(0, -1));
   if (item) {
-    const model = models.find(entry => entry.slug === item.distribution);
+    const model = models.find(entry => entry.slug === item.slug);
     return page(item.href, `${item.name} on Apple Silicon`, `${item.description} Runs on device with MLX on Apple Silicon.`,
       model ? modelPage(model) : runtimePage(item), [breadcrumbs([
         ['Models', '/models/'], [item.task, `/models/?task=${encodeURIComponent(item.task)}`], [item.name, item.href],

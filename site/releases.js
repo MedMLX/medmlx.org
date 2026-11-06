@@ -8,7 +8,7 @@ export const releases = {
   medmlx: { version: '0.4.4', repository: 'MedMLX/medmlx' },
   'mlx-reason-ct': { version: '0.3.6', repository: 'MedMLX/mlx-reason-ct' },
   'fdg-pet-ct-mlx': { version: '0.2.6', repository: 'MedMLX/fdg-pet-ct-mlx' },
-  'nnunet-mlx': { version: '0.6.4', repository: 'MedMLX/nnunet-mlx' },
+  'nnunet-mlx': { version: '0.7.1', repository: 'MedMLX/nnunet-mlx' },
   'mlx-segment-ct': { version: '0.3.5', repository: 'MedMLX/mlx-segment-ct' },
   'segresnet-mlx': { version: '0.3.3', repository: 'MedMLX/segresnet-mlx' },
   'unest-mlx': { version: '0.2.7', repository: 'MedMLX/unest-mlx' },
