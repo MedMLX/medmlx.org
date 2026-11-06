@@ -184,12 +184,6 @@ export const modelCards = {
         "sources": [
           "Like `siam-pred`, the runner predicts on the volume reoriented to RAS without interpolation, averages the five folds without mirroring, and returns labels on the input grid; `voxel_size=` reproduces `-voxelsize` for small heads and `fold=` selects one fold."
         ]
-      },
-      {
-        "text": "Matching the original model does not establish its segmentation accuracy on your scans.",
-        "sources": [
-          "Profiles cover inference only, not training or segmentation quality."
-        ]
       }
     ],
     "measurements": [
