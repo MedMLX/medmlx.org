@@ -69,7 +69,8 @@ export const models = [
 // README block at the release tag; `install` holds the README's exceptions to the
 // standard block. A named model with its own page inside a package sets `slug`, its
 // page and model-card key (otherwise the distribution), and `upstream`, the original
-// work credited at the top of that page.
+// work credited at the top of that page. `request` links the public issue that asked
+// for the port; the page shows it as a "User requested" tag.
 export const additionalRuntimes = [
   { name: 'FDG PET/CT', distribution: 'fdg-pet-ct-mlx', task: 'Generation', description: 'Synthetic FDG PET from CT and organ labels, with scanner blur, scatter and count noise.' },
   { name: 'nnU-Net', distribution: 'nnunet-mlx', task: 'Segmentation', description: 'Segmentation of liver and pancreas CT, brain tumor MRI and PET/CT lesions.' },
@@ -81,6 +82,7 @@ export const additionalRuntimes = [
       repository: 'https://github.com/romainVala/SIAM', paper: 'https://arxiv.org/abs/2605.02737',
       citation: 'Valabregue, R., Khemir, I., Bardinet, E., Rousseau, F., Auzias, G. & Dorent, R. (2026). SIAM: Head and Brain MRI Segmentation from Few High-Quality Templates via Synthetic Training. arXiv:2605.02737.',
     },
+    request: 'https://github.com/MedMLX/.github/issues/2',
   },
   { name: 'NV-Segment-CT', distribution: 'mlx-segment-ct', task: 'Segmentation', description: 'Automatic and prompted 3D CT segmentation with NVIDIA VISTA-3D.' },
   { name: 'SegResNet', distribution: 'segresnet-mlx', task: 'Segmentation', description: 'Segmentation of brain tumors, kidney structures and whole-body anatomy from MRI or CT.' },

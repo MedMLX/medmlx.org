@@ -946,6 +946,7 @@ function runtimePage(item) {
         <span aria-current="page">${item.name}</span>
       </nav>
       <div class="page-head-copy">
+        ${item.request ? html`<a class="request-tag" href="${item.request}">User requested</a>` : ''}
         <h1>${item.name}</h1>
         <p class="lead">${item.description}</p>
         ${item.upstream ? html`<p class="credit">Original model: ${item.upstream.name} by ${item.upstream.authors} ·

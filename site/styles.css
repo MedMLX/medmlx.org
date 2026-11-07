@@ -552,6 +552,9 @@ main:focus { outline: none; }
 .page-head { padding-block: 120px 64px; }
 .page-head h1 { max-width: 16em; margin-bottom: 24px; }
 .page-head .lead { max-width: 32em; color: var(--secondary); font-size: clamp(1.3125rem, 1.1rem + 0.6vw, 1.75rem); line-height: 1.29; letter-spacing: 0.007em; }
+/* Tag above the title linking the public issue that requested the port. */
+.page-head .request-tag { display: inline-block; margin-bottom: 20px; padding: 4px 12px; border: 1px solid var(--rule); border-radius: var(--pill); color: var(--secondary); font-size: 0.8125rem; letter-spacing: -0.008em; text-decoration: none; transition: border-color 200ms var(--ease), color 200ms var(--ease); }
+.page-head .request-tag:hover { border-color: var(--link); color: var(--foreground); }
 /* Credit for the original work behind a ported model, under the lead. */
 .page-head .credit { max-width: 36em; margin: 16px 0 0; color: var(--foreground); font-size: 1.0625rem; letter-spacing: -0.016em; }
 .page-body { padding-bottom: 140px; }
