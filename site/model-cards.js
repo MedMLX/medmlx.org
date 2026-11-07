@@ -3,7 +3,7 @@
 // Keep implementation details in the linked repository. Reason-CT lives in models.js.
 export const modelCards = {
   "fdg-pet-ct-mlx": {
-    "version": "0.2.6",
+    "version": "0.2.7",
     "rows": [
       [
         "Input",
@@ -54,26 +54,32 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peaked at **2.7 GB** of memory for a 400×400×284 whole-body CT.",
+        "sources": [
+          "No model weights to download. Peak MLX memory: 2.7 GB for a 400×400×284 whole-body CT."
+        ]
+      }
+    ],
     "noWeights": true,
     "weights": [],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.2.6/LICENSE).",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.2.7/LICENSE).",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.2.6/LICENSE). See [third-party notices](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.2.6/THIRD_PARTY_NOTICES.md)."
+        "[Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.2.7/LICENSE). See [third-party notices](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.2.7/THIRD_PARTY_NOTICES.md)."
       ]
     }
   },
   "nnunet-mlx": {
-    "version": "0.7.1",
+    "version": "0.7.2",
     "rows": [
       [
         "Input",
         {
           "text": "One or more scans saved as NIfTI files, depending on the model.",
           "sources": [
-            "NIfTI channels",
-            "Supply input channels in the model’s expected order."
+            "NIfTI channels"
           ]
         }
       ],
@@ -92,8 +98,7 @@ export const modelCards = {
         "text": "Models that use several scans need them aligned and supplied in the required order.",
         "sources": [
           "| `nnunet-autopet` | `nnunet_mlx.named_models.autopet(image_paths=[ct, pet])` | Co-registered CT and SUV PET, in that order |",
-          "| `nnunet-brats2021` | `nnunet_mlx.named_models.brats(t1_path=..., t1ce_path=..., t2_path=..., flair_path=...)` | Four co-registered MRI |",
-          "Supply input channels in the model’s expected order."
+          "| `nnunet-brats2021` | `nnunet_mlx.named_models.brats(t1_path=..., t1ce_path=..., t2_path=..., flair_path=...)` | Four co-registered MRI |"
         ]
       },
       {
@@ -103,39 +108,57 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peak memory: **8.9 GB** (liver) and **14.5 GB** (pancreas) for a 768×768×101 abdominal CT, **7.4 GB** (BraTS) for a 240×240×155 brain MRI and **4.8 GB** (AutoPET) for a 400×400×284 whole-body PET/CT. SIAM needs about **16 GB**.",
+        "sources": [
+          "Weights: 125 MB (`nnunet-liver`), 410 MB (`nnunet-pancreas`), 628 MB (`nnunet-brats2021`) and 2.0 GB (`nnunet-autopet`) downloads. Peak MLX memory: 8.9 GB for a 768×768×101 abdominal CT with `nnunet-liver`, 14.5 GB for the same CT with `nnunet-pancreas`, 7.4 GB for a 240×240×155 four-sequence brain MRI with `nnunet-brats2021` and 4.8 GB for a 400×400×284 whole-body PET/CT with `nnunet-autopet`.",
+          "A typical head MRI needs about 16 GB of memory"
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "Liver CT",
-        "url": "https://huggingface.co/MedMLX/nnunet-liver-mlx"
+        "url": "https://huggingface.co/MedMLX/nnunet-liver-mlx",
+        "revision": "0cb76a54e3ac55c2ae7e55a43a70a2c40a3e76d5",
+        "size": "0.1 GB"
       },
       {
         "name": "PET/CT lesions",
-        "url": "https://huggingface.co/MedMLX/nnunet-autopet-mlx"
+        "url": "https://huggingface.co/MedMLX/nnunet-autopet-mlx",
+        "revision": "655190e49d0bb8cced452984fb458f2f69cd5348",
+        "size": "2.0 GB"
       },
       {
         "name": "Pancreas CT",
-        "url": "https://huggingface.co/MedMLX/nnunet-pancreas-mlx"
+        "url": "https://huggingface.co/MedMLX/nnunet-pancreas-mlx",
+        "revision": "6bbcfea84c4a317b9deb8854eafb7392cd0cc8a6",
+        "size": "0.4 GB"
       },
       {
         "name": "Brain tumor MRI",
-        "url": "https://huggingface.co/MedMLX/nnunet-brats-mlx"
+        "url": "https://huggingface.co/MedMLX/nnunet-brats-mlx",
+        "revision": "b77b65309ac6f3cd747d5b849700ee866eac220a",
+        "size": "0.6 GB"
       },
       {
         "name": "Head tissue MRI or CT (SIAM)",
-        "url": "https://huggingface.co/MedMLX/siam"
+        "url": "https://huggingface.co/MedMLX/siam",
+        "revision": "0c861ad842f262401928c910725acf5ecb60ed69",
+        "size": "2.8 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "siam": {
-    "version": "0.7.1",
+    "version": "0.7.2",
     "rows": [
       [
         "Input",
@@ -204,14 +227,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/LICENSE). SIAM weights: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), by Valabregue et al., converted from the [original release](https://zenodo.org/records/17733431).",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/LICENSE). SIAM weights: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), by Valabregue et al., converted from the [original release](https://zenodo.org/records/17733431).",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "mlx-segment-ct": {
-    "version": "0.3.5",
+    "version": "0.3.6",
     "rows": [
       [
         "Input",
@@ -240,27 +263,38 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peak memory: **5.9 GB** to segment all classes of a 768×768×101 abdominal CT, and **11.0 GB** with the CT/MRI version on a 576×468×72 abdominal MRI.",
+        "sources": [
+          "Weights: 872 MB download for each of NV-Segment-CT and NV-Segment-CTMR. Peak MLX memory: 5.9 GB to segment all classes of a 768×768×101 abdominal CT with `mlx-segment-ct`, and 11.0 GB for all classes of a 576×468×72 abdominal MRI with `mlx-segment-ctmr`."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "CT model",
-        "url": "https://huggingface.co/MedMLX/vista3d-ct-mlx"
+        "url": "https://huggingface.co/MedMLX/vista3d-ct-mlx",
+        "revision": "0dae3679a4fcf0ad0948628c5f87e551630e8928",
+        "size": "0.9 GB"
       },
       {
         "name": "CT/MRI model",
-        "url": "https://huggingface.co/MedMLX/vista3d-ctmr-mlx"
+        "url": "https://huggingface.co/MedMLX/vista3d-ctmr-mlx",
+        "revision": "313b1a47a7b27524fbc929951a2cddd8ddc3eb64",
+        "size": "0.9 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.3.5/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.3.6/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.3.5/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-segment-ct/blob/v0.3.5/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.3.6/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-segment-ct/blob/v0.3.6/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "segresnet-mlx": {
-    "version": "0.3.3",
+    "version": "0.3.4",
     "rows": [
       [
         "Brain tumor model",
@@ -304,31 +338,44 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peak memory: **4.9 GB** for a 240×240×155 four-sequence brain MRI and **4.0 GB** for a 478×277×161 three-phase kidney CT. The whole-body CT model has no published figure.",
+        "sources": [
+          "Weights: 19 MB download for `segresnet-brats`, 76 MB for `segresnet-renal-cect`. Peak MLX memory: 4.9 GB for a 240×240×155 four-sequence brain MRI (`segresnet-brats`) and 4.0 GB for a 478×277×161 three-phase CT (`segresnet-renal-cect`)."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "Brain tumor MRI",
-        "url": "https://huggingface.co/MedMLX/segresnet-brats-mlx"
+        "url": "https://huggingface.co/MedMLX/segresnet-brats-mlx",
+        "revision": "dd339bb0671974ae9dc65ff92b0c667bb5c3cd03",
+        "size": "19 MB"
       },
       {
         "name": "Contrast-enhanced kidney CT",
-        "url": "https://huggingface.co/MedMLX/segresnet-renal-cect-mlx"
+        "url": "https://huggingface.co/MedMLX/segresnet-renal-cect-mlx",
+        "revision": "6b9f350e6bd93e1aa7525189f933b05e9460b1b6",
+        "size": "76 MB"
       },
       {
         "name": "Whole-body CT",
-        "url": "https://huggingface.co/MedMLX/segresnet-wholebody-mlx"
+        "url": "https://huggingface.co/MedMLX/segresnet-wholebody-mlx",
+        "revision": "31f5d2631faa8b9a7440a6945b14d4adea4af87a",
+        "size": "0.2 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.3.3/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.3.4/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.3.3/LICENSE). See [third-party notices](https://github.com/MedMLX/segresnet-mlx/blob/v0.3.3/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.3.4/LICENSE). See [third-party notices](https://github.com/MedMLX/segresnet-mlx/blob/v0.3.4/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "unest-mlx": {
-    "version": "0.2.7",
+    "version": "0.2.8",
     "rows": [
       [
         "Input",
@@ -357,23 +404,32 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peaked at **7.2 GB** of memory for a 478×277×161 contrast CT.",
+        "sources": [
+          "Weights: 349 MB download. Peak MLX memory: 7.2 GB for a 478×277×161 contrast CT."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "Kidney model",
-        "url": "https://huggingface.co/MedMLX/unest-renal-ct-mlx"
+        "url": "https://huggingface.co/MedMLX/unest-renal-ct-mlx",
+        "revision": "42ac739bc812b7d7c607aca7da55ba9222887c31",
+        "size": "0.3 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.2.7/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.2.8/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.2.7/LICENSE). See [third-party notices](https://github.com/MedMLX/unest-mlx/blob/v0.2.7/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.2.8/LICENSE). See [third-party notices](https://github.com/MedMLX/unest-mlx/blob/v0.2.8/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "swin-unetr-mlx": {
-    "version": "0.2.6",
+    "version": "0.2.7",
     "rows": [
       [
         "Input",
@@ -395,23 +451,32 @@ export const modelCards = {
       ]
     ],
     "limitations": [],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peaked at **7.4 GB** of memory for a 768×768×101 abdominal CT.",
+        "sources": [
+          "Weights: 253 MB download. Peak MLX memory: 7.4 GB for a 768×768×101 abdominal CT."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "Abdominal organ model",
-        "url": "https://huggingface.co/MedMLX/swin-unetr-mlx"
+        "url": "https://huggingface.co/MedMLX/swin-unetr-mlx",
+        "revision": "9c14ae8b1a6afe5e136b4edcf2ec1bedb8c7ac36",
+        "size": "0.3 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.2.6/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.2.7/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.2.6/LICENSE). See [third-party notices](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.2.6/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.2.7/LICENSE). See [third-party notices](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.2.7/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "medsam2-mlx": {
-    "version": "0.2.8",
+    "version": "0.2.9",
     "rows": [
       [
         "Input",
@@ -461,27 +526,38 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peaked at **1.3 GB** of memory to follow one box prompt through 21 slices of a 512×512×147 chest CT.",
+        "sources": [
+          "Weights: 156 MB download. Peak MLX memory: 1.3 GB to track one box prompt through 21 slices of a 512×512×147 chest CT."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "CT lesion model",
-        "url": "https://huggingface.co/MedMLX/medsam2-ct-lesion-mlx"
+        "url": "https://huggingface.co/MedMLX/medsam2-ct-lesion-mlx",
+        "revision": "2472bb6339db7391dd38a2a5320be558e6197fb1",
+        "size": "0.2 GB"
       },
       {
         "name": "All MedSAM2 models",
-        "url": "https://huggingface.co/MedMLX/medsam2-mlx"
+        "url": "https://huggingface.co/MedMLX/medsam2-mlx",
+        "revision": "9986f1f6c600ab6e99875a931b63bdd67feff2d1",
+        "size": "0.8 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.2.8/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.2.9/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.2.8/LICENSE). See [third-party notices](https://github.com/MedMLX/medsam2-mlx/blob/v0.2.8/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms; see the [model card](https://huggingface.co/MedMLX/medsam2-mlx)."
+        "[Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.2.9/LICENSE). See [third-party notices](https://github.com/MedMLX/medsam2-mlx/blob/v0.2.9/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms; see the [model card](https://huggingface.co/MedMLX/medsam2-mlx)."
       ]
     }
   },
   "biomedparse-mlx": {
-    "version": "0.1.5",
+    "version": "0.1.6",
     "rows": [
       [
         "Input",
@@ -519,23 +595,32 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peaked at **3.8 GB** of memory for four organ prompts on a 768×768×101 abdominal CT.",
+        "sources": [
+          "Weights: 1.5 GB download. Peak MLX memory: 3.8 GB for four organ prompts on a 768×768×101 abdominal CT."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "BioMedParse v2",
-        "url": "https://huggingface.co/MedMLX/biomedparse-v2-mlx"
+        "url": "https://huggingface.co/MedMLX/biomedparse-v2-mlx",
+        "revision": "7790b9183b1c708b970820a400016f71ef399310",
+        "size": "1.5 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.1.5/LICENSE). Model files have their own license terms. BioMedParse models are for noncommercial use under CC-BY-NC-SA-4.0.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.1.6/LICENSE). Model files have their own license terms. BioMedParse models are for noncommercial use under CC-BY-NC-SA-4.0.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.1.5/LICENSE). See [third-party notices](https://github.com/MedMLX/biomedparse-mlx/blob/v0.1.5/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. BioMedParse weights are CC-BY-NC-SA-4.0."
+        "[Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.1.6/LICENSE). See [third-party notices](https://github.com/MedMLX/biomedparse-mlx/blob/v0.1.6/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. BioMedParse weights are CC-BY-NC-SA-4.0."
       ]
     }
   },
   "totalsegmentator-mlx": {
-    "version": "0.1.8",
+    "version": "0.1.9",
     "rows": [
       [
         "Input",
@@ -588,23 +673,32 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peaked at **5.0 GB** of memory in standard mode on a 768×768×101 abdominal CT.",
+        "sources": [
+          "Weights: 824 MB download. Peak MLX memory: 5.0 GB for the standard mode on a 768×768×101 abdominal CT."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "TotalSegmentator models",
-        "url": "https://huggingface.co/MedMLX/totalsegmentator-mlx"
+        "url": "https://huggingface.co/MedMLX/totalsegmentator-mlx",
+        "revision": "8efa3f68ebe4dbc43178814a2d4650525e99a255",
+        "size": "0.8 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.1.8/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.1.9/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.1.8/LICENSE). See [third-party notices](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.1.8/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.1.9/LICENSE). See [third-party notices](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.1.9/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "synthseg-mlx": {
-    "version": "0.3.4",
+    "version": "0.3.5",
     "rows": [
       [
         "Input",
@@ -626,23 +720,32 @@ export const modelCards = {
       ]
     ],
     "limitations": [],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peaked at **11.6 GB** of memory for a 160×192×192 T1 brain MRI with cortical parcellation.",
+        "sources": [
+          "Weights: 424 MB download. Peak MLX memory: 11.6 GB for a 160×192×192 T1 MRI with cortical parcellation."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "SynthSeg models",
-        "url": "https://huggingface.co/MedMLX/synthseg-mlx"
+        "url": "https://huggingface.co/MedMLX/synthseg-mlx",
+        "revision": "76d5e02e527b43332068ea84acdba82fbc682bc5",
+        "size": "0.4 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.3.4/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.3.5/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.3.4/LICENSE). See [third-party notices](https://github.com/MedMLX/synthseg-mlx/blob/v0.3.4/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.3.5/LICENSE). See [third-party notices](https://github.com/MedMLX/synthseg-mlx/blob/v0.3.5/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "flexray-mlx": {
-    "version": "0.2.6",
+    "version": "0.2.7",
     "rows": [
       [
         "Input",
@@ -672,23 +775,32 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peaked at **1.2 GB** of memory for a 1929×2207 chest radiograph with the default single model.",
+        "sources": [
+          "Weights: 2.0 GB download, all five ensemble members. Peak MLX memory: 1.2 GB for a 1929×2207 chest radiograph with the default single model."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "FleXray model",
-        "url": "https://huggingface.co/MedMLX/flexray-mlx"
+        "url": "https://huggingface.co/MedMLX/flexray-mlx",
+        "revision": "642fb36846175bc0c1d43fd7d873e377bd72c1d0",
+        "size": "2.0 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.2.6/LICENSE). Model files have their own license terms. FleXray models are for noncommercial use under CC-BY-NC-4.0.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.2.7/LICENSE). Model files have their own license terms. FleXray models are for noncommercial use under CC-BY-NC-4.0.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.2.6/LICENSE). See [third-party notices](https://github.com/MedMLX/flexray-mlx/blob/v0.2.6/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. FleXray weights are noncommercial (CC-BY-NC-4.0)."
+        "[Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.2.7/LICENSE). See [third-party notices](https://github.com/MedMLX/flexray-mlx/blob/v0.2.7/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. FleXray weights are noncommercial (CC-BY-NC-4.0)."
       ]
     }
   },
   "flexible-unet-mlx": {
-    "version": "0.2.6",
+    "version": "0.2.7",
     "rows": [
       [
         "Input",
@@ -717,23 +829,32 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peaked at **0.27 GB** of memory for a 768×576 endoscopy frame.",
+        "sources": [
+          "Weights: 46 MB download. Peak MLX memory: 0.27 GB for a 768×576 endoscopy frame."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "Instrument segmentation model",
-        "url": "https://huggingface.co/MedMLX/flexible-unet-effnetb2-mlx"
+        "url": "https://huggingface.co/MedMLX/flexible-unet-effnetb2-mlx",
+        "revision": "c486b82c59278e1aa0c05619631c15e7ef51c7b9",
+        "size": "46 MB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.2.6/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.2.7/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.2.6/LICENSE). See [third-party notices](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.2.6/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.2.7/LICENSE). See [third-party notices](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.2.7/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "lung-nodule-mlx": {
-    "version": "0.2.6",
+    "version": "0.2.7",
     "rows": [
       [
         "Input",
@@ -769,18 +890,27 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Peaked at **10.7 GB** of memory for a 512×512×147 chest CT resampled to the model grid.",
+        "sources": [
+          "Weights: 85 MB download. Peak MLX memory: 10.7 GB for a 512×512×147 chest CT resampled to the model grid."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "Lung nodule model",
-        "url": "https://huggingface.co/MedMLX/retinanet-lung-nodule-mlx"
+        "url": "https://huggingface.co/MedMLX/retinanet-lung-nodule-mlx",
+        "revision": "58f199295680aa0296f97d7c0a6480b02a47457d",
+        "size": "85 MB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.2.6/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.2.7/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.2.6/LICENSE). See [third-party notices](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.2.6/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.2.7/LICENSE). See [third-party notices](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.2.7/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
@@ -928,7 +1058,7 @@ export const modelCards = {
     }
   },
   "med-vlm-mlx": {
-    "version": "0.3.3",
+    "version": "0.3.4",
     "rows": [
       [
         "Input",
@@ -963,31 +1093,44 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Describing a chest radiograph in up to 256 tokens peaked at **4.4 GB** (MedGemma 1.5 4B), **4.1 GB** (MedGemma 4B) and **17.9 GB** (MedGemma 27B).",
+        "sources": [
+          "Weights: 3.4 GB (MedGemma 1.5 4B), 3.0 GB (MedGemma 4B) or 16.9 GB (MedGemma 27B) download. Peak MLX memory to describe a 1929×2207 chest radiograph in up to 256 tokens: 4.4 GB (MedGemma 1.5 4B), 4.1 GB (MedGemma 4B) and 17.9 GB (MedGemma 27B)."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "MedGemma 1.5 4B",
-        "url": "https://huggingface.co/mlx-community/medgemma-1.5-4b-it-4bit"
+        "url": "https://huggingface.co/mlx-community/medgemma-1.5-4b-it-4bit",
+        "revision": "762746b7a72b0b68dd8fa3f9aea5dc3980674d23",
+        "size": "3.4 GB"
       },
       {
         "name": "MedGemma 4B",
-        "url": "https://huggingface.co/mlx-community/medgemma-4b-it-4bit"
+        "url": "https://huggingface.co/mlx-community/medgemma-4b-it-4bit",
+        "revision": "db10be5ae6bd569e2063c3c74b9b9dfbcbedcad3",
+        "size": "3.0 GB"
       },
       {
         "name": "MedGemma 27B",
-        "url": "https://huggingface.co/mlx-community/medgemma-27b-it-4bit"
+        "url": "https://huggingface.co/mlx-community/medgemma-27b-it-4bit",
+        "revision": "f57d2d648d28950b1bc7abd6e1b7b06aff0e183a",
+        "size": "16.9 GB"
       }
     ],
     "terms": {
       "text": "Software: MIT, with Apache-2.0 adaptations. Model use is covered by the [Health AI Developer Foundations terms](https://developers.google.com/health-ai-developer-foundations/terms).",
       "sources": [
-        "MIT, with Apache-2.0 adaptations. See [LICENSE](https://github.com/MedMLX/med-vlm-mlx/blob/v0.3.3/LICENSE) and [third-party notices](https://github.com/MedMLX/med-vlm-mlx/blob/v0.3.3/THIRD_PARTY_NOTICES.md). MedGemma weights are subject to the [Health AI Developer Foundations terms](https://developers.google.com/health-ai-developer-foundations/terms)."
+        "MIT, with Apache-2.0 adaptations. See [LICENSE](https://github.com/MedMLX/med-vlm-mlx/blob/v0.3.4/LICENSE) and [third-party notices](https://github.com/MedMLX/med-vlm-mlx/blob/v0.3.4/THIRD_PARTY_NOTICES.md). MedGemma weights are subject to the [Health AI Developer Foundations terms](https://developers.google.com/health-ai-developer-foundations/terms)."
       ]
     }
   },
   "radimagenet-mlx": {
-    "version": "0.3.3",
+    "version": "0.3.4",
     "rows": [
       [
         "Input",
@@ -1031,18 +1174,27 @@ export const modelCards = {
         ]
       }
     ],
-    "measurements": [],
+    "measurements": [
+      {
+        "text": "Each backbone is a separate 28–218 MB download. A 1929×2207 chest radiograph peaked at **0.11–0.44 GB** of memory, depending on the backbone.",
+        "sources": [
+          "Weights: one file per backbone, 28 MB (DenseNet121), 87 MB (InceptionV3), 94 MB (ResNet50) or 218 MB (InceptionResNetV2). Peak MLX memory for a 1929×2207 chest radiograph: 0.11 GB (DenseNet121), 0.18 GB (InceptionV3), 0.19 GB (ResNet50) and 0.44 GB (InceptionResNetV2)."
+        ]
+      }
+    ],
     "noWeights": false,
     "weights": [
       {
         "name": "RadImageNet models",
-        "url": "https://huggingface.co/MedMLX/radimagenet-mlx"
+        "url": "https://huggingface.co/MedMLX/radimagenet-mlx",
+        "revision": "9a8cb273484ff626dc74f10f132b883f42ab5e24",
+        "size": "0.4 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.3/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.4/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.3/LICENSE). See [third-party notices](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.3/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.4/LICENSE). See [third-party notices](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.4/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
