@@ -842,7 +842,9 @@ export const modelCards = {
     "weights": [
       {
         "name": "CT and MRI models",
-        "url": "https://huggingface.co/MedMLX/mlx-generate-ctmr"
+        "url": "https://huggingface.co/MedMLX/mlx-generate-ctmr",
+        "revision": "ca4e877408ec987879e6f354e536e6d586ffcc25",
+        "size": "3.5 GB"
       }
     ],
     "terms": {
@@ -913,7 +915,9 @@ export const modelCards = {
     "weights": [
       {
         "name": "LesionDiffusion model",
-        "url": "https://huggingface.co/MedMLX/lesiondiffusion-mlx"
+        "url": "https://huggingface.co/MedMLX/lesiondiffusion-mlx",
+        "revision": "2c57fbc39001321ed375ffbbaf19877f36105f16",
+        "size": "1.7 GB"
       }
     ],
     "terms": {
