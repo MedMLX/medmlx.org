@@ -89,6 +89,7 @@ export const additionalRuntimes = [
   { name: 'UNesT', distribution: 'unest-mlx', task: 'Segmentation', description: 'Kidney cortex, medulla and collecting system segmentation in contrast-enhanced CT.' },
   { name: 'SwinUNETR', distribution: 'swin-unetr-mlx', task: 'Segmentation', description: 'Organ segmentation in abdominal CT.' },
   { name: 'MedSAM2', distribution: 'medsam2-mlx', task: 'Segmentation', description: 'Lesion or organ segmentation from a box, point or mask prompt, tracked through the volume.' },
+  { name: 'SAM 3', distribution: 'sam3-mlx', task: 'Segmentation', description: 'Segment objects in 2D images or video frames from a text, box or point prompt with Meta SAM 3.' },
   { name: 'BioMedParse', distribution: 'biomedparse-mlx', task: 'Segmentation', description: 'Text-prompted 3D segmentation with Microsoft BioMedParse v2.' },
   { name: 'TotalSegmentator', distribution: 'totalsegmentator-mlx', task: 'Segmentation', description: 'Identify 117 organs and other body structures in CT scans.' },
   { name: 'SynthSeg', distribution: 'synthseg-mlx', task: 'Segmentation', description: 'Brain segmentation and parcellation.' },
@@ -99,7 +100,6 @@ export const additionalRuntimes = [
   { name: 'LesionDiffusion', distribution: 'lesiondiffusion-mlx', task: 'Generation', description: 'Synthetic lesions in CT, with control of organ, size, placement and phenotype.' },
   { name: 'MedGemma', distribution: 'med-vlm-mlx', task: 'Vision-language', description: 'Ask questions about medical images and receive written responses on your Mac.' },
   { name: 'RadImageNet', distribution: 'radimagenet-mlx', task: 'Feature extraction', description: 'Extract numerical image features for research with models trained on RadImageNet.' },
-  { name: 'PyRadiomics', distribution: 'mlxradiomics', task: 'Quantitative imaging', description: 'Measure image intensity, texture and shape within a selected region.' },
 ].map(({ install, ...runtime }) => ({
   slug: runtime.distribution,
   ...runtime,

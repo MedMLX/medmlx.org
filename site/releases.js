@@ -5,7 +5,7 @@ export const pythonVersion = '3.13';
 export const macosVersion = '14.0';
 export const platformRequirement = `macOS ${macosVersion} or later on Apple Silicon`;
 export const releases = {
-  medmlx: { version: '0.4.6', repository: 'MedMLX/medmlx' },
+  medmlx: { version: '0.4.7', repository: 'MedMLX/medmlx' },
   'mlx-reason-ct': { version: '0.4.0', repository: 'MedMLX/mlx-reason-ct' },
   'fdg-pet-ct-mlx': { version: '0.2.7', repository: 'MedMLX/fdg-pet-ct-mlx' },
   'nnunet-mlx': { version: '0.7.2', repository: 'MedMLX/nnunet-mlx' },
@@ -14,6 +14,7 @@ export const releases = {
   'unest-mlx': { version: '0.2.8', repository: 'MedMLX/unest-mlx' },
   'swin-unetr-mlx': { version: '0.2.7', repository: 'MedMLX/swin-unetr-mlx' },
   'medsam2-mlx': { version: '0.2.9', repository: 'MedMLX/medsam2-mlx' },
+  'sam3-mlx': { version: '0.2.4', repository: 'MedMLX/sam3-mlx' },
   'biomedparse-mlx': { version: '0.1.6', repository: 'MedMLX/biomedparse-mlx' },
   'totalsegmentator-mlx': { version: '0.1.9', repository: 'MedMLX/totalsegmentator-mlx' },
   'synthseg-mlx': { version: '0.3.5', repository: 'MedMLX/synthseg-mlx' },
@@ -24,7 +25,6 @@ export const releases = {
   'lesiondiffusion-mlx': { version: '0.2.7', repository: 'MedMLX/lesiondiffusion-mlx' },
   'med-vlm-mlx': { version: '0.3.4', repository: 'MedMLX/med-vlm-mlx' },
   'radimagenet-mlx': { version: '0.3.4', repository: 'MedMLX/radimagenet-mlx' },
-  mlxradiomics: { version: '0.1.0.dev10', repository: 'MedMLX/mlx-radiomics' },
 };
 
 // From uv's installation docs; uv is not a reviewed MedMLX release.
@@ -36,14 +36,16 @@ export const medmlxProjectCommand = 'uv add "medmlx[all,mcp]"';
 // Copied from the medmlx README; make release-check finds each in the tagged release.
 export const medmlxRunCommand = [
   'medmlx describe mlx-segment-ct',
-  'medmlx readiness mlx-segment-ct --arguments arguments.json --root /path/to/work',
-  'medmlx run mlx-segment-ct --arguments arguments.json --root /path/to/work',
+  'medmlx readiness mlx-segment-ct --arguments arguments.json --root ~/medmlx-work',
+  'medmlx run mlx-segment-ct --arguments arguments.json --root ~/medmlx-work',
 ].join('\n');
+// The README's arguments.json for that run, saved in ~/medmlx-work with ct.nii.gz.
+export const medmlxArguments = '{"image_path": "ct.nii.gz", "output_dir": "segment-ct"}';
 export const medmlxSetupCommand = 'medmlx setup --all --progress';
 export const medmlxServeCommand = 'medmlx serve --root /path/to/work';
 /** The medmlx commands the site shows, with the release document that contains each. */
 export const medmlxExamples = [
-  medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxSetupCommand, medmlxServeCommand,
+  medmlxInstallCommand, medmlxProjectCommand, medmlxArguments, medmlxRunCommand, medmlxSetupCommand, medmlxServeCommand,
 ].map(command => ({ distribution: 'medmlx', path: 'README.md', command }));
 
 /** Link to the package's current published instructions. */

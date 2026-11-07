@@ -211,7 +211,7 @@
       "kind": "computed-feature-overlay",
       "asset": "radiomics-texture.webp",
       "run_manifest": "radiomics-run.json",
-      "repository": "MedMLX/mlx-radiomics",
+      "package": "mlxradiomics",
       "version": "0.1.0.dev5",
       "feature": "original_firstorder_Entropy"
     }

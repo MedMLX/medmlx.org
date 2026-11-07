@@ -1,4 +1,4 @@
-import { medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxServeCommand, releases } from './releases.js';
+import { medmlxArguments, medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxServeCommand, releases } from './releases.js';
 
 // The command line and Python API pages describe the reviewed medmlx tag.
 // make release-check finds every example below in its README or docs/setup.md,
@@ -25,6 +25,7 @@ export const cliCommands = [
 
 export const cliExamples = {
   install: medmlxInstallCommand,
+  arguments: medmlxArguments,
   run: medmlxRunCommand,
   setup: 'medmlx setup --all --progress\nmedmlx setup mlx-segment-ct --progress',
   plan: 'medmlx setup --all --plan',
@@ -50,12 +51,13 @@ export const pythonFunctions = [
 export const pythonExamples = {
   install: medmlxProjectCommand,
   run: [
-    'import json',
-    'from pathlib import Path',
     'import medmlx',
     '',
-    'arguments = json.loads(Path("arguments.json").read_text())',
-    'result = medmlx.run("mlx-segment-ct", arguments=arguments, root="/path/to/work")',
+    'result = medmlx.run(',
+    '    "mlx-segment-ct",',
+    '    arguments={"image_path": "ct.nii.gz", "output_dir": "segment-ct"},',
+    '    root="/path/to/medmlx-work",',
+    ')',
   ].join('\n'),
 };
 

@@ -3,7 +3,7 @@
 import { models, additionalRuntimes, reportCommand } from './models.js';
 import { modelCards } from './model-cards.js';
 import {
-  medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxServeCommand, medmlxSetupCommand,
+  medmlxArguments, medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxServeCommand, medmlxSetupCommand,
   platformRequirement, pythonVersion, releases, uvInstallCommand,
 } from './releases.js';
 import { mcpCalls, mcpCommands, mcpGuideSource, mcpTools, medmlxDoc } from './mcp.js';
@@ -228,7 +228,7 @@ const modelMedia = {
   'swin-unetr-mlx': { loop: 'abdomen-scroll' }, 'synthseg-mlx': { image: 'featured-brain' },
   'flexray-mlx': { image: 'featured-xray' }, 'lung-nodule-mlx': { loop: 'nodule-scroll' },
   'fdg-pet-ct-mlx': { image: 'featured-pet' }, 'mlx-generate-ctmr': { loop: 'generation-grid' },
-  'mlx-reason-ct': { loop: 'vision-attention' }, mlxradiomics: { loop: 'radiomics-organs' },
+  'mlx-reason-ct': { loop: 'vision-attention' },
   'radimagenet-mlx': { loop: 'feature-scroll' }, siam: { spin: 'siam-spin', slices: 'siam-slices' },
 };
 export const playIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M4 2l8 5-8 5z"/></svg>`;
@@ -605,7 +605,9 @@ function gettingStartedPage() {
         </li>
         <li>
           <h2>Run a model</h2>
-          <p><code>describe</code> lists the arguments a model takes. Save yours in <code>arguments.json</code>. <code>readiness</code> checks that the model can run, without downloading anything. <code>run</code> downloads the weights the first time, then runs the model.</p>
+          <p>To segment a CT scan, put it in a folder such as <code>~/medmlx-work</code> and save the run's arguments there as <code>arguments.json</code>. Paths in the file are read from that folder:</p>
+          ${terminal('medmlx-arguments', 'arguments.json', medmlxArguments, 'arguments.json')}
+          <p>From that folder, <code>describe</code> lists the arguments a model takes, <code>readiness</code> checks that the model can run without downloading anything, and <code>run</code> downloads the weights the first time, then runs the model:</p>
           ${terminal('medmlx-run-command', 'Run', medmlxRunCommand)}
           <p>To download weights ahead of time for offline use:</p>
           ${terminal('medmlx-setup-command', 'Download weights', medmlxSetupCommand)}
@@ -806,6 +808,8 @@ function cliPage() {
 
         <section class="guide-section" id="run" aria-labelledby="run-title">
           <h2 id="run-title">Run a model</h2>
+          <p>Save the run's arguments as <code>arguments.json</code> in your working folder, next to the scan:</p>
+          ${terminal('cli-arguments', 'arguments.json', cliExamples.arguments, 'arguments.json')}
           ${terminal('cli-run', 'Run a model', cliExamples.run)}
           <p><code>describe</code> lists the arguments a model takes. <code>readiness</code> checks that the model can run on this Mac, without downloading anything. <code>run</code> reads the arguments from a JSON file, runs the model and waits for it to finish. Relative paths in the file are read from the <code>--root</code> folder.</p>
           <p>Most models download their weights the first time they run, so you can leave out <code>weights_path</code>. Later runs reuse that download, and each run records which weights it used. To use your own weights, pass a local folder as <code>weights_path</code>. MedGemma and MRSegmentator need local weights for now.</p>

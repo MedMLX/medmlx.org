@@ -475,6 +475,67 @@ export const modelCards = {
       ]
     }
   },
+  "sam3-mlx": {
+    "version": "0.2.4",
+    "rows": [
+      [
+        "Input",
+        {
+          "text": "One 2D image, such as a PNG or JPEG, or one chosen frame of an image folder or video, with a text prompt, a box or a point.",
+          "sources": [
+            "One 2D image (PNG, JPEG or any Pillow-readable format), or one chosen frame of an image folder or video; a text prompt, one box and/or one point"
+          ]
+        }
+      ],
+      [
+        "Output",
+        {
+          "text": "One mask per detected object at the image's size, plus boxes and scores.",
+          "sources": [
+            "`out/masks.npy`, boolean `(N, height, width)` at the input resolution, and `out/prediction.json` with pixel boxes and scores"
+          ]
+        }
+      ]
+    ],
+    "limitations": [
+      {
+        "text": "SAM 3 is a general-purpose model. Its accuracy on medical images is not established.",
+        "sources": [
+          "SAM 3 is a general-purpose model; its accuracy on medical images is not established."
+        ]
+      },
+      {
+        "text": "Reads ordinary 8-bit images. DICOM, NIfTI and 3D volumes are not read; export a slice to PNG first.",
+        "sources": [
+          "Images are 2D and decoded with Pillow; DICOM, NIfTI and 3D volumes are not read. Export a slice to PNG first.",
+          "Image files and frames must be 8-bit."
+        ]
+      }
+    ],
+    "measurements": [
+      {
+        "text": "Peaks at about **12 GB** of memory at the default 1008-pixel resolution.",
+        "sources": [
+          "about 12 GB peak memory at the default 1008-pixel resolution"
+        ]
+      }
+    ],
+    "noWeights": false,
+    "weights": [
+      {
+        "name": "SAM 3 image model",
+        "url": "https://huggingface.co/mlx-community/sam3-image",
+        "revision": "b72a14d8127e17e6f2a3d2e075bbbf4307ba146e",
+        "size": "3.4 GB"
+      }
+    ],
+    "terms": {
+      "text": "Software and model files: the [SAM License](https://github.com/MedMLX/sam3-mlx/blob/v0.2.4/LICENSE), which allows commercial use but bars military, weapons and trade-controlled uses. Publications must acknowledge SAM.",
+      "sources": [
+        "royalty-free,\nincluding commercial use, but not for military, weapons or other uses barred by\ntrade controls, and publications must acknowledge SAM."
+      ]
+    }
+  },
   "medsam2-mlx": {
     "version": "0.2.9",
     "rows": [
@@ -1195,72 +1256,6 @@ export const modelCards = {
       "text": "Software: [Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.4/LICENSE). Model files have their own license terms.",
       "sources": [
         "[Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.4/LICENSE). See [third-party notices](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.4/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
-      ]
-    }
-  },
-  "mlxradiomics": {
-    "version": "0.1.0.dev10",
-    "rows": [
-      [
-        "Input",
-        {
-          "text": "A 2D or 3D image in NIfTI or NRRD format, with a label mask marking the region to measure.",
-          "sources": [
-            "One 2D or 3D image: `.nii`, `.nii.gz`, `.nrrd` or `.nhdr`",
-            "Integer label mask."
-          ]
-        }
-      ],
-      [
-        "Output",
-        {
-          "text": "Measurements of image intensity, texture and shape. Intensity and texture can also be shown as maps.",
-          "sources": [
-            "ROI features or voxel maps",
-            "`FEATURES` lists 190 selectable outputs, including all 116 non-deprecated PyRadiomics names. The default remains the original 93 intensity and texture outputs; request additions and shape features explicitly.",
-            "| Shape | 32 | 3D ROI |"
-          ]
-        }
-      ],
-      [
-        "Model download",
-        {
-          "text": "No model files need to be downloaded.",
-          "sources": [
-            "No model weights are required."
-          ]
-        }
-      ]
-    ],
-    "limitations": [
-      {
-        "text": "The image and mask must be aligned, unless the settings turn on resampling or mask correction.",
-        "sources": [
-          "A geometry mismatch is refused unless the params enable `correctMask` or `resampledPixelSpacing`"
-        ]
-      },
-      {
-        "text": "Some measurements can be undefined or outside the supported range. Check the results before analysis.",
-        "sources": [
-          "Undefined features are NaN, and float32 overflow can give infinity."
-        ]
-      },
-      {
-        "text": "The Simoncelli and Riesz filters are experimental and exposed to a known MLX bug until a fixed MLX release is published. Other features are unaffected.",
-        "sources": [
-          "Simoncelli and Riesz filters are experimental.",
-          "MLX 0.32.4 has an out-of-bounds FFT write that can silently modify a neighbouring array",
-          "All other features do not use the FFT."
-        ]
-      }
-    ],
-    "measurements": [],
-    "noWeights": true,
-    "weights": [],
-    "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v0.1.0.dev10/LICENSE).",
-      "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v0.1.0.dev10/LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md)"
       ]
     }
   }
