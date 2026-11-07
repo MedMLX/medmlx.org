@@ -3,7 +3,7 @@
 // Keep implementation details in the linked repository. Reason-CT lives in models.js.
 export const modelCards = {
   "fdg-pet-ct-mlx": {
-    "version": "0.2.7",
+    "version": "0.3.0",
     "rows": [
       [
         "Input",
@@ -65,9 +65,9 @@ export const modelCards = {
     "noWeights": true,
     "weights": [],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.2.7/LICENSE).",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.3.0/LICENSE).",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.2.7/LICENSE). See [third-party notices](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.2.7/THIRD_PARTY_NOTICES.md)."
+        "[Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.3.0/LICENSE). See [third-party notices](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.3.0/THIRD_PARTY_NOTICES.md)."
       ]
     }
   },
@@ -537,7 +537,7 @@ export const modelCards = {
     }
   },
   "medsam2-mlx": {
-    "version": "0.2.9",
+    "version": "0.3.0",
     "rows": [
       [
         "Input",
@@ -611,9 +611,9 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.2.9/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.3.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.2.9/LICENSE). See [third-party notices](https://github.com/MedMLX/medsam2-mlx/blob/v0.2.9/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms; see the [model card](https://huggingface.co/MedMLX/medsam2-mlx)."
+        "[Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.3.0/LICENSE). See [third-party notices](https://github.com/MedMLX/medsam2-mlx/blob/v0.3.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms; see the [model card](https://huggingface.co/MedMLX/medsam2-mlx)."
       ]
     }
   },
