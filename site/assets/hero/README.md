@@ -13,28 +13,21 @@ radiomics asset, and the six three-panel scenes. Documentation figures were
 read from their Git tags, not from working trees.
 
 `radiomics-texture.webp` and its lossless PNG were computed for this site.
-MedMLX job `5192108bfe00` ran mlxradiomics
-0.1.0.dev5 on the Apple Silicon GPU with `voxel=True`, 10-HU bins, a five-pixel kernel
-radius, and 2D neighborhoods. Its source is the retained AMOS22 CT plane and
+They use mlxradiomics 0.1.0.dev5 with `voxel=True`, 10-HU bins, a five-pixel
+kernel radius and 2D neighborhoods. Its source is the retained AMOS22 CT plane and
 SwinUNETR liver label in `figure1.npz`, which is not included in this repository.
 The ROI is the largest connected component of the predicted liver label;
 the two detached components were excluded before computing radiomics.
 `radiomics-run.json` records the source, that ROI selection, the actual
-runtime/settings, feature-map summaries and the display transform. No feature
-values are synthesized or smoothed. The CT uses a −160 to 240 HU window;
+runtime/settings, feature-map summaries and the display transform. The CT uses a −160 to 240 HU window;
 the sequential crimson palette maps the ROI's 2nd–98th entropy percentiles.
 The legend reports bits. The film uses this image. The renderer is `docs/hero/render_radiomics.py`; local NIfTI
 inputs and raw map outputs remain in `dist/radiomics-demo/`.
 
-The crops remove figure headings and legends. An RGB black-level subtraction
-of 8 and saturation of 0.78 unify the documentation figure backgrounds;
-the computed radiomics asset retains its renderer's palette. Each scene
-lasts six seconds, with a 1.5-second
-smoothstep dissolve to the next. A periodic 1.00–1.03 scale about the frame
-center (1.015 + 0.015·sin(2πt/36)) provides a gentle camera move and returns to
-the same position at the loop seam. Each scene is composited once on a float
-canvas at twice the film's resolution, and every frame is resampled through one
-float crop box, so the move has no whole-pixel steps.
+Each scene lasts six seconds, with a 1.5-second dissolve and a gentle scale
+animation that returns to its starting position at the loop seam. The renderer
+removes figure headings, matches backgrounds and composites at twice the film's
+resolution before resampling.
 
 The browser starts the film only with the hero visible. It pauses when the
 hero leaves the viewport, the tab is hidden, or the user presses Pause film.
