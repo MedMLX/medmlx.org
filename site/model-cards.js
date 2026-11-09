@@ -1046,7 +1046,7 @@ export const modelCards = {
     }
   },
   "lesiondiffusion-mlx": {
-    "version": "0.2.7",
+    "version": "0.2.8",
     "rows": [
       [
         "Input",
@@ -1075,9 +1075,10 @@ export const modelCards = {
         ]
       },
       {
-        "text": "Parts of the CT outside the lesion can also change.",
+        "text": "By default the whole CT is reconstructed, which shifts values away from the lesion by several HU. Set `output_region` to `lesion` to keep the rest of the scan unchanged.",
         "sources": [
-          "The decoder reconstructs the whole CT, so voxels outside the lesion can change."
+          "away from the lesion it shifts attenuation by several HU, by an amount that depends on the volume.",
+          "The shift cancels, and voxels farther away are the input unchanged."
         ]
       },
       {
@@ -1089,10 +1090,10 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Tests peaked at **3.29 GB** with the default settings and **3.46 GB** in source mode, for a 160×160×128 crop at 1 mm resolution with 200 generation steps.",
+        "text": "Tests peaked at **5.19 GB** with the default settings and **3.46 GB** in source mode, for a 160×160×128 crop at 1 mm resolution with 200 generation steps.",
         "sources": [
-          "**3.46 GB** peak MLX memory for `lesiondiffusion` in source mode and **3.29 GB** in the default conditioned mode on a 160×160×128, 1 mm RAS crop.",
-          "Both measurements used an AMOS case 0008 crop and 200 diffusion steps: FP32 LMNet and text encoders, FP16 LINet and VQ."
+          "**5.19 GB** peak MLX memory for `lesiondiffusion` in the default conditioned mode and **3.46 GB** in source mode on a 160×160×128, 1 mm RAS crop.",
+          "Both measurements used an AMOS case 0008 crop and 200 diffusion steps"
         ]
       },
       {
@@ -1112,9 +1113,9 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.7/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.8/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.7/LICENSE). See [third-party notices](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.7/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.8/LICENSE). See [third-party notices](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.2.8/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
@@ -1256,6 +1257,69 @@ export const modelCards = {
       "text": "Software: [Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.4/LICENSE). Model files have their own license terms.",
       "sources": [
         "[Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.4/LICENSE). See [third-party notices](https://github.com/MedMLX/radimagenet-mlx/blob/v0.3.4/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+      ]
+    }
+  },
+  "mlxradiomics": {
+    "version": "1.0.1",
+    "rows": [
+      [
+        "Input",
+        {
+          "text": "A 2D or 3D image in NIfTI or NRRD format, with a label mask on the same grid marking the region to measure.",
+          "sources": [
+            "Use a 2D or 3D NIfTI/NRRD image and an integer label mask on the same grid."
+          ]
+        }
+      ],
+      [
+        "Output",
+        {
+          "text": "Up to 190 intensity, texture and shape measurements as JSON and CSV, or one map per intensity or texture feature.",
+          "sources": [
+            "`mlxradiomics.FEATURES` lists all 190 names, including all 116 non-deprecated",
+            "ROI mode writes `features.json` and `features.csv`;",
+            "`voxel=True` writes float32 NIfTI maps under `maps/`, zero outside the ROI."
+          ]
+        }
+      ],
+      [
+        "Model download",
+        {
+          "text": "No model files need to be downloaded.",
+          "sources": [
+            "No model weights to download."
+          ]
+        }
+      ]
+    ],
+    "limitations": [
+      {
+        "text": "Shape is measured over the whole region, without maps. Local intensity needs a 3D image.",
+        "sources": [
+          "Shape and local intensity are ROI-only; local intensity needs 3D input."
+        ]
+      },
+      {
+        "text": "The Simoncelli and Riesz filters are not available in this release.",
+        "sources": [
+          "Simoncelli and Riesz filters are unavailable on this release; see the limits guide."
+        ]
+      },
+      {
+        "text": "Undefined measurements are reported as NaN.",
+        "sources": [
+          "Feature arithmetic is float32. Undefined values are NaN; overflow is infinity."
+        ]
+      }
+    ],
+    "measurements": [],
+    "noWeights": true,
+    "weights": [],
+    "terms": {
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v1.0.1/LICENSE).",
+      "sources": [
+        "[Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/main/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-radiomics/blob/main/THIRD_PARTY_NOTICES.md), including CC BY 4.0 attribution"
       ]
     }
   }

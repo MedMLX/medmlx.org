@@ -199,6 +199,8 @@ export const catalog = [
   return {
     slug: item.distribution, ...item, version, href: `/models/${item.slug || item.distribution}/`, internal: true,
     source: `https://github.com/${repository}/tree/v${version}`,
+    // GitHub resolves this to the newest release, so the link never goes stale.
+    latest: `https://github.com/${repository}/releases/latest`,
   };
 }).sort((a, b) => {
   const rank = item => featuredNames.includes(item.name) ? featuredNames.indexOf(item.name) : featuredNames.length;
@@ -216,7 +218,7 @@ const featuredImages = { 'nnU-Net': 'featured-liver', TotalSegmentator: 'feature
 /** Let a camel-case name wrap between its words (Total|Segmentator) rather than overflow. */
 const breakable = name => name.split(/(?<=[a-z])(?=[A-Z][a-z])/).flatMap((part, i) => (i ? [html`<wbr>`, part] : [part]));
 // Task cards that loop a saved model run; each has <name>.mp4, <name>-poster.webp and <name>-run.json.
-const taskLoops = { Segmentation: 'abdomen-scroll', Detection: 'nodule-scroll', Generation: 'generation-grid', 'Vision-language': 'vision-attention', 'Quantitative imaging': 'radiomics-organs', 'Feature extraction': 'feature-scroll' };
+const taskLoops = { Segmentation: 'abdomen-scroll', Detection: 'nodule-scroll', Generation: 'generation-grid', 'Vision-language': 'vision-attention', 'Quantitative imaging': 'radiomics-features', 'Feature extraction': 'feature-scroll' };
 export const pauseIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 2h3v10H3zm5 0h3v10H8z"/></svg>`;
 // Model pages lead with that model's own output: a saved run that loops, or a
 // panel from its documentation figure. Sources are on the credits page. Models
@@ -229,7 +231,7 @@ const modelMedia = {
   'flexray-mlx': { image: 'featured-xray' }, 'lung-nodule-mlx': { loop: 'nodule-scroll' },
   'fdg-pet-ct-mlx': { image: 'featured-pet' }, 'mlx-generate-ctmr': { loop: 'generation-grid' },
   'mlx-reason-ct': { loop: 'vision-attention' },
-  'radimagenet-mlx': { loop: 'feature-scroll' }, siam: { spin: 'siam-spin', slices: 'siam-slices' },
+  'radimagenet-mlx': { loop: 'feature-scroll' }, mlxradiomics: { loop: 'radiomics-features' }, siam: { spin: 'siam-spin', slices: 'siam-slices' },
 };
 export const playIcon = html`<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M4 2l8 5-8 5z"/></svg>`;
 
@@ -542,7 +544,7 @@ function modelPage(model) {
       <div class="page-head-copy">
         <h1>${model.name}</h1>
         <p class="lead">${model.summary}</p>
-        <p class="meta">Model card · Version <a href="https://github.com/${repository}/tree/v${version}">${version}</a> · Based on <a href="${model.upstream.url}">${model.upstream.name}</a></p>
+        <p class="meta">Model card · Version <a href="https://github.com/${repository}/tree/v${version}">${version}</a> · <a href="https://github.com/${repository}/releases/latest">Latest release</a> · Based on <a href="${model.upstream.url}">${model.upstream.name}</a></p>
         <div class="actions">
           <a class="button" href="${guide}" data-route>Get started</a>
           <a class="button secondary" href="https://github.com/${repository}/tree/v${version}">GitHub repository</a>
@@ -955,7 +957,7 @@ function runtimePage(item) {
         <p class="lead">${item.description}</p>
         ${item.upstream ? html`<p class="credit">Original model: ${item.upstream.name} by ${item.upstream.authors} ·
           <a href="${item.upstream.repository}">Repository</a> · <a href="${item.upstream.paper}">Paper</a></p>` : ''}
-        <p class="meta">${item.slug === item.distribution ? 'Version' : `Runs in ${item.distribution}`} <a href="${item.source}">${item.version}</a> · Apple Silicon</p>
+        <p class="meta">${item.slug === item.distribution ? 'Version' : `Runs in ${item.distribution}`} <a href="${item.source}">${item.version}</a> · <a href="${item.latest}">Latest release</a> · Apple Silicon</p>
         <div class="actions">
           <a class="button" href="/get-started/" data-route>Get started</a>
           <a class="button secondary" href="${item.source}">GitHub repository</a>

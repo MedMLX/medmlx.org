@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "method": "Native MLX Radiomics voxel and ROI extraction with mlxradiomics.medmlx.run on one liver ROI",
+  "job": {
+    "script": "docs/hero/compute_radiomics_features.py",
+    "entry_point": "mlxradiomics.medmlx.run(image_path, mask_path, output_dir, params, voxel=True), then the same call with voxel=False",
+    "started_at": "2026-11-09T17:22:04+00:00",
+    "finished_at": "2026-11-09T17:22:08+00:00",
+    "voxel_wall_seconds": 3.663,
+    "roi_wall_seconds": 0.789
+  },
+  "runtime": {
+    "package": "mlxradiomics",
+    "version": "1.0.0",
+    "mlx_version": "0.32.4",
+    "simpleitk_version": "2.5.6",
+    "nibabel_version": "5.5.0",
+    "numpy_version": "2.5.4",
+    "python_version": "3.13.17",
+    "device": "Apple M5 Max GPU"
+  },
+  "source": {
+    "source_file": "figure1.npz",
+    "image_key": "swinunetr/image",
+    "labels_key": "swinunetr/labels",
+    "source_case": "AMOS22 amos_0008",
+    "axial_slice": 80,
+    "spacing_mm_row_col": [
+      0.6158854365348816,
+      0.6158854365348816
+    ],
+    "input_shape": [
+      768,
+      768
+    ],
+    "derivation": "Same as radiomics-run.json: the raw HU axial slice and native SwinUNETR prediction written as one-slice NIfTI with SimpleITK. No resampling or input smoothing.",
+    "parameters": {
+      "setting": {
+        "binWidth": 10,
+        "kernelRadius": 5,
+        "maskedKernel": true,
+        "force2D": true,
+        "force2Ddimension": 0
+      },
+      "featureClass": {
+        "firstorder": [
+          "Mean",
+          "Entropy"
+        ],
+        "glcm": [
+          "Contrast"
+        ],
+        "glrlm": [
+          "RunEntropy"
+        ],
+        "glszm": [
+          "ZoneEntropy"
+        ],
+        "gldm": [
+          "DependenceEntropy"
+        ],
+        "ngtdm": [
+          "Busyness"
+        ]
+      }
+    }
+  },
+  "roi_selection": {
+    "rule": "largest 4-connected component of the predicted BTCV liver label (6), computed before extraction",
+    "original_roi_pixels": 14940,
+    "selected_roi_pixels": 14435,
+    "original_component_count": 3,
+    "manual_mask_edits": false
+  },
+  "maps": {
+    "original_firstorder_Mean": {
+      "roi_value": 57.22964859008789,
+      "map_range": [
+        5.361111164093018,
+        68.5
+      ],
+      "local_artifact": "dist/radiomics-features-demo/voxel/maps/original_firstorder_Mean.nii.gz"
+    },
+    "original_firstorder_Entropy": {
+      "roi_value": 2.4740946292877197,
+      "map_range": [
+        0.8166890740394592,
+        3.217390775680542
+      ],
+      "local_artifact": "dist/radiomics-features-demo/voxel/maps/original_firstorder_Entropy.nii.gz"
+    },
+    "original_glcm_Contrast": {
+      "roi_value": 1.197616696357727,
+      "map_range": [
+        0.2155316174030304,
+        5.1703596115112305
+      ],
+      "local_artifact": "dist/radiomics-features-demo/voxel/maps/original_glcm_Contrast.nii.gz"
+    },
+    "original_glrlm_RunEntropy": {
+      "roi_value": 4.103139877319336,
+      "map_range": [
+        2.6331355571746826,
+        4.116569519042969
+      ],
+      "local_artifact": "dist/radiomics-features-demo/voxel/maps/original_glrlm_RunEntropy.nii.gz"
+    },
+    "original_glszm_ZoneEntropy": {
+      "roi_value": 6.0936079025268555,
+      "map_range": [
+        1.7924810647964478,
+        4.9219279289245605
+      ],
+      "local_artifact": "dist/radiomics-features-demo/voxel/maps/original_glszm_ZoneEntropy.nii.gz"
+    },
+    "original_ngtdm_Busyness": {
+      "roi_value": 4.023355007171631,
+      "map_range": [
+        0.044431351125240326,
+        1.8374580144882202
+      ],
+      "local_artifact": "dist/radiomics-features-demo/voxel/maps/original_ngtdm_Busyness.nii.gz"
+    }
+  },
+  "not_shown": [
+    "original_gldm_DependenceEntropy"
+  ],
+  "display": {
+    "renderer": "docs/hero/render_radiomics_features.py",
+    "ct_window_hu": [
+      -160,
+      240
+    ],
+    "color_range_rule": "2nd-98th percentile of each map's ROI values; each frame has its own range, so colors compare only within a frame",
+    "frames": [
+      {
+        "feature": "original_firstorder_Mean",
+        "family_title": "First order",
+        "units": "HU",
+        "color_range": [
+          21.852434692382815,
+          65.79338836669922
+        ],
+        "labels": [
+          "65.8 HU",
+          "21.9 HU",
+          "Whole ROI 57.2"
+        ],
+        "roi_pixels_clipped": {
+          "below": 289,
+          "above": 288
+        }
+      },
+      {
+        "feature": "original_firstorder_Entropy",
+        "family_title": "First order",
+        "units": "bits",
+        "color_range": [
+          1.4671012449264527,
+          2.9387619495391846
+        ],
+        "labels": [
+          "2.94 bits",
+          "1.47 bits",
+          "Whole ROI 2.47"
+        ],
+        "roi_pixels_clipped": {
+          "below": 289,
+          "above": 289
+        }
+      },
+      {
+        "feature": "original_glcm_Contrast",
+        "family_title": "GLCM",
+        "units": null,
+        "color_range": [
+          0.5932100796699524,
+          2.3136122131347645
+        ],
+        "labels": [
+          "2.31",
+          "0.593",
+          "Whole ROI 1.20"
+        ],
+        "roi_pixels_clipped": {
+          "below": 289,
+          "above": 289
+        }
+      },
+      {
+        "feature": "original_glrlm_RunEntropy",
+        "family_title": "GLRLM",
+        "units": "bits",
+        "color_range": [
+          2.996308488845825,
+          3.866298122406006
+        ],
+        "labels": [
+          "3.87 bits",
+          "3.00 bits",
+          "Whole ROI 4.10"
+        ],
+        "roi_pixels_clipped": {
+          "below": 289,
+          "above": 289
+        }
+      },
+      {
+        "feature": "original_glszm_ZoneEntropy",
+        "family_title": "GLSZM",
+        "units": "bits",
+        "color_range": [
+          3.179321556091309,
+          4.469670295715332
+        ],
+        "labels": [
+          "4.47 bits",
+          "3.18 bits",
+          "Whole ROI 6.09"
+        ],
+        "roi_pixels_clipped": {
+          "below": 289,
+          "above": 285
+        }
+      },
+      {
+        "feature": "original_ngtdm_Busyness",
+        "family_title": "NGTDM",
+        "units": null,
+        "color_range": [
+          0.0780331164598465,
+          0.6357476162910461
+        ],
+        "labels": [
+          "0.636",
+          "0.0780",
+          "Whole ROI 4.02"
+        ],
+        "roi_pixels_clipped": {
+          "below": 289,
+          "above": 289
+        }
+      }
+    ],
+    "roi_value": "the whole-ROI feature value from the ROI-mode run, which need not lie within the voxel map's range",
+    "color_palette_rgb": [
+      [
+        48,
+        9,
+        20
+      ],
+      [
+        120,
+        24,
+        43
+      ],
+      [
+        195,
+        58,
+        77
+      ],
+      [
+        239,
+        137,
+        143
+      ],
+      [
+        255,
+        233,
+        226
+      ]
+    ],
+    "overlay_opacity": 0.78,
+    "body_mask": "largest CT > -300 HU component, holes filled; contains the ROI; pixels outside it set to black",
+    "source_crop_xyxy": [
+      118,
+      164,
+      639,
+      576
+    ],
+    "panel_xywh_px": [
+      20,
+      54,
+      521,
+      412
+    ],
+    "display_resampling": "none; the cropped panel is placed at 1:1 source pixels",
+    "numerical_smoothing": false,
+    "frame_size_px": [
+      800,
+      520
+    ],
+    "background": "black",
+    "fonts": "Inter SemiBold 34 px (family), IBM Plex Mono 26 px (feature), Inter Regular 24 px (labels); SIL Open Font License"
+  },
+  "animation": {
+    "fps": 24,
+    "hold_frames": 48,
+    "dissolve_frames": 14,
+    "dissolve": "smoothstep cross-dissolve of the rendered RGB frames over 14 frames; feature values are never blended before color mapping",
+    "text": "outgoing labels fade out over the first half of each dissolve; incoming labels fade in and the feature name types in over the second half",
+    "loop_frames": 372,
+    "loop_seconds": 15.5,
+    "loop": "the last dissolve leads into frame 0, which is the poster"
+  },
+  "encode": {
+    "video": {
+      "codec": "H.264 (libx264)",
+      "preset": "veryslow",
+      "crf": 24,
+      "pix_fmt": "yuv420p",
+      "color": "BT.709, limited range",
+      "fps": 24,
+      "frames": 372,
+      "size_px": [
+        800,
+        520
+      ],
+      "audio": false,
+      "ffmpeg": "ffmpeg version 9.0",
+      "imageio_ffmpeg": "0.8.1",
+      "bytes": 208216
+    },
+    "poster": {
+      "format": "WebP",
+      "quality": 85,
+      "method": 6,
+      "frame": 0,
+      "bytes": 29288
+    }
+  },
+  "outputs": {
+    "video": "site/assets/hero/radiomics-features.mp4",
+    "poster": "site/assets/hero/radiomics-features-poster.webp"
+  }
+}

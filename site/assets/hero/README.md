@@ -48,9 +48,9 @@ in `docs/hero/`. Raw outputs stay in `dist/<name>-demo/`.
 - `nodule-scroll`: lung-nodule-mlx 0.2.5 on a held-out LUNA16 subset0 CT; the
   predicted box is drawn on the 8 slices it spans. Soft-tissue window, to match
   the abdomen loop.
-- `radiomics-organs`: mlxradiomics 0.1.0.dev8 entropy maps for the liver,
-  kidneys and pancreas on the same AMOS22 slice as `radiomics-texture`, with
-  one shared color range. The liver map is identical to the dev5 one.
+- `radiomics-features`: mlxradiomics 1.0.0 voxel maps of six features, one
+  per family, on the liver ROI of the same AMOS22 slice as `radiomics-texture`.
+  Each frame has its own color range and shows the whole-ROI value.
 - `generation-grid`: mlx-generate-ctmr 0.5.2.post2 volumes generated from
   noise, three paired CTs and three MR-Brain contrasts, scrolled together. CT
   seeds and each tile's slice range were chosen by visual review; ranges stop

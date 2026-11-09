@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := qa
-.PHONY: env check-env serve lint typecheck test site-check release-check build pages deploy qa loc clean
+.PHONY: env check-env serve lint typecheck test site-check release-check bump build pages deploy qa loc clean
 
 PORT ?= 4173
 PYTHON ?= .venv/bin/python
@@ -48,6 +48,10 @@ GITHUB_TOKEN_FROM_GH = GITHUB_TOKEN="$${GITHUB_TOKEN:-$$(gh auth token 2>/dev/nu
 
 release-check: check-env
 	$(GITHUB_TOKEN_FROM_GH) $(PYTHON) devtools/check_releases.py
+
+# Move pins to newer PyPI releases that pass release-check; others stay and are listed.
+bump: check-env
+	$(GITHUB_TOKEN_FROM_GH) $(PYTHON) devtools/bump_releases.py
 
 pages: site-check
 	$(GITHUB_TOKEN_FROM_GH) MEDMLX_SITE_PYTHON="$(PYTHON)" node devtools/export-site.mjs
