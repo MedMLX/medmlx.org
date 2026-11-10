@@ -186,14 +186,13 @@ function setupScrubs() {
     let touched = false;
     let visible = false;
     let drag = null;
-    // The static host ignores range requests, so a streamed video cannot seek beyond
-    // what it has buffered. Each view downloads its video whole and plays it from a
-    // local object URL, where every frame can be sought.
+    // A local blob makes every frame seekable once the download finishes.
     let objectUrl = '';
     let pending = null;
+    const download = new AbortController();
     const load = () => {
-      if (video.hasAttribute('src') || pending) return;
-      pending = fetch(video.dataset.src)
+      if (disposed || video.hasAttribute('src') || pending) return;
+      pending = fetch(video.dataset.src, { signal: download.signal })
         .then(response => {
           if (!response.ok) throw new Error(`${response.status} ${video.dataset.src}`);
           return response.blob();
@@ -203,7 +202,10 @@ function setupScrubs() {
           objectUrl = URL.createObjectURL(blob);
           video.src = objectUrl;
           video.addEventListener('loadedmetadata', sync, { once: true });
-        });
+        })
+        // Keep the poster on failure; a later visit or gesture can retry.
+        .catch(() => {})
+        .finally(() => { pending = null; });
     };
     // Distinct frames: every angle, or each slice once (the video also runs back up).
     const count = () => {
@@ -287,9 +289,11 @@ function setupScrubs() {
     motion.addEventListener('change', sync);
     document.addEventListener('visibilitychange', sync);
     cleanups.push(() => {
+      download.abort();
       observer.disconnect();
       motion.removeEventListener('change', sync);
       document.removeEventListener('visibilitychange', sync);
+      video.removeEventListener('loadedmetadata', sync);
       video.pause();
       video.removeAttribute('src');
       video.load();
