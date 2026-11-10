@@ -95,11 +95,11 @@ export const additionalRuntimes = [
   { name: 'SynthSeg', distribution: 'synthseg-mlx', task: 'Segmentation', description: 'Brain segmentation and parcellation.' },
   { name: 'FleXray', distribution: 'flexray-mlx', task: 'Segmentation', description: 'Radiograph segmentation.' },
   { name: 'FlexibleUNet', distribution: 'flexible-unet-mlx', task: 'Segmentation', description: 'Identify surgical instruments in endoscopy images.' },
-  { name: '3D RetinaNet', distribution: 'lung-nodule-mlx', task: 'Detection', description: 'MONAI RetinaNet lung nodule detection in 3D chest CT.' },
+  { name: 'RetinaNet', distribution: 'lung-nodule-mlx', task: 'Detection', description: 'MONAI RetinaNet lung nodule detection in 3D chest CT.' },
   { name: 'NV-Generate', distribution: 'mlx-generate-ctmr', task: 'Generation', description: 'Synthetic 3D CT and MRI generation with NVIDIA NV-Generate (MAISI).' },
   { name: 'LesionDiffusion', distribution: 'lesiondiffusion-mlx', task: 'Generation', description: 'Synthetic lesions in CT, with control of organ, size, placement and phenotype.' },
   { name: 'MedGemma', distribution: 'med-vlm-mlx', task: 'Vision-language', description: 'Ask questions about medical images and receive written responses on your Mac.' },
-  { name: 'mlxradiomics', distribution: 'mlxradiomics', task: 'Quantitative imaging', description: 'Measure intensity, texture and shape in a region, with voxel maps of intensity and texture.' },
+  { name: 'Radiomics', distribution: 'mlxradiomics', task: 'Quantitative imaging', description: 'Measure intensity, texture and shape in a region, with voxel maps of intensity and texture.' },
   { name: 'RadImageNet', distribution: 'radimagenet-mlx', task: 'Feature extraction', description: 'Extract numerical image features for research with models trained on RadImageNet.' },
 ].map(({ install, ...runtime }) => ({
   slug: runtime.distribution,

@@ -8,7 +8,20 @@
     "wall_seconds": 24.84,
     "call": "lung_nodule_mlx.medmlx.run(image_path=\"<LUNA16>/nifti/nodule_03_20mm.nii.gz\", weights_path=\"~/.cache/medmlx/lung-nodule\", output_dir=\"dist/nodule-scroll-demo/nodule_03_20mm\", overwrite=True, resample_raw_input=True)",
     "fresh_process": true,
-    "deterministic_rerun": "A second run in a fresh process wrote byte-identical detections.json and bundle_detections.json."
+    "deterministic_rerun": "A second run in a fresh process wrote byte-identical detections.json and bundle_detections.json.",
+    "rerun": {
+      "date": "2026-11-10",
+      "reason": "lung-nodule-mlx 0.2.5 is no longer on PyPI; the saved outputs were regenerated for re-framing",
+      "call": "lung_nodule_mlx.medmlx.run(image_path=\"<LUNA16>/nifti/nodule_03_20mm.nii.gz\", output_dir=\"dist/nodule-scroll-demo/nodule_03_20mm\", overwrite=True, resample_raw_input=True)",
+      "runtime": {
+        "package": "lung-nodule-mlx",
+        "version": "0.2.7",
+        "medmlx_core_version": "0.2.6",
+        "mlx_version": "0.32.4"
+      },
+      "weights_revision": "58f199295680aa0296f97d7c0a6480b02a47457d",
+      "result": "Detection boxes identical to the recorded 0.2.5 run; the renderer checks them against this record."
+    }
   },
   "runtime": {
     "model_id": "lung-nodule",
@@ -266,13 +279,13 @@
     "body_mask": "Largest 3D CT > -300 HU component of the displayed slab, holes filled per slice; set to true black outside. Contains the predicted box center.",
     "field_of_view": "The body reaches the first and last image columns, so the flat left and right body edges are the edge of the scan's 360 mm reconstruction field, not a crop.",
     "source_crop_xyxy": [
-      -58.427,
-      69.622,
-      570.427,
-      478.378
+      152.63,
+      204.768,
+      522.408,
+      445.123
     ],
-    "source_crop_note": "Continuous source-pixel coordinates (columns = i, rows = j) of one crop for every frame: body bounds plus 8 mm, widened to 800:520; area beyond the scan is black padding.",
-    "scale_px_per_mm": 1.8093,
+    "source_crop_note": "Continuous source-pixel coordinates (columns = i, rows = j) of one crop for every frame: 260 mm wide at 800:520, centered on the predicted box and shifted to stay within the body bounds plus 8 mm; area beyond the scan is black padding.",
+    "scale_px_per_mm": 3.0769,
     "display_resampling": "uniform in-plane Lanczos on the windowed float image",
     "box": {
       "drawn_detection_ranks": [
@@ -300,10 +313,10 @@
         113.161
       ],
       "frame_stroke_outer_xyxy": [
-        483,
-        304,
-        525,
-        346
+        367,
+        227,
+        433,
+        293
       ],
       "color": "#ff5a73",
       "stroke_px": 6,
@@ -329,9 +342,9 @@
       "color": "BT.709 primaries, transfer and matrix; limited range",
       "faststart": true,
       "audio": null,
-      "stream": "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 800x520, 559 kb/s, 24 fps, 24 tbr, 12288 tbn (default)",
-      "ffmpeg": "ffmpeg version 7.1 Copyright (c) 2000-2024 the FFmpeg developers",
-      "imageio_ffmpeg_version": "0.7.0",
+      "stream": "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 800x520, 545 kb/s, 24 fps, 24 tbr, 12288 tbn (default)",
+      "ffmpeg": "ffmpeg version 9.0 Copyright (c) 2000-2026 the FFmpeg developers",
+      "imageio_ffmpeg_version": "0.8.1",
       "ffmpeg_arguments": [
         "-hide_banner",
         "-loglevel",
@@ -371,14 +384,14 @@
     },
     "decoded_check": {
       "frames": 160,
-      "max_rgb_outside_body": 4,
+      "max_rgb_outside_body": 3,
       "outside_body_region": "Body exterior of the first frame, eroded by 6 output pixels"
     },
     "outputs": {
       "video": "site/assets/hero/nodule-scroll.mp4",
-      "video_bytes": 468454,
+      "video_bytes": 456840,
       "poster": "site/assets/hero/nodule-scroll-poster.webp",
-      "poster_bytes": 36530,
+      "poster_bytes": 31974,
       "size_px": [
         800,
         520

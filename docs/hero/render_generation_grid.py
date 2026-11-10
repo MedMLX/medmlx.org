@@ -8,7 +8,7 @@
 #     "imageio-ffmpeg>=0.6",
 # ]
 # ///
-"""Render the homepage Generation card: eight mlx-generate-ctmr volumes scrolling together.
+"""Render the homepage Generation card: mlx-generate-ctmr volumes scrolling together.
 
 Two stages, run in order from the repository root:
     uv run docs/hero/render_generation_grid.py generate   # mlx-generate-ctmr on Metal
@@ -72,9 +72,9 @@ CHOSEN_SEEDS = {'ct-abdomen': 3, 'ct-hepatic-tumor': 3, 'ct-lung-tumor': 1}
 # shrinks inside its fixed tile crop (low pelvis, shoulders, MR vertex).
 SLICE_RANGE = {'ct-abdomen': (80, 196), 'ct-hepatic-tumor': (10, 190), 'ct-lung-tumor': (40, 170),
                'mr-brain-t1': (40, 92), 'mr-brain-t2': (40, 92), 'mr-brain-flair': (40, 92)}
-# Tiles shown, one list per row. Generated tiles left out here stay in the run folder.
-LAYOUT = [['ct-abdomen', 'ct-hepatic-tumor', 'ct-lung-tumor'],
-          ['mr-brain-t1', 'mr-brain-t2', 'mr-brain-flair']]
+# Tiles shown, one list per row: one paired CT and one MR-Brain contrast, large enough to
+# read on the card. Generated tiles left out here stay in the run folder.
+LAYOUT = [['ct-hepatic-tumor', 'mr-brain-t2']]
 SIZE = (800, 520)
 GAP = 12
 CT_WINDOW = (40, 400)  # level, width in HU

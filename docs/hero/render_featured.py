@@ -36,7 +36,8 @@ slice with the predicted mask and the box. The mask is never edited or smoothed.
 crop recorded for each in sources.json, with the documentation-panel tone.
 
 `cards` writes the featured-*.webp images, used by the homepage featured cards and the
-model pages, on one canvas and scale.
+model pages, on one canvas and scale. The MedSAM2 card is instead a window centered on
+its box prompt.
 """
 
 import argparse
@@ -211,6 +212,22 @@ CARDS = {'liver': 'liver', 'anatomy': 'anatomy-torso', 'medsam': 'medsam-slice',
          'segresnet': 'segresnet-axial', 'kidney': 'kidney', 'brain': 'brain', 'xray': 'xray', 'pet': 'pet'}
 CARD_SIZE = (960, 720)
 CARD_FILL = 0.86
+# The MedSAM2 card shows a 4:3 window this fraction of the slice image wide, centered
+# on the box prompt, so the 25 mm nodule is not lost in the whole chest.
+MEDSAM_CARD_WIDTH = 0.8
+
+
+def medsam_focus(image):
+    """Crop medsam-slice.webp to a 4:3 window centered on its box, inside the image."""
+    run = json.loads((ASSETS / 'medsam-slice-run.json').read_text())
+    box, crop = run['prompt']['box_xyxy'], run['display']['crop_xyxy_px']
+    cx = ((box[0] + box[2]) / 2 - crop[0]) * UPSCALE
+    cy = ((box[1] + box[3]) / 2 - crop[1]) * UPSCALE
+    width = MEDSAM_CARD_WIDTH * image.width
+    height = width * CARD_SIZE[1] / CARD_SIZE[0]
+    x0 = min(max(cx - width / 2, 0), image.width - width)
+    y0 = min(max(cy - height / 2, 0), image.height - height)
+    return image.crop((round(x0), round(y0), round(x0 + width), round(y0 + height)))
 
 
 def cards(_args):
@@ -222,6 +239,10 @@ def cards(_args):
     """
     for card, source in CARDS.items():
         image = Image.open(ASSETS / f'{source}.webp').convert('RGB')
+        if card == 'medsam':
+            medsam_focus(image).resize(CARD_SIZE, Image.LANCZOS).save(
+                ASSETS / 'featured-medsam.webp', quality=88, method=6)
+            continue
         bright = np.asarray(image).max(axis=2) > 24
         labels, _ = ndimage.label(ndimage.binary_dilation(bright, iterations=6))
         counts = np.bincount(labels[bright])

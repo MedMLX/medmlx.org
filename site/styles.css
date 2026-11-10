@@ -295,7 +295,7 @@ main:focus { outline: none; }
 .section-title { max-width: 18em; margin-bottom: 12px; font-size: clamp(2.5rem, 1.75rem + 2.4vw, 3.5rem); line-height: 1.07; letter-spacing: -0.005em; }
 
 /* A centered statement with key phrases in white. */
-.statement-section { padding-block: 140px 120px; text-align: center; }
+.statement-section { padding-block: 96px 88px; text-align: center; }
 
 .statement {
   max-width: 24em;
@@ -841,7 +841,7 @@ video.page-media-visual { aspect-ratio: 800 / 520; }
   .detail-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .detail-grid .detail-section + .detail-section { padding-top: 0; border-top: 0; }
   .section { padding-block: 96px; }
-  .statement-section { padding-block: 104px 96px; }
+  .statement-section { padding-block: 80px 72px; }
   .tile { padding: 40px 28px; }
 
   /* One column: the output panel follows the breadcrumb, ahead of the title. */

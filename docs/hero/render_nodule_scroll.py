@@ -8,8 +8,8 @@ Run after the detection recorded in nodule-scroll-run.json:
     uv run docs/hero/render_nodule_scroll.py
 
 Only display transformations are performed here: one soft-tissue window (the
-same as the Segmentation card, so the solid nodule shows inside black lung), one body
-crop shared by every frame, uniform in-plane Lanczos resampling, the model's
+same as the Segmentation card, so the solid nodule shows inside black lung), one crop
+around the predicted box shared by every frame, uniform in-plane Lanczos resampling, the model's
 predicted box drawn on the native slices it intersects, and H.264/WebP
 encoding. The box is read from the runner's detections.json and is never
 edited, smoothed or recomputed. There is no through-plane interpolation, and
@@ -36,6 +36,7 @@ WINDOW = {'center': 40, 'width': 400}
 LOW, HIGH = WINDOW['center'] - WINDOW['width'] / 2, WINDOW['center'] + WINDOW['width'] / 2
 BODY_HU = -300
 MARGIN_MM = 8.0
+FIELD_MM = 260.0  # crop width; the 20 mm box spans about a thirteenth of the frame
 HALF_RANGE_MM = 25.0
 HOLD = 4
 FPS = 24
@@ -86,20 +87,22 @@ def body_masks(slab):
     return body
 
 
-def framing(body, spacing):
-    """One 800:520 crop around every slice's body, in source pixel coordinates."""
+def framing(body, spacing, center):
+    """One 800:520 crop, FIELD_MM wide, centered on the predicted box.
+
+    The crop is shifted, never shrunk, to stay inside the body bounds plus
+    MARGIN_MM where they are large enough, so the card shows the nodule's
+    neighbourhood rather than the whole chest at a size where the box is lost.
+    """
     cols, rows = np.where(body.any(axis=2))  # body axes are (i, j) = (column, row)
     margin = MARGIN_MM / spacing
-    x0, x1 = cols.min() - margin, cols.max() + 1 + margin
-    y0, y1 = rows.min() - margin, rows.max() + 1 + margin
-    aspect = FRAME[0] / FRAME[1]
-    if (x1 - x0) / (y1 - y0) < aspect:
-        grow = (y1 - y0) * aspect - (x1 - x0)
-        x0, x1 = x0 - grow / 2, x1 + grow / 2
-    else:
-        grow = (x1 - x0) / aspect - (y1 - y0)
-        y0, y1 = y0 - grow / 2, y1 + grow / 2
-    return np.array([x0, y0, x1, y1])
+    bx0, bx1 = cols.min() - margin, cols.max() + 1 + margin
+    by0, by1 = rows.min() - margin, rows.max() + 1 + margin
+    width = FIELD_MM / spacing
+    height = width * FRAME[1] / FRAME[0]
+    x0 = min(max(center[0] + 0.5 - width / 2, bx0), bx1 - width)
+    y0 = min(max(center[1] + 0.5 - height / 2, by0), by1 - height)
+    return np.array([x0, y0, x0 + width, y0 + height])
 
 
 def render(hu, body, crop, pad):
@@ -233,7 +236,7 @@ def main():
         raise ValueError('The predicted box center must lie inside the body mask')
     # Report, rather than hide, a body wider than the reconstructed field of view.
     truncated = bool(body[0].any() or body[-1].any())
-    crop = framing(body, spacing)
+    crop = framing(body, spacing, (low[:2] + high[:2]) / 2)
     pad = int(np.ceil(max(0, -crop[0], -crop[1], crop[2] - hu.shape[0], crop[3] - hu.shape[1])))
     left, top_y = to_frame(low[0], low[1], crop)
     right, bottom = to_frame(high[0], high[1], crop)
@@ -300,8 +303,9 @@ def main():
                           if truncated else 'The body lies inside the reconstruction field.'),
         'source_crop_xyxy': rounded(crop),
         'source_crop_note': 'Continuous source-pixel coordinates (columns = i, rows = j) of one '
-                            f'crop for every frame: body bounds plus {MARGIN_MM:g} mm, widened to '
-                            f'{FRAME[0]}:{FRAME[1]}; area beyond the scan is black padding.',
+                            f'crop for every frame: {FIELD_MM:g} mm wide at {FRAME[0]}:{FRAME[1]}, centered on the '
+                            f'predicted box and shifted to stay within the body bounds plus '
+                            f'{MARGIN_MM:g} mm; area beyond the scan is black padding.',
         'scale_px_per_mm': round(FRAME[0] / ((crop[2] - crop[0]) * spacing), 4),
         'display_resampling': 'uniform in-plane Lanczos on the windowed float image',
         'box': {
