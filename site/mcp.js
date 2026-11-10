@@ -19,10 +19,8 @@ export const mcpCommands = {
   ].join('\n'),
   check: '.venv/bin/medmlx models\n.venv/bin/medmlx runtime',
   codex: [
-    'MEDMLX_WORK_ROOT="$HOME/medmlx-work"',
-    'mkdir -p "$MEDMLX_WORK_ROOT"',
-    'codex mcp add medmlx -- "$PWD/.venv/bin/medmlx" serve --root "$MEDMLX_WORK_ROOT"',
-    'codex mcp list',
+    'mkdir -p "$HOME/medmlx-work"',
+    'codex mcp add medmlx -- "$PWD/.venv/bin/medmlx" serve --root "$HOME/medmlx-work"',
   ].join('\n'),
 };
 

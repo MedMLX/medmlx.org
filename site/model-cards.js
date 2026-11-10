@@ -72,7 +72,7 @@ export const modelCards = {
     }
   },
   "nnunet-mlx": {
-    "version": "0.7.2",
+    "version": "0.8.0",
     "rows": [
       [
         "Input",
@@ -106,8 +106,11 @@ export const modelCards = {
       {
         "text": "Peak memory: **8.9 GB** (liver) and **14.5 GB** (pancreas) for a 768×768×101 abdominal CT, **7.4 GB** (BraTS) for a 240×240×155 brain MRI and **4.8 GB** (AutoPET) for a 400×400×284 whole-body PET/CT. SIAM needs about **16 GB**.",
         "sources": [
-          "Weights: 125 MB (`nnunet-liver`), 410 MB (`nnunet-pancreas`), 628 MB (`nnunet-brats2021`) and 2.0 GB (`nnunet-autopet`) downloads. Peak MLX memory: 8.9 GB for a 768×768×101 abdominal CT with `nnunet-liver`, 14.5 GB for the same CT with `nnunet-pancreas`, 7.4 GB for a 240×240×155 four-sequence brain MRI with `nnunet-brats2021` and 4.8 GB for a 400×400×284 whole-body PET/CT with `nnunet-autopet`.",
-          "A typical head MRI needs about 16 GB of memory"
+          "| `nnunet-liver` | 125 MB | 8.9 GB | 768×768×101 abdominal CT |",
+            "| `nnunet-pancreas` | 410 MB | 14.5 GB | 768×768×101 abdominal CT |",
+            "| `nnunet-brats2021` | 628 MB | 7.4 GB | 240×240×155 four-sequence brain MRI |",
+            "| `nnunet-autopet` | 2.0 GB | 4.8 GB | 400×400×284 whole-body PET/CT |",
+          "a typical head MRI needs about 16 GB"
         ]
       }
     ],
@@ -145,14 +148,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.8.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.8.0/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.8.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "siam": {
-    "version": "0.7.2",
+    "version": "0.8.0",
     "rows": [
       [
         "Input",
@@ -169,7 +172,7 @@ export const modelCards = {
         {
           "text": "A label map on the input scan’s grid. Its 17 labels cover grey and white matter, CSF and ventricles, cerebellar grey matter, five deep nuclei, hippocampus and amygdala, dura, vessels, skull and scalp, plus **Anomalies** (17) for pathology such as tumors.",
           "sources": [
-            "Its 17 labels cover grey and white matter, CSF and ventricles, cerebellar grey matter, deep nuclei, hippocampus and amygdala, dura, vessels, skull and scalp, plus `Anomalies` (17) for pathology.",
+            "17 labels cover grey and white matter, CSF and ventricles, cerebellar grey matter, deep nuclei, hippocampus and amygdala, dura, vessels, skull and scalp, plus `Anomalies` (17) for pathology.",
             "returns labels on the input grid"
           ]
         }
@@ -179,7 +182,7 @@ export const modelCards = {
         {
           "text": "Trained by its authors on synthetic images; one model covers any MRI contrast or CT.",
           "sources": [
-            "SIAM v0.3 is the contrast-agnostic head tissue model by Valabregue et al. ([repository](https://github.com/romainVala/SIAM), [paper](https://arxiv.org/abs/2605.02737)), trained on synthetic images."
+            "**SIAM** v0.3 is the contrast-agnostic head tissue model by Valabregue et al. ([repository](https://github.com/romainVala/SIAM), [paper](https://arxiv.org/abs/2605.02737)), trained on synthetic images."
           ]
         }
       ],
@@ -190,7 +193,7 @@ export const modelCards = {
           "sources": [
             "| `siam` | `nnunet_mlx.named_models.siam(image_path=...)` | One head MRI of any contrast, or CT | [MedMLX/siam](https://huggingface.co/MedMLX/siam) |",
             "All runners take `output_dir`, `weights_path` and `overwrite`, and return the label map as `outputs[\"mask\"]`.",
-            "`nnunet-autopet`, `siam` and `mrsegmentator` for you."
+            "Use the [MedMLX MCP server](https://github.com/MedMLX/medmlx/blob/main/docs/mcp.md) to run the named models from an MCP client."
           ]
         }
       ]
@@ -199,7 +202,8 @@ export const modelCards = {
       {
         "text": "The five folds are averaged without mirroring, as the original `siam-pred` does; `fold=` runs one fold. For small heads, `voxel_size=` matches SIAM’s `-voxelsize`.",
         "sources": [
-          "Like `siam-pred`, the runner predicts on the volume reoriented to RAS without interpolation, averages the five folds without mirroring, and returns labels on the input grid; `voxel_size=` reproduces `-voxelsize` for small heads and `fold=` selects one fold."
+          "like `siam-pred`, the runner predicts on the volume reoriented to RAS without interpolation, averages the five folds without mirroring, and returns labels on the input grid.",
+          "`voxel_size=` reproduces `-voxelsize` for small heads and `fold=` selects one fold."
         ]
       }
     ],
@@ -207,7 +211,7 @@ export const modelCards = {
       {
         "text": "A typical head MRI needs about **16 GB** of memory, more for larger fields of view.",
         "sources": [
-          "A typical head MRI needs about 16 GB of memory, more for larger fields of view."
+          "a typical head MRI needs about 16 GB, more for larger fields of view."
         ]
       }
     ],
@@ -221,9 +225,9 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/LICENSE). SIAM weights: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), by Valabregue et al., converted from the [original release](https://zenodo.org/records/17733431).",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.8.0/LICENSE). SIAM weights: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), by Valabregue et al., converted from the [original release](https://zenodo.org/records/17733431).",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.7.2/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.8.0/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.8.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
@@ -669,7 +673,7 @@ export const modelCards = {
     }
   },
   "totalsegmentator-mlx": {
-    "version": "0.1.9",
+    "version": "0.2.0",
     "rows": [
       [
         "Input",
@@ -686,7 +690,7 @@ export const modelCards = {
           "text": "One file marking 117 organs and other body structures, aligned with the original scan.",
           "sources": [
             "Multilabel mask on the input grid",
-            "Only the upstream `total` CT task is included: Dataset291–295, 297 and 298 with 117 labels, plus the Dataset300 body model for cropping, all `3d_fullres`, fold 0, without mirroring."
+            "Supports the `total` CT task: Dataset291–295, 297 and 298 (117 labels), plus Dataset300 for body cropping."
           ]
         }
       ],
@@ -704,21 +708,21 @@ export const modelCards = {
       {
         "text": "This version supports CT scans. MRI segmentation is not included.",
         "sources": [
-          "Only the upstream `total` CT task is included: Dataset291–295, 297 and 298 with 117 labels, plus the Dataset300 body model for cropping, all `3d_fullres`, fold 0, without mirroring.",
-          "DICOM input, DICOM-SEG and RT-STRUCT output, other upstream tasks (including `total_mr` and licensed tasks), per-class output files, statistics, radiomics, previews, `--remove_small_blobs`, `--higher_order_resampling`, `--v1_order`, test-time augmentation and training are rejected or absent."
+          "Supports the `total` CT task: Dataset291–295, 297 and 298 (117 labels), plus Dataset300 for body cropping.",
+          "Other TotalSegmentator tasks and its extra export, statistics and training options are unsupported."
         ]
       },
       {
-        "text": "Use NIfTI files. DICOM input and DICOM segmentation export are not supported.",
+        "text": "Input and output are NIfTI files. DICOM is not supported.",
         "sources": [
           "One finite 3D CT in NIfTI-1 or NIfTI-2, in Hounsfield units",
-          "DICOM input, DICOM-SEG and RT-STRUCT output, other upstream tasks (including `total_mr` and licensed tasks), per-class output files, statistics, radiomics, previews, `--remove_small_blobs`, `--higher_order_resampling`, `--v1_order`, test-time augmentation and training are rejected or absent."
+          "Input and output are NIfTI."
         ]
       },
       {
-        "text": "Organ statistics and radiomics measurements are not included.",
+        "text": "Organ statistics are not included.",
         "sources": [
-          "DICOM input, DICOM-SEG and RT-STRUCT output, other upstream tasks (including `total_mr` and licensed tasks), per-class output files, statistics, radiomics, previews, `--remove_small_blobs`, `--higher_order_resampling`, `--v1_order`, test-time augmentation and training are rejected or absent."
+          "Other TotalSegmentator tasks and its extra export, statistics and training options are unsupported."
         ]
       }
     ],
@@ -726,7 +730,7 @@ export const modelCards = {
       {
         "text": "Peaked at **5.0 GB** of memory in standard mode on a 768×768×101 abdominal CT.",
         "sources": [
-          "Weights: 824 MB download. Peak MLX memory: 5.0 GB for the standard mode on a 768×768×101 abdominal CT."
+          "| `totalsegmentator` | 824 MB | 5.0 GB | Standard mode, 768×768×101 abdominal CT |"
         ]
       }
     ],
@@ -740,9 +744,9 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.1.9/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.2.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.1.9/LICENSE). See [third-party notices](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.1.9/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.2.0/LICENSE). See [third-party notices](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.2.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
@@ -964,7 +968,7 @@ export const modelCards = {
     }
   },
   "mlx-generate-ctmr": {
-    "version": "0.5.2.post2",
+    "version": "0.6.0",
     "rows": [
       [
         "Input",
@@ -995,19 +999,20 @@ export const modelCards = {
       ]
     ],
     "limitations": [
+      {
+        "text": "General MRI generates T1 only. Use brain MRI for T2, FLAIR, MRA and SWI.",
+        "sources": [
+          "| `modality` | Unspecified (8) or T1 (9) | T1, T2, FLAIR, MRA and SWI (9, 10, 11, 16, 20) and their skull-stripped variants (29, 30, 31, 33, 32) |"
+        ]
+      }
     ],
     "measurements": [
       {
-        "text": "Published test peaks: **27.9 GiB** for CT (256×256×256) and **23.8 GiB** for brain MRI (256×256×128). General MRI has no published figure.",
+        "text": "Peak memory: **10.3 GiB** for CT (256×256×256, from an anatomy mask), and **9.5 GiB** each for brain MRI (256×256×128) and general MRI (128×256×256).",
         "sources": [
-          "Peak MLX memory: **27.9 GiB** for `mlx-generate-ctmr-ct` (256³, from-mask, ControlNet + four-window decode); **23.8 GiB** for `mlx-generate-ctmr-mr-brain` (256×256×128, guided batch 2). No recorded peak for `mlx-generate-ctmr-mr`."
-        ]
-      },
-      {
-        "text": "These version 0.5.1 tests used untrained models. They excluded model loading, input preparation and other apps, so the figures do not establish a minimum RAM requirement.",
-        "sources": [
-          "The v0.5.1 memory measurements used MLX 0.32.4 and `MLX_ENABLE_TF32=0`: default `fast` arithmetic with FP32 accumulation and split-FP16 convolution operands, production constructors with random fan-in-scaled weights, seed 0 and 30 steps. Peaks include VAE decoding and exclude weight loading.",
-          "These figures cover the stated pipelines and grids; they are MLX allocations, excluding host preprocessing and other applications."
+          "| `mlx-generate-ctmr-ct` | 10.3 GiB | 256³ CT from a mask, ControlNet + four-window decode |",
+          "| `mlx-generate-ctmr-mr-brain` | 9.5 GiB | 256×256×128 MR-Brain, guided batch 2 |",
+          "| `mlx-generate-ctmr-mr` | 9.5 GiB | 128×256×256 general MR |"
         ]
       }
     ],
@@ -1021,9 +1026,9 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.5.2.post2/LICENSE). Model files have their own license terms. General MRI models have noncommercial terms. The CT license terms need clarification from the publisher.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.6.0/LICENSE). Model files have their own license terms. General MRI models have noncommercial terms. The CT license terms need clarification from the publisher.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.5.2.post2/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.5.2.post2/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. General-MR weights have noncommercial terms; CT component terms require publisher clarification."
+        "[Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.6.0/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.6.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. General-MR weights have noncommercial terms; CT component terms require publisher clarification."
       ]
     }
   },

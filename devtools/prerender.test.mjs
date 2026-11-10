@@ -46,9 +46,8 @@ test('every runtime card exposes its reviewed source, limits and resource eviden
     if (!card.measurements.length) assert.match(body, /not published for this version/);
   }
   const generation = String(route('/models/mlx-generate-ctmr').body);
-  assert.match(generation, /untrained models/);
-  assert.match(generation, /excluded model loading/);
-  assert.match(generation, /27.9 GiB/);
+  assert.match(generation, /10\.3 GiB/);
+  assert.match(generation, /General MRI generates T1 only/);
 });
 
 test('model cards render summaries safely and keep supporting excerpts out of the page', () => {
