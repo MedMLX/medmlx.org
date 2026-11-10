@@ -1,4 +1,4 @@
-import { medmlxArguments, medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxServeCommand, releases } from './releases.js';
+import { medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxServeCommand, releases } from './releases.js';
 
 // The command line and Python API pages describe the reviewed medmlx tag.
 // make release-check finds every example below in its README or docs/setup.md,
@@ -14,8 +14,8 @@ export const setupSource = tagged('docs/setup.md');
 export const cliCommands = [
   ['models', '--task, --family', 'Lists the installed models.'],
   ['describe', 'MODEL_ID', 'Shows the arguments a model takes and how to use them.'],
-  ['readiness', 'MODEL_ID…, --arguments, --root', 'Checks that a model can run on this Mac, without downloading anything.'],
-  ['run', 'MODEL_ID, --arguments, --root', 'Runs a model and waits for it to finish.'],
+  ['readiness', 'MODEL_ID…, --arg, --arguments, --root', 'Checks that a model can run on this Mac, without downloading anything.'],
+  ['run', 'MODEL_ID, --arg, --arguments, --root', 'Runs a model and waits for it to finish.'],
   ['setup', 'MODEL_ID, --all, --refresh, --plan, --progress', 'Downloads weights ahead of time, for working offline.'],
   ['serve', '--root', 'Starts the MCP server for an agent. Needs the mcp extra.'],
   ['checkpoints', '--model-id', 'Lists where model checkpoints come from. Downloads nothing.'],
@@ -25,7 +25,6 @@ export const cliCommands = [
 
 export const cliExamples = {
   install: medmlxInstallCommand,
-  arguments: medmlxArguments,
   run: medmlxRunCommand,
   setup: 'medmlx setup --all --progress\nmedmlx setup mlx-segment-ct --progress',
   plan: 'medmlx setup --all --plan',

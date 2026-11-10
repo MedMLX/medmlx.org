@@ -5,7 +5,7 @@ import {
   article, articleUrl, bibtex, catalog, citation, maintainers, route, routes, siteDescription, siteUrl, tasks,
 } from '../site/render.js';
 import {
-  medmlxArguments, medmlxInstallCommand, medmlxRunCommand, medmlxServeCommand, medmlxSetupCommand,
+  medmlxInstallCommand, medmlxRunCommand, medmlxServeCommand, medmlxSetupCommand,
   platformRequirement, pythonVersion, releases, uvInstallCommand,
 } from '../site/releases.js';
 
@@ -76,7 +76,6 @@ export function catalogJson() {
     medmlx: {
       version: releases.medmlx.version,
       install: medmlxInstallCommand,
-      arguments: medmlxArguments,
       run: medmlxRunCommand,
       downloadWeights: medmlxSetupCommand,
       mcpServer: medmlxServeCommand,
@@ -122,11 +121,7 @@ Install the medmlx command, its MCP server and every model family:
 
 ${indent(medmlxInstallCommand)}
 
-Save a run's arguments as arguments.json in a working folder, next to the scan:
-
-${indent(medmlxArguments)}
-
-From that folder, describe the model's arguments, check readiness, then run it:
+From a working folder that holds the scan, describe the model's arguments, check readiness, then run it:
 
 ${indent(medmlxRunCommand)}
 

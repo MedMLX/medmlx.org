@@ -3,7 +3,7 @@
 import { models, additionalRuntimes, reportCommand } from './models.js';
 import { modelCards } from './model-cards.js';
 import {
-  medmlxArguments, medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxServeCommand, medmlxSetupCommand,
+  medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxServeCommand, medmlxSetupCommand,
   platformRequirement, pythonVersion, releases, uvInstallCommand,
 } from './releases.js';
 import { mcpCalls, mcpCommands, mcpGuideSource, mcpTools, medmlxDoc } from './mcp.js';
@@ -594,9 +594,7 @@ function gettingStartedPage() {
         </li>
         <li>
           <h2>Run a model</h2>
-          <p>To segment a CT scan, put it in a folder such as <code>~/medmlx-work</code> and save the run's arguments there as <code>arguments.json</code>. Paths in the file are read from that folder:</p>
-          ${terminal('medmlx-arguments', 'arguments.json', medmlxArguments, 'arguments.json')}
-          <p>From that folder, <code>describe</code> lists the arguments a model takes, <code>readiness</code> checks that the model can run without downloading anything, and <code>run</code> downloads the weights the first time, then runs the model:</p>
+          <p>To segment a CT scan, put it in a folder such as <code>~/medmlx-work</code> and run these commands from that folder. <code>describe</code> lists the arguments a model takes, <code>readiness</code> checks that the model can run without downloading anything, and <code>run</code> downloads the weights the first time, then runs the model:</p>
           ${terminal('medmlx-run-command', 'Run', medmlxRunCommand)}
           <p>To download weights ahead of time for offline use:</p>
           ${terminal('medmlx-setup-command', 'Download weights', medmlxSetupCommand)}
@@ -796,10 +794,9 @@ function cliPage() {
 
         <section class="guide-section" id="run" aria-labelledby="run-title">
           <h2 id="run-title">Run a model</h2>
-          <p>Save the run's arguments as <code>arguments.json</code> in your working folder, next to the scan:</p>
-          ${terminal('cli-arguments', 'arguments.json', cliExamples.arguments, 'arguments.json')}
+          <p>From the folder that holds the scan:</p>
           ${terminal('cli-run', 'Run a model', cliExamples.run)}
-          <p><code>describe</code> lists the arguments a model takes. <code>readiness</code> checks that the model can run on this Mac, without downloading anything. <code>run</code> reads the arguments from a JSON file, runs the model and waits for it to finish. Relative paths in the file are read from the <code>--root</code> folder.</p>
+          <p><code>describe</code> lists the arguments a model takes. <code>readiness</code> checks that the model can run on this Mac, without downloading anything. <code>run</code> runs the model and waits for it to finish. Each <code>--arg</code> value is converted to the type the model declares; give lists and other JSON values as <code>KEY:=JSON</code>, for example <code>points:='[[120, 140, 60]]'</code>. <code>--arguments FILE</code> reads the arguments from a JSON file instead. Relative paths are read from the current folder, or from <code>--root</code>.</p>
           <p>Most models download their weights the first time they run, so you can leave out <code>weights_path</code>. Later runs reuse that download, and each run records which weights it used. To use your own weights, pass a local folder as <code>weights_path</code>. MedGemma and MRSegmentator need local weights for now.</p>
         </section>
 

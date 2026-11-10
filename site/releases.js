@@ -37,16 +37,14 @@ export const medmlxProjectCommand = 'uv add "medmlx[all,mcp]"';
 // Copied from the medmlx README; make release-check finds each in the tagged release.
 export const medmlxRunCommand = [
   'medmlx describe mlx-segment-ct',
-  'medmlx readiness mlx-segment-ct --arguments arguments.json --root ~/medmlx-work',
-  'medmlx run mlx-segment-ct --arguments arguments.json --root ~/medmlx-work',
+  'medmlx readiness mlx-segment-ct --arg image_path=ct.nii.gz output_dir=segment-ct',
+  'medmlx run mlx-segment-ct --arg image_path=ct.nii.gz output_dir=segment-ct',
 ].join('\n');
-// The README's arguments.json for that run, saved in ~/medmlx-work with ct.nii.gz.
-export const medmlxArguments = '{"image_path": "ct.nii.gz", "output_dir": "segment-ct"}';
 export const medmlxSetupCommand = 'medmlx setup --all --progress';
 export const medmlxServeCommand = 'medmlx serve --root /path/to/work';
 /** The medmlx commands the site shows, with the release document that contains each. */
 export const medmlxExamples = [
-  medmlxInstallCommand, medmlxProjectCommand, medmlxArguments, medmlxRunCommand, medmlxSetupCommand, medmlxServeCommand,
+  medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxSetupCommand, medmlxServeCommand,
 ].map(command => ({ distribution: 'medmlx', path: 'README.md', command }));
 
 /** Link to the package's current published instructions. */
