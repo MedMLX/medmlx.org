@@ -411,33 +411,63 @@ def cli_options(tree: ast.Module) -> Options:
         ):
             options.setdefault(node.args[0].value, {})
     for node in ast.walk(tree):
-        if not (
+        if (
             isinstance(node, ast.Call)
             and isinstance(node.func, ast.Attribute)
             and node.func.attr == "add_argument"
             and isinstance(node.func.value, ast.Name)
             and node.func.value.id in parsers
         ):
-            continue
-        choices: frozenset[str] | None = None
-        for keyword in node.keywords:
-            if keyword.arg != "choices":
-                continue
-            try:
-                value: object = ast.literal_eval(keyword.value)
-            except ValueError:
-                continue  # Computed choices cannot be read without running the CLI.
-            if isinstance(value, (list, tuple)):
-                items = cast(list[object] | tuple[object, ...], value)
-                choices = frozenset(str(item) for item in items)
-        for argument in node.args:
-            if (
-                isinstance(argument, ast.Constant)
-                and isinstance(argument.value, str)
-                and argument.value.startswith("-")
-            ):
-                options[parsers[node.func.value.id]][argument.value] = choices
+            _declare_option(options[parsers[node.func.value.id]], node)
+    # A helper function can add shared options to the parser passed as its first
+    # argument, as in `_add_argument_options(run, ...)`; credit them to that parser.
+    helpers: dict[str, list[ast.Call]] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef) and node.args.args:
+            parameter = node.args.args[0].arg
+            helpers[node.name] = [
+                call
+                for call in ast.walk(node)
+                if isinstance(call, ast.Call)
+                and isinstance(call.func, ast.Attribute)
+                and call.func.attr == "add_argument"
+                and isinstance(call.func.value, ast.Name)
+                and call.func.value.id == parameter
+            ]
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id in helpers
+            and node.args
+            and isinstance(node.args[0], ast.Name)
+            and node.args[0].id in parsers
+        ):
+            for call in helpers[node.func.id]:
+                _declare_option(options[parsers[node.args[0].id]], call)
     return options
+
+
+def _declare_option(declared: dict[str, frozenset[str] | None], call: ast.Call) -> None:
+    """Record an `add_argument` call's option strings with their literal choices."""
+    choices: frozenset[str] | None = None
+    for keyword in call.keywords:
+        if keyword.arg != "choices":
+            continue
+        try:
+            value: object = ast.literal_eval(keyword.value)
+        except ValueError:
+            continue  # Computed choices cannot be read without running the CLI.
+        if isinstance(value, (list, tuple)):
+            items = cast(list[object] | tuple[object, ...], value)
+            choices = frozenset(str(item) for item in items)
+    for argument in call.args:
+        if (
+            isinstance(argument, ast.Constant)
+            and isinstance(argument.value, str)
+            and argument.value.startswith("-")
+        ):
+            declared[argument.value] = choices
 
 
 def verify_command(command: str, scripts: dict[str, object], source: Callable[[str], str]) -> None:
