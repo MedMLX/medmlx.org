@@ -211,7 +211,7 @@ def render(args):
         gray = np.asarray(Image.open(RUN_DIR / 'slices' / f'{kept[n]:03d}.png'), dtype=np.float64)
         side = gray.shape[0]
         # Each 7 x 7 cell covers the same 1/7 of the PNG that it covers of the
-        # runner's nearest-neighbour 224 x 224 input.
+        # runner's nearest-neighbor 224 x 224 input.
         edges = np.round(np.linspace(0, side, 8)).astype(int)
         tint = np.zeros((side, side, 3))
         for r in range(7):

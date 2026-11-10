@@ -170,7 +170,7 @@ def main():
     colours = {v: spec.get('colours', {}).get(names[v]) or lookup(names[v]) for v in present}
     missing = [names[v] for v, c in colours.items() if c is None]
     if missing:
-        raise ValueError(f'No colour for {missing}')
+        raise ValueError(f'No color for {missing}')
 
     held = np.flatnonzero(labels.any(axis=(1, 2)))
     first, last = int(held[0]), int(held[-1])

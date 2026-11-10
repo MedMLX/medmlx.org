@@ -21,7 +21,7 @@ Nothing is segmented here, and the labels are never edited.
 spin: each drawn label becomes a marching-cubes surface of the lightly smoothed
 label with a per-tissue PBR material. Scalp and skull are translucent so the cortex
 shows from every side, and one octant (left, posterior, superior of the brain's
-centre) is cut out of the scalp, skull, cortex, white matter and vessels so the
+center) is cut out of the scalp, skull, cortex, white matter and vessels so the
 deep nuclei and ventricles show inside. The camera turns a full circle about the
 vertical axis in FRAMES one-degree steps from a view into the cut; the lights turn
 with it. The neck, where the scan ends, fades to black.
@@ -293,7 +293,7 @@ def spin(args):
         'display': {
             'renderer': 'docs/hero/render_siam_views.py spin', 'labels_drawn': drawn,
             'translucent': {LABELS[k]: v for k, v in OPACITY.items()},
-            'cut': 'left, posterior and superior octant of the brain centre removed from '
+            'cut': 'left, posterior and superior octant of the brain center removed from '
                    + ', '.join(LABELS[v] for v in sorted(CUT)),
             'pieces': 'connected pieces of more than 30 voxels, 60 for vessels',
             'detached_voxels_not_drawn': detached,

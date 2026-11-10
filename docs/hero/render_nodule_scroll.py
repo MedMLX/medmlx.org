@@ -92,7 +92,7 @@ def framing(body, spacing, center):
 
     The crop is shifted, never shrunk, to stay inside the body bounds plus
     MARGIN_MM where they are large enough, so the card shows the nodule's
-    neighbourhood rather than the whole chest at a size where the box is lost.
+    neighborhood rather than the whole chest at a size where the box is lost.
     """
     cols, rows = np.where(body.any(axis=2))  # body axes are (i, j) = (column, row)
     margin = MARGIN_MM / spacing

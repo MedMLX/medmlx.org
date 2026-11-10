@@ -1,9 +1,9 @@
-"""One colour per anatomical structure for the website's segmentation renders.
+"""One color per anatomical structure for the website's segmentation renders.
 
 Names are matched by keyword, so TotalSegmentator, BTCV and VISTA-3D label names
 share one table; the first matching entry wins, so specific names come first.
 Solid organs take distinct hues, arteries are red and veins blue, and muscle and
-bone are muted so the organs and vessels carry the colour.
+bone are muted so the organs and vessels carry the color.
 """
 
 BONE, MUSCLE, ARTERY, VEIN, LUNG = (232, 218, 186), (198, 130, 118), (224, 48, 52), (48, 102, 224), (150, 196, 236)
@@ -42,6 +42,6 @@ PALETTE = [
 
 
 def lookup(name):
-    """The structure's colour, or None when no entry names it."""
+    """The structure's color, or None when no entry names it."""
     key = name.lower().replace(' ', '_')
     return next((value for words, value in PALETTE if any(w.replace(' ', '_') in key for w in words)), None)

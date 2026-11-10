@@ -86,16 +86,16 @@ HIDDEN = ('small_bowel', 'colon', 'duodenum', 'skull', 'brain', 'humerus')
 THIN = ('rib', 'costal', 'subclavian', 'common_carotid', 'brachiocephalic', 'adrenal',
         'iliac', 'pulmonary_vein', 'atrial', 'spinal_cord', 'esophagus', 'trachea', 'clavicula')
 SSAO_RADIUS, SSAO_BIAS, SSAO_KERNEL = 8.0, 2.0, 128  # mm, mm, samples
-# White directional key, fill and rim lights; offsets from the scene centre, mm, for the
+# White directional key, fill and rim lights; offsets from the scene center, mm, for the
 # starting view. They turn with the camera, so every angle is lit like that view.
 LIGHTS = (((-900.0, 1100.0, 1100.0), 2.8), ((1100.0, 800.0, 200.0), 0.45),
           ((500.0, -1100.0, 800.0), 1.2))
 
 def colour(name):
-    """Palette colour scaled to the tissue's chroma."""
+    """Palette color scaled to the tissue's chroma."""
     rgb = lookup(name)
     if rgb is None:
-        raise KeyError(f'No colour for {name}')
+        raise KeyError(f'No color for {name}')
     chroma = MATERIALS[tissue(name)][3]
     h, light, s = colorsys.rgb_to_hls(*(c / 255 for c in rgb))
     return tuple(round(c * 255) for c in colorsys.hls_to_rgb(h, light, s * chroma))
