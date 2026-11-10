@@ -925,7 +925,7 @@ function aboutPage() {
         <a class="lab-logo" href="${labUrl}" tabindex="-1" aria-hidden="true">
           <img src="/assets/lab/ai-ir-logo.svg" alt="" width="252" height="112">
         </a>
-        <p>Maintained by <a href="https://github.com/sandovaljoseph">Joseph Sandoval</a> and <a href="https://alfredo-sandoval.com/">Alfredo Sandoval Jr.</a> (<a href="https://github.com/Alfredo-Sandoval">GitHub</a>)
+        <p>Maintained by <a href="https://josephsandoval.org/">Joseph Sandoval</a> (<a href="https://github.com/sandovaljoseph">GitHub</a>) and <a href="https://alfredo-sandoval.com/">Alfredo Sandoval Jr.</a> (<a href="https://github.com/Alfredo-Sandoval">GitHub</a>)
           in the <a href="${labUrl}">AI-IR lab</a> at the University of Texas Medical Branch.</p>
       </section>
     </div>`;
