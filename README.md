@@ -13,9 +13,12 @@ The website for [MedMLX](https://github.com/MedMLX/medmlx): medical imaging mode
 
 </div>
 
-The site is static HTML, CSS and JavaScript with no build framework. It lists every
-public MedMLX runtime with its install command, inputs, outputs, weights and peak
-memory, taken from each package's released documentation.
+[medmlx.org](https://medmlx.org) is where to find the right MedMLX model and get it
+running. Every model has a page with real outputs, what it takes in and gives back, how
+much memory it needs, and an install command you can copy. Those commands are checked
+against the released packages before each deploy, so they work as written.
+
+This repository is the site's source: plain HTML, CSS and JavaScript, with no framework.
 
 ## Preview
 
