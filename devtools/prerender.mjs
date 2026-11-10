@@ -85,7 +85,7 @@ export function catalogJson() {
     article: { ...article, url: articleUrl, citation, bibtex },
     maintainers: maintainers.map(person => ({ name: person.name, url: person.url, profiles: person.sameAs })),
     lab: { name: 'AI-IR', url: 'https://ai-ir.org/', institution: 'University of Texas Medical Branch' },
-    intendedUse: 'Research software, not a medical device. Model outputs require human review.',
+    intendedUse: 'Local medical imaging for research and education.',
     tasks,
     models: catalog.map(runtimeRecord),
   }, null, 2)}\n`;
@@ -110,7 +110,7 @@ export function llmsText() {
 
 > ${siteDescription} The inference path uses no PyTorch or CUDA.
 
-MedMLX is research software, not a medical device. Model outputs require human review.
+MedMLX runs medical imaging models locally on Apple Silicon.
 
 ## Install
 
@@ -167,7 +167,7 @@ ${indent(bibtex)}
 ${sections.join('\n')}
 ## Optional
 
-- [About](${siteUrl}/about/): project, developer links, intended use and licenses
+- [About](${siteUrl}/about/): project, developer links and licenses
 - [Image credits](${siteUrl}/assets/hero/credits.html): datasets and licenses for the homepage media
 - [Source on GitHub](https://github.com/${releases.medmlx.repository})
 - [medmlx on PyPI](https://pypi.org/project/medmlx/)

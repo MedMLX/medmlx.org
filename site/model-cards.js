@@ -101,12 +101,6 @@ export const modelCards = {
           "| `nnunet-brats2021` | `nnunet_mlx.named_models.brats(t1_path=..., t1ce_path=..., t2_path=..., flair_path=...)` | Four co-registered MRI |"
         ]
       },
-      {
-        "text": "Support for a model does not establish its segmentation accuracy.",
-        "sources": [
-          "Profiles cover inference only, not training or segmentation quality."
-        ]
-      }
     ],
     "measurements": [
       {
@@ -499,12 +493,6 @@ export const modelCards = {
     ],
     "limitations": [
       {
-        "text": "SAM 3 is a general-purpose model. Its accuracy on medical images is not established.",
-        "sources": [
-          "SAM 3 is a general-purpose model; its accuracy on medical images is not established."
-        ]
-      },
-      {
         "text": "Reads ordinary 8-bit images. DICOM, NIfTI and 3D volumes are not read; export a slice to PNG first.",
         "sources": [
           "Images are 2D and decoded with Pillow; DICOM, NIfTI and 3D volumes are not read. Export a slice to PNG first.",
@@ -650,7 +638,7 @@ export const modelCards = {
     ],
     "limitations": [
       {
-        "text": "The model was trained for 3D scans. It accepts 2D images, but its accuracy on them has not been established.",
+        "text": "Trained for 3D scans; 2D images are also accepted.",
         "sources": [
           "The released checkpoint is trained for 3D modalities, so 2D accuracy is not established."
         ]
@@ -1007,12 +995,6 @@ export const modelCards = {
       ]
     ],
     "limitations": [
-      {
-        "text": "Generated scans are synthetic data. Software comparison tests do not establish their image quality.",
-        "sources": [
-          "Numerical parity is checked against MONAI on small seeded networks. That does not qualify pretrained image quality. Synthetic output is not ground truth."
-        ]
-      }
     ],
     "measurements": [
       {
@@ -1081,12 +1063,6 @@ export const modelCards = {
           "The shift cancels, and voxels farther away are the input unchanged."
         ]
       },
-      {
-        "text": "The generated lesion is synthetic and should not be treated as a known real finding.",
-        "sources": [
-          "Synthetic output is not ground truth."
-        ]
-      }
     ],
     "measurements": [
       {
@@ -1148,12 +1124,6 @@ export const modelCards = {
           "Text and images only. Requests with audio, video, tool definitions or tool-call turns are rejected."
         ]
       },
-      {
-        "text": "Clinical accuracy has not been evaluated.",
-        "sources": [
-          "The checks cover numerical agreement on small synthetic models and one public radiograph per checkpoint. Clinical accuracy has not been evaluated."
-        ]
-      }
     ],
     "measurements": [
       {

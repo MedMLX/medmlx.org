@@ -390,16 +390,7 @@ function homePage() {
         ${taskCards()}
       </div>
     </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="tile tile-center">
-          <h2>Intended use</h2>
-          <p>MedMLX is research software and not a medical device. Outputs require human review, and matching the original model does not establish clinical validity.</p>
-          <p class="link-row"><a href="/about/" data-route>About MedMLX</a></p>
-        </div>
-      </div>
-    </section>`;
+`;
 }
 
 /** Render the catalog with its search text and recognized task from the URL. */
@@ -468,7 +459,7 @@ function modelsPage(search = '') {
             <a class="button" href="${modelRequestUrl}">Request on GitHub <span aria-hidden="true">&nbsp;↗</span></a>
             <a href="${modelRequestsUrl}">Browse requests <span aria-hidden="true">↗</span></a>
           </div>
-          <p class="note">Requests are public and require a GitHub account. If your model is already requested, add your use case to that thread. A request does not guarantee a port or a release date.</p>
+          <p class="note">Requests are public and need a GitHub account. If a model is already requested, add your use case to its thread.</p>
         </div>
       </section>
       <p class="link-row community-link"><a href="/community/" data-route>Questions, bug reports and community discussions</a></p>
@@ -567,10 +558,6 @@ function modelPage(model) {
         </section>
       </div>
 
-      <section class="detail-section">
-        <h2>Intended use</h2>
-        <p class="measure">For research and education. Not for clinical diagnosis or treatment decisions. Outputs require human review.</p>
-      </section>
 
       <section class="detail-section">
         <h2>Resources</h2>
@@ -767,8 +754,7 @@ function mcpPage() {
 
         <section class="guide-section" id="files" aria-labelledby="files-title">
           <h2 id="files-title">Files and permissions</h2>
-          <p><code>--root</code> sets the folder that relative paths start from. It isn't a sandbox: a model can read and write any path that your account and your client allow, and some models download files. Results and logs go back to the MCP client and can include file paths and model output, so set your client's access and data settings with that in mind.</p>
-          <p>MedMLX is research software. Matching the original model's numbers doesn't make it clinically equivalent, and every output needs human review.</p>
+          <p><code>--root</code> sets the working folder for relative paths. Models use your account's file permissions and may download weights. Results and logs are returned to the MCP client.</p>
         </section>
       </div>
     </div>`;
@@ -911,10 +897,6 @@ function aboutPage() {
               : html`<a href="${href}">${title}</a>`)}
           </p>
         </section>
-        <section class="detail-section" aria-labelledby="use-title">
-          <h2 id="use-title">Intended use</h2>
-          <p>MedMLX is research software. It is not a medical device and is not for clinical use. Model outputs require human review.</p>
-        </section>
         <section class="detail-section" aria-labelledby="licenses-title">
           <h2 id="licenses-title">Licenses</h2>
           <p>Code and weights are licensed separately. Each package's README and third-party notices give the terms for both.</p>
@@ -974,10 +956,6 @@ function runtimePage(item) {
           ${related.map(other => html`<li><a href="${other.href}" data-route>${other.name}</a></li>`)}
         </ul>
       </section>` : ''}
-      <section class="detail-section">
-        <h2>Intended use</h2>
-        <p class="measure">For research and education. Not for clinical diagnosis or treatment decisions. Outputs require human review.</p>
-      </section>
     </div>`;
 }
 
@@ -1089,7 +1067,7 @@ export function route(path, search = '') {
       pythonPage(), [breadcrumbs([['Python API', '/python/']])]);
   }
   if (path === '/about') {
-    return page('/about/', 'About', 'MedMLX reimplements published medical imaging models in MLX for on-device AI on Apple Silicon. The article, developer links, intended use and licenses.',
+    return page('/about/', 'About', 'MedMLX runs published medical imaging models locally on Apple Silicon. Read the paper, find developer documentation and check code and weight licenses.',
       aboutPage(), [breadcrumbs([['About', '/about/']])]);
   }
   if (path === '/community') {
