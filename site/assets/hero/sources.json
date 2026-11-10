@@ -125,49 +125,49 @@
     {
       "name": "nodule",
       "repository": "MedMLX/lung-nodule-mlx",
-      "tag": "v0.2.5",
+      "tag": "6c3db8adf368962b738f411d5f8e4b20b0c28924",
       "path": "docs/showcase.png",
       "crop": [
-        0.26,
-        0.16,
-        0.48,
-        0.91
+        0.61518,
+        0.09664,
+        0.99062,
+        0.97152
       ]
     },
     {
       "name": "medsam",
       "repository": "MedMLX/medsam2-mlx",
-      "tag": "v0.2.7",
+      "tag": "423a6055e1a5a1679be94f67067f3249cdd518f5",
       "path": "docs/showcase.png",
       "crop": [
-        0.41,
-        0.18,
-        0.59,
-        0.89
+        0.36161,
+        0.10474,
+        0.63839,
+        0.96509
       ]
     },
     {
       "name": "synthetic",
       "repository": "MedMLX/mlx-generate-ctmr",
-      "tag": "v0.5.1",
+      "tag": "eb4997f5718c392838fb71b8418bb3ff9bb819b0",
       "path": "docs/example.png",
       "crop": [
-        0,
-        0,
-        1,
-        1
+        0.36339,
+        0.53744,
+        0.63482,
+        0.94036
       ]
     },
     {
       "name": "lesion",
       "repository": "MedMLX/lesiondiffusion-mlx",
-      "tag": "v0.2.5",
+      "tag": "a57635ccb845f014a32e32d37e9dd95001bba6fe",
       "path": "docs/showcase.png",
       "crop": [
-        0.67,
-        0.19,
-        0.97,
-        0.91
+        0.50446,
+        0.57225,
+        0.74152,
+        0.94581
       ]
     },
     {

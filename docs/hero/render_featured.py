@@ -15,6 +15,7 @@ Run from the repository root:
     uv run docs/hero/render_featured.py panels
     uv run docs/hero/render_featured.py medsam --dataset <LUNA16 folder>
     uv run docs/hero/render_featured.py cards
+    uv run docs/hero/render_featured.py film-panels nodule medsam lesion synthetic
 
 `anatomy` crops the torso from the 3D surface panel of the tagged
 totalsegmentator-mlx documentation figure. That panel's render is clipped flat
@@ -30,6 +31,9 @@ segresnet-mlx brain tumor figure, both with the same tone.
 `medsam` runs the published medsam2-mlx runner on one LUNA16 CT, prompted with a
 box drawn around the LUNA16 annotation of its 25 mm nodule, and shows the prompt
 slice with the predicted mask and the box. The mask is never edited or smoothed.
+
+`film-panels` re-crops the named homepage film panels from the figure, revision and
+crop recorded for each in sources.json, with the documentation-panel tone.
 
 `cards` writes the featured-*.webp images, used by the homepage featured cards and the
 model pages, on one canvas and scale.
@@ -85,7 +89,7 @@ def documentation_tone(rgb):
 
 
 def tagged_figure(source, crop):
-    """Download a documentation figure at its release tag and crop it by fractions."""
+    """Download a documentation figure at a release tag or commit and crop it by fractions."""
     repository, tag, path = source
     url = f'https://raw.githubusercontent.com/{repository}/{tag}/{path}'
     with urllib.request.urlopen(url, timeout=60) as response:
@@ -113,6 +117,15 @@ def panels(_args):
     """
     save_panel(np.asarray(tagged_figure(PROMPT_SOURCE, PROMPT_CROP))[::-1], 'biomedparse-panel')
     save_panel(tagged_figure(SEGRESNET_SOURCE, SEGRESNET_CROP), 'segresnet-axial')
+
+
+def film_panels(args):
+    """Homepage film panels re-cropped from the sources.json entries named on the command line."""
+    sources = {s['name']: s for s in json.loads((ASSETS / 'sources.json').read_text())['sources']}
+    for name in args.names:
+        source = sources[name]
+        panel = np.asarray(tagged_figure((source['repository'], source['tag'], source['path']), source['crop']))
+        save_panel(panel[::-1] if source.get('flip_vertical') else panel, name)
 
 
 def anatomy(_args):
@@ -227,10 +240,12 @@ def cards(_args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
-    parser.add_argument('stage', choices=['anatomy', 'panels', 'medsam', 'cards'])
+    parser.add_argument('stage', choices=['anatomy', 'panels', 'medsam', 'film-panels', 'cards'])
+    parser.add_argument('names', nargs='*', help='film-panels: sources.json panel names')
     parser.add_argument('--dataset', type=Path, default=Path.home() / 'Documents/datasets/LUNA16')
     args = parser.parse_args()
-    {'anatomy': anatomy, 'panels': panels, 'medsam': medsam, 'cards': cards}[args.stage](args)
+    {'anatomy': anatomy, 'panels': panels, 'medsam': medsam, 'film-panels': film_panels,
+     'cards': cards}[args.stage](args)
 
 
 if __name__ == '__main__':

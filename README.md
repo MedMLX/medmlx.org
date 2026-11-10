@@ -9,7 +9,7 @@ The website for [MedMLX](https://github.com/MedMLX/medmlx): medical imaging mode
 
 [Website](https://medmlx.org) · [MedMLX](https://github.com/MedMLX/medmlx) · [Report a site problem](https://github.com/MedMLX/medmlx.org/issues/new/choose)
 
-<img src="https://raw.githubusercontent.com/MedMLX/medmlx.org/main/docs/homepage.jpg" alt="The medmlx.org homepage: install command and segmentation outputs from MedMLX runtimes" width="100%">
+<img src="https://raw.githubusercontent.com/MedMLX/medmlx.org/main/docs/homepage.webp" alt="The homepage scenes: outputs from MedMLX segmentation, detection, synthesis and feature runtimes" width="100%">
 
 </div>
 
@@ -37,7 +37,7 @@ Then open <http://localhost:4173>. Set `PORT=8000` to use another port.
 | `site/models.js`, `site/model-cards.js` | Model catalog and model pages |
 | `site/releases.js` | Reviewed package versions and shared install commands |
 | `site/assets/` | Images, video, fonts and brand files |
-| `docs/hero/` | Scripts that render the site's images and videos from published runtime outputs |
+| `docs/hero/` | Scripts that render the site's images and videos, and this README's animation, from published runtime outputs |
 | `devtools/` | Tests, release checks and the static export |
 
 ## Checks

@@ -10,7 +10,7 @@ crop and the three card posters, described below.
 
 `sources.json` records documentation source tags and crops, the computed
 radiomics asset, and the six three-panel scenes. Documentation figures were
-read from their Git tags, not from working trees.
+read at their release tag or pinned commit, not from working trees.
 
 `radiomics-texture.webp` and its lossless PNG were computed for this site.
 They use mlxradiomics 0.1.0.dev5 with `voxel=True`, 10-HU bins, a five-pixel
