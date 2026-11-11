@@ -5,8 +5,8 @@ export const pythonVersion = '3.13';
 export const macosVersion = '14.0';
 export const platformRequirement = `macOS ${macosVersion} or later on Apple Silicon`;
 export const releases = {
-  medmlx: { version: '0.5.0', repository: 'MedMLX/medmlx' },
-  'mlx-reason-ct': { version: '0.4.1', repository: 'MedMLX/mlx-reason-ct' },
+  medmlx: { version: '0.9.0', repository: 'MedMLX/medmlx' },
+  'mlx-reason-ct': { version: '0.6.0', repository: 'MedMLX/mlx-reason-ct' },
   'fdg-pet-ct-mlx': { version: '0.3.0', repository: 'MedMLX/fdg-pet-ct-mlx' },
   'nnunet-mlx': { version: '0.8.0', repository: 'MedMLX/nnunet-mlx' },
   'mlx-segment-ct': { version: '0.3.6', repository: 'MedMLX/mlx-segment-ct' },
@@ -14,7 +14,7 @@ export const releases = {
   'unest-mlx': { version: '0.2.8', repository: 'MedMLX/unest-mlx' },
   'swin-unetr-mlx': { version: '0.2.7', repository: 'MedMLX/swin-unetr-mlx' },
   'medsam2-mlx': { version: '0.3.0', repository: 'MedMLX/medsam2-mlx' },
-  'sam3-mlx': { version: '0.2.4', repository: 'MedMLX/sam3-mlx' },
+  'sam3-mlx': { version: '0.3.0', repository: 'MedMLX/sam3-mlx' },
   'biomedparse-mlx': { version: '0.1.6', repository: 'MedMLX/biomedparse-mlx' },
   'totalsegmentator-mlx': { version: '0.2.0', repository: 'MedMLX/totalsegmentator-mlx' },
   'synthseg-mlx': { version: '0.3.5', repository: 'MedMLX/synthseg-mlx' },

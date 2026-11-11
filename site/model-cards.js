@@ -448,7 +448,7 @@ export const modelCards = {
     }
   },
   "sam3-mlx": {
-    "version": "0.2.4",
+    "version": "0.3.0",
     "rows": [
       [
         "Input",
@@ -480,9 +480,10 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peaks at about **12 GB** of memory at the default 1008-pixel resolution.",
+        "text": "Peaks at about **5.4 GB** of memory for one image at the default 1008-pixel resolution, and **6.0 GB** for a tracked video session.",
         "sources": [
-          "about 12 GB peak memory at the default 1008-pixel resolution"
+          "| `sam3` | 3.4 GB | 5.4 GB | One image at the default 1008-pixel resolution |",
+          "| `sam3`, tracked video | 3.4 GB | 6.0 GB | A tracked video session |"
         ]
       }
     ],
@@ -496,9 +497,11 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software and model files: the [SAM License](https://github.com/MedMLX/sam3-mlx/blob/v0.2.4/LICENSE), which allows commercial use but bars military, weapons and trade-controlled uses. Publications must acknowledge SAM.",
+      "text": "Software and model files: the [SAM License](https://github.com/MedMLX/sam3-mlx/blob/v0.3.0/LICENSE), which allows commercial use but bars military, weapons and trade-controlled uses. Publications must acknowledge SAM.",
       "sources": [
-        "royalty-free,\nincluding commercial use, but not for military, weapons or other uses barred by\ntrade controls, and publications must acknowledge SAM."
+        "royalty-free, including commercial use;",
+        "not for military, weapons or other uses barred by trade controls;",
+        "publications must acknowledge SAM."
       ]
     }
   },

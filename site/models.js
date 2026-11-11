@@ -17,7 +17,7 @@ export function reportCommand(parameters) {
 // Runtimes with a detailed page have published packages and weights.
 // Copy requirements, figures and commands from each package's README and docs.
 const reasonCtWeights = '17.4 GB';
-const reasonCtMemory = '14.4 GB';
+const reasonCtMemory = '12.5 GB';
 
 export const models = [
   {
@@ -35,7 +35,7 @@ export const models = [
       ['Output', 'Report or answer as text'],
       ['Weights', reasonCtWeights],
       ['Peak memory', reasonCtMemory],
-      ['Precision', 'FP32'],
+      ['Precision', 'BF16 weights with FP32 accumulation'],
     ],
     requirements: [
       ['Platform', platformRequirement],
@@ -47,11 +47,11 @@ export const models = [
     outputs: [
       ['report.txt', 'the generated report or answer'],
       ['model_response.json', 'the response and generation metadata, plus the reasoning when thinking mode is on'],
-      ['run.json', 'execution metadata'],
+      ['run.json', 'scan geometry, precision and run status'],
     ],
     limitations: [
       'Use one NIfTI scan at a time. DICOM files, 2D images and video are not supported.',
-      'Crop whole-body scans to the chest or abdomen before running. Automatic cropping can select the wrong region, especially when the arms are raised.',
+      'Crop whole-body scans to the chest or abdomen before running. If the region is not found, the run warns and falls back to a crop from the top of the scan.',
     ],
     links: {
       package: packageUrl('mlx-reason-ct'),
