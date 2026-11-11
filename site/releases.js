@@ -10,7 +10,7 @@ export const releases = {
   'fdg-pet-ct-mlx': { version: '0.3.0', repository: 'MedMLX/fdg-pet-ct-mlx' },
   'nnunet-mlx': { version: '0.8.0', repository: 'MedMLX/nnunet-mlx' },
   'mlx-segment-ct': { version: '0.3.6', repository: 'MedMLX/mlx-segment-ct' },
-  'segresnet-mlx': { version: '0.4.0', repository: 'MedMLX/segresnet-mlx' },
+  'segresnet-mlx': { version: '0.4.1', repository: 'MedMLX/segresnet-mlx' },
   'unest-mlx': { version: '0.2.8', repository: 'MedMLX/unest-mlx' },
   'swin-unetr-mlx': { version: '0.2.7', repository: 'MedMLX/swin-unetr-mlx' },
   'medsam2-mlx': { version: '0.3.0', repository: 'MedMLX/medsam2-mlx' },

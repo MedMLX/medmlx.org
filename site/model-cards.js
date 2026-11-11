@@ -292,7 +292,7 @@ export const modelCards = {
     }
   },
   "segresnet-mlx": {
-    "version": "0.4.0",
+    "version": "0.4.1",
     "rows": [
       [
         "Input",
@@ -340,9 +340,9 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.4.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/segresnet-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.4.1/LICENSE). See [third-party notices](https://github.com/MedMLX/segresnet-mlx/blob/v0.4.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
