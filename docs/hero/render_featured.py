@@ -25,8 +25,8 @@ sources.json are applied, as for the other panels.
 
 `panels` crops the text-prompt panel of the tagged biomedparse-mlx abdomen
 figure, inside its frame, flipped vertically to standard display orientation
-(the figure shows posterior at the top), and the axial panel of the tagged
-segresnet-mlx brain tumor figure, both with the same tone.
+(the figure shows posterior at the top), and the labeled axial panel of the
+segresnet-mlx renal figure at a fixed commit, both with the same tone.
 
 `medsam` runs the published medsam2-mlx runner on one LUNA16 CT, prompted with a
 box drawn around the LUNA16 annotation of its 25 mm nodule, and shows the prompt
@@ -64,9 +64,9 @@ ANATOMY_FADE = 0.2
 # The middle "Four text prompts" panel of the BioMedParse figure, inside its frame.
 PROMPT_SOURCE = ('MedMLX/biomedparse-mlx', 'v0.1.5', 'docs/example-abdomen.png')
 PROMPT_CROP = (0.337, 0.2, 0.628, 0.8)
-# The axial panel of the SegResNet brain tumor figure, below its heading.
-SEGRESNET_SOURCE = ('MedMLX/segresnet-mlx', 'v0.3.3', 'docs/example.png')
-SEGRESNET_CROP = (0.008, 0.105, 0.258, 0.89)
+# The middle panel of the SegResNet renal figure: one axial CT slice with its labels.
+SEGRESNET_SOURCE = ('MedMLX/segresnet-mlx', '02cc3c9a535a04ca40c1d84e46f4b92c491c1637', 'docs/example.png')
+SEGRESNET_CROP = (0.3535, 0.11, 0.6695, 0.869)
 
 CASE_FILE = 'nifti/nodule_01_25mm.nii.gz'
 SERIES_UID = '1.3.6.1.4.1.14519.5.2.1.6279.6001.511347030803753100045216493273'

@@ -84,8 +84,8 @@ Vision-language card, recorded in `medsam-slice-run.json`; and
 `biomedparse-panel.webp`, the text-prompt panel of biomedparse-mlx v0.1.5
 `docs/example-abdomen.png`, flipped vertically because that figure shows
 posterior at the top (the film's `prompt.webp` is flipped the same way, as
-recorded in `sources.json`); and `segresnet-axial.webp`, the axial panel of
-segresnet-mlx v0.3.3 `docs/example.png`. `kidney`, `brain`, `xray` and `pet`
+recorded in `sources.json`); and `segresnet-axial.webp`, the labeled axial panel of
+segresnet-mlx `docs/example.png` at commit `02cc3c9a535a`. `kidney`, `brain`, `xray` and `pet`
 are the film panels. Figure crops carry the documentation-panel black
 level and saturation. All come from `docs/hero/render_featured.py`; the film
 keeps its own panels.
