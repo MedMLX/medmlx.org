@@ -85,7 +85,7 @@ export const additionalRuntimes = [
     request: 'https://github.com/MedMLX/.github/issues/2',
   },
   { name: 'NV-Segment-CT', distribution: 'mlx-segment-ct', task: 'Segmentation', description: 'Automatic and prompted 3D CT segmentation with NVIDIA VISTA-3D.' },
-  { name: 'SegResNet', distribution: 'segresnet-mlx', task: 'Segmentation', description: 'Segmentation of brain tumors, kidney structures and whole-body anatomy from MRI or CT.' },
+  { name: 'SegResNet', distribution: 'segresnet-mlx', task: 'Segmentation', description: 'Segmentation of renal arteries, veins, ureters, tumors and kidney tissue from three-phase CT.' },
   { name: 'UNesT', distribution: 'unest-mlx', task: 'Segmentation', description: 'Kidney cortex, medulla and collecting system segmentation in contrast-enhanced CT.' },
   { name: 'SwinUNETR', distribution: 'swin-unetr-mlx', task: 'Segmentation', description: 'Organ segmentation in abdominal CT.' },
   { name: 'MedSAM2', distribution: 'medsam2-mlx', task: 'Segmentation', description: 'Lesion or organ segmentation from a box, point or mask prompt, tracked through the volume.' },

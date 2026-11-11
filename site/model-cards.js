@@ -292,83 +292,57 @@ export const modelCards = {
     }
   },
   "segresnet-mlx": {
-    "version": "0.3.4",
+    "version": "0.4.0",
     "rows": [
       [
-        "Brain tumor model",
+        "Input",
         {
-          "text": "Four MRI sequences: contrast-enhanced T1, T1, T2 and FLAIR, saved as NIfTI files.",
+          "text": "Arterial, venous and excretory CT scans of the kidneys, saved as NIfTI files.",
           "sources": [
-            "`brats`: contrast T1, T1, T2 and FLAIR MRI in NIfTI"
-          ]
-        }
-      ],
-      [
-        "Kidney model",
-        {
-          "text": "Arterial, venous and excretory CT scans saved as NIfTI files.",
-          "sources": [
-            "`renal_cect`: arterial, venous and excretory CT in NIfTI"
+            "Arterial, venous and excretory CT in NIfTI, on one voxel grid"
           ]
         }
       ],
       [
         "Output",
         {
-          "text": "A segmentation map aligned with the original scan.",
+          "text": "A label map aligned with the original scan, marking renal arteries, veins, ureters, tumors and kidney tissue.",
           "sources": [
-            "Segmentation on the input grid"
+            "Renal labels on the input grid",
+            "The mask is float32 with labels 1 artery, 2 vein, 3 ureter, 4 neoplasm and 5 parenchyma"
           ]
         }
       ]
     ],
     "limitations": [
       {
-        "text": "Scans used together must already be aligned.",
+        "text": "The three scans must already be aligned on one grid.",
         "sources": [
           "Inputs are finite 3D volumes on one voxel grid, with spatial units in millimetres or unspecified."
-        ]
-      },
-      {
-        "text": "Whole-body CT models are also available; see the repository for setup.",
-        "sources": [
-          "The standalone `run(bundle=..., weights_path=...)` interface remains available for explicit local checkpoints, including the whole-body CT variants."
         ]
       }
     ],
     "measurements": [
       {
-        "text": "Peak memory: **4.9 GB** for a 240×240×155 four-sequence brain MRI and **4.0 GB** for a 478×277×161 three-phase kidney CT. The whole-body CT model has no published figure.",
+        "text": "Peak memory: **4.0 GB** for a 478×277×161 three-phase kidney CT.",
         "sources": [
-          "Weights: 19 MB download for `segresnet-brats`, 76 MB for `segresnet-renal-cect`. Peak MLX memory: 4.9 GB for a 240×240×155 four-sequence brain MRI (`segresnet-brats`) and 4.0 GB for a 478×277×161 three-phase CT (`segresnet-renal-cect`)."
+          "| `segresnet-renal-cect` | 76 MB | 4.0 GB | 478×277×161 three-phase CT |"
         ]
       }
     ],
     "noWeights": false,
     "weights": [
       {
-        "name": "Brain tumor MRI",
-        "url": "https://huggingface.co/MedMLX/segresnet-brats-mlx",
-        "revision": "dd339bb0671974ae9dc65ff92b0c667bb5c3cd03",
-        "size": "19 MB"
-      },
-      {
         "name": "Contrast-enhanced kidney CT",
         "url": "https://huggingface.co/MedMLX/segresnet-renal-cect-mlx",
         "revision": "6b9f350e6bd93e1aa7525189f933b05e9460b1b6",
         "size": "76 MB"
-      },
-      {
-        "name": "Whole-body CT",
-        "url": "https://huggingface.co/MedMLX/segresnet-wholebody-mlx",
-        "revision": "31f5d2631faa8b9a7440a6945b14d4adea4af87a",
-        "size": "0.2 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.3.4/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.3.4/LICENSE). See [third-party notices](https://github.com/MedMLX/segresnet-mlx/blob/v0.3.4/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/segresnet-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
