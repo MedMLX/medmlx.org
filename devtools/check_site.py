@@ -27,7 +27,7 @@ ROUTES = {
     "/community",
 }
 # Written by devtools/export-site.mjs, not stored under site/.
-GENERATED = {"/llms.txt", "/catalog.json", "/sitemap.xml", "/robots.txt"}
+GENERATED = {"/llms.txt", "/llms-full.txt", "/catalog.json", "/sitemap.xml", "/robots.txt"}
 SOURCES = {
     "index.html": r'(?:src|href)="(/[^"]*)"',
     "app.js": r'(?:src|href)="(/[^"]*)"',

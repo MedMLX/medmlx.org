@@ -3,6 +3,8 @@ the pinned Hugging Face weights.
 
 This is a network check, separate from the hermetic command tests. It never
 imports a runtime, installs a model, downloads weights, or executes examples.
+With ``--readmes FILE`` a passing check also writes each package's verified
+tagged README to FILE as JSON, which the site export publishes for agents.
 """
 
 import ast
@@ -586,7 +588,8 @@ def verify_release(
     fetch: Callable[[str], str] = fetch_text,
     models: tuple[Model, ...] = (),
     references: tuple[Reference, ...] = (),
-) -> None:
+) -> tuple[str, str]:
+    """Check one release and return its README path and text at the tag."""
     data = mapping(json.loads(fetch(f"https://pypi.org/pypi/{release.name}/json")))
     info = mapping(data["info"])
     if canonicalize_name(string(info["name"])) != canonicalize_name(release.name):
@@ -704,6 +707,7 @@ def verify_release(
         if not any(model.peak_memory in document for document in documents.values()):
             raise ReleaseError(f"peak memory {model.peak_memory} is absent from the release docs")
         verify_weights(model, fetch)
+    return readme_path, readme
 
 
 def resolve_installation(requirement: str, python: str, macos: str) -> None:
@@ -806,10 +810,16 @@ def installation_requirements(
 
 
 def main() -> int:
-    if len(sys.argv) != 1:
-        print("Usage: python devtools/check_releases.py", file=sys.stderr)
-        return 2
+    match sys.argv[1:]:
+        case []:
+            readmes_file = None
+        case ["--readmes", path]:
+            readmes_file = Path(path)
+        case _:
+            print("Usage: python devtools/check_releases.py [--readmes FILE]", file=sys.stderr)
+            return 2
     python, macos, releases, examples, models, references, pins = load_catalog()
+    readmes: dict[str, dict[str, str]] = {}
     failures: list[str] = []
     for url, revision, size in pins:
         try:
@@ -828,7 +838,8 @@ def main() -> int:
         ]
         for release, check in checks:
             try:
-                check.result()
+                readme_path, readme = check.result()
+                readmes[release.name] = {"path": readme_path, "text": readme}
             except (ValueError, KeyError, SyntaxError) as error:
                 failures.append(f"{release.name}: {error}")
     if failures:
@@ -842,6 +853,9 @@ def main() -> int:
         ]
         for resolution in resolutions:
             resolution.result()
+    # Written only after every check passes, so the export never publishes an unverified README.
+    if readmes_file:
+        readmes_file.write_text(json.dumps(readmes), encoding="utf-8")
     print(
         f"Verified {len(releases)} releases, {len(examples)} examples, "
         f"{sum(release.card is not None for release in releases)} model cards and {len(models) + len(pins)} weight pins "

@@ -3,8 +3,9 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
-import { catalogJson, llmsText, prerender, robots, sitemap } from './prerender.mjs';
+import { catalogJson, llmsFullText, llmsText, markdownUrl, modelMarkdown, prerender, robots, sitemap } from './prerender.mjs';
 import { catalog, route, routes, siteUrl } from '../site/render.js';
+import { releases } from '../site/releases.js';
 import { modelCards } from '../site/model-cards.js';
 
 const shell = readFileSync(new URL('../site/index.html', import.meta.url), 'utf8');
@@ -94,7 +95,23 @@ test('llms.txt and catalog.json carry every runtime with its verified install co
   assert.equal(data.models.length, catalog.length);
   for (const item of catalog) {
     assert.ok(text.includes(`${siteUrl}${item.href}`), item.name);
+    assert.ok(text.includes(markdownUrl(item)), item.name);
     for (const line of item.install.split('\n')) assert.ok(text.includes(`        ${line}`), `${item.name}: ${line}`);
     assert.equal(data.models.find(model => model.distribution === item.distribution).install, item.install);
   }
+});
+
+test('Markdown model pages and llms-full.txt carry each package README from its release tag', () => {
+  const readmes = Object.fromEntries(Object.keys(releases).map(name => [name, { path: 'README.md', text: `# ${name} release README\n` }]));
+  for (const item of catalog) {
+    const text = modelMarkdown(item, readmes);
+    assert.ok(text.includes(`# ${item.distribution} release README`), item.slug);
+    assert.ok(text.includes(`source: "${item.source.replace('/tree/', '/blob/')}/README.md"`), item.slug);
+  }
+  const full = llmsFullText(readmes);
+  for (const name of new Set(['medmlx', ...catalog.map(item => item.distribution)])) {
+    assert.equal(full.split(`# ${name} release README`).length, 2, name);
+  }
+  const { 'segresnet-mlx': _, ...missing } = readmes;
+  assert.throws(() => llmsFullText(missing), /segresnet-mlx: the release check returned no README/);
 });

@@ -48,7 +48,8 @@ not build the site, and there is no workers.dev or preview address.
   every page without a DOM, and `site/app.js` adds only browser behavior.
   `make pages` prerenders each route (routes end in `/`) and generates
   `sitemap.xml`, `robots.txt`, `llms.txt` and `catalog.json` from the same
-  verified catalog.
+  verified catalog, plus `llms-full.txt` and each model page's
+  `index.html.md` from the READMEs the release check verified at each tag.
 - `.github/workflows/release-check.yml` runs the release check daily against
   the catalog on `main`, which is what `make deploy` publishes. A failure means
   the site has drifted from a new release: review the release, update the site

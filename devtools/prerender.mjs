@@ -1,6 +1,8 @@
 // Static files for search engines and agents, built from the same modules the
 // site renders: one prerendered HTML page per route, the sitemap, robots.txt,
-// llms.txt and catalog.json. Everything here is a pure function of its inputs.
+// llms.txt, catalog.json, and the Markdown model pages and llms-full.txt built
+// from the READMEs the release check verified. Everything here is a pure
+// function of its inputs.
 import {
   article, articleUrl, bibtex, catalog, citation, maintainers, route, routes, siteDescription, siteUrl, tasks,
 } from '../site/render.js';
@@ -51,6 +53,9 @@ export function robots() {
   return `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`;
 }
 
+/** A model page's Markdown twin: its URL plus index.html.md (llmstxt.org). */
+export const markdownUrl = item => `${siteUrl}${item.href}index.html.md`;
+
 /** Each runtime as data: the same facts and verified install command the site shows. */
 function runtimeRecord(item) {
   return {
@@ -60,6 +65,7 @@ function runtimeRecord(item) {
     task: item.task,
     description: item.description,
     page: `${siteUrl}${item.href}`,
+    markdown: markdownUrl(item),
     pypi: item.package,
     source: item.source,
     install: item.install,
@@ -81,6 +87,7 @@ export function catalogJson() {
       mcpServer: medmlxServeCommand,
       mcpGuide: `${siteUrl}/mcp/`,
     },
+    documentation: `${siteUrl}/llms-full.txt`,
     article: { ...article, url: articleUrl, citation, bibtex },
     maintainers: maintainers.map(person => ({ name: person.name, url: person.url, profiles: person.sameAs })),
     lab: { name: 'AI-IR', url: 'https://ai-ir.org/', institution: 'University of Texas Medical Branch' },
@@ -98,7 +105,7 @@ export function llmsText() {
     '',
     ...catalog.filter(item => item.task === task).map(item => [
       `- [${item.name}](${siteUrl}${item.href}): ${item.description}`,
-      `  Package ${item.distribution} ${item.version}. [PyPI](${item.package}) · [Source](${item.source})`,
+      `  Package ${item.distribution} ${item.version}. [Docs as Markdown](${markdownUrl(item)}) · [PyPI](${item.package}) · [Source](${item.source})`,
       '  Install on its own in a new environment:',
       '',
       indent(indent(item.install)),
@@ -135,6 +142,7 @@ An MCP client can list, check and run models. Configure this as its stdio comman
 
 ${indent(medmlxServeCommand)}
 
+- [Full documentation](${siteUrl}/llms-full.txt): the README of medmlx and of every runtime at its release tag, in one file
 - [MCP guide](${siteUrl}/mcp/): install, client setup, job workflow and tool reference
 - [Command line](${siteUrl}/cli/): the medmlx command, its subcommands and weight downloads
 - [Python API](${siteUrl}/python/): run, describe_model, model_readiness and the other public functions
@@ -167,5 +175,57 @@ ${sections.join('\n')}
 - [Source on GitHub](https://github.com/${releases.medmlx.repository})
 - [medmlx on PyPI](https://pypi.org/project/medmlx/)
 - [Weights on Hugging Face](https://huggingface.co/MedMLX)
+`;
+}
+
+/** A package's README as the release check verified it, with its URL at the reviewed tag. */
+function verifiedReadme(distribution, readmes) {
+  const readme = readmes[distribution];
+  if (!readme) throw new Error(`${distribution}: the release check returned no README`);
+  const { repository, version } = releases[distribution];
+  return { text: readme.text.trim(), version, url: `https://github.com/${repository}/blob/v${version}/${readme.path}` };
+}
+
+// JSON strings and arrays are valid YAML, so values never need hand-quoting.
+const frontMatter = fields =>
+  `---\n${Object.entries(fields).map(([key, value]) => `${key}: ${JSON.stringify(value)}`).join('\n')}\n---\n\n`;
+
+/** A model page as Markdown: the page's facts, then its package README from the release tag. */
+export function modelMarkdown(item, readmes) {
+  const readme = verifiedReadme(item.distribution, readmes);
+  return `${frontMatter({
+    title: item.name,
+    description: item.description,
+    page: `${siteUrl}${item.href}`,
+    package: item.distribution,
+    version: item.version,
+    source: readme.url,
+    install: item.install,
+  })}${readme.text}\n`;
+}
+
+/** Every package README the site relies on, medmlx first, in one file (llmstxt.org). */
+export function llmsFullText(readmes) {
+  const packages = ['medmlx', ...new Set(catalog.map(item => item.distribution))];
+  // medmlx has no model page; its README backs the getting-started and developer guides.
+  const pages = distribution => distribution === 'medmlx'
+    ? ['/get-started/', '/cli/', '/python/', '/mcp/']
+    : catalog.filter(item => item.distribution === distribution).map(item => item.href);
+  const documents = packages.map(distribution => {
+    const readme = verifiedReadme(distribution, readmes);
+    return `${frontMatter({
+      package: distribution,
+      version: readme.version,
+      source: readme.url,
+      pages: pages(distribution).map(path => `${siteUrl}${path}`),
+    })}${readme.text}`;
+  });
+  return `# MedMLX documentation
+
+> ${siteDescription}
+
+The README of medmlx and of every runtime on ${siteUrl}, as published at each package's reviewed release tag. A front-matter block before each README gives its package, version, source and site pages. [llms.txt](${siteUrl}/llms.txt) is the short index.
+
+${documents.join('\n\n')}
 `;
 }
