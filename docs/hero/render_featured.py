@@ -152,8 +152,8 @@ def medsam(args):
     half = BOX_MARGIN * NODULE_DIAMETER_MM / image.header.get_zooms()[0] / 2
     box = [round(i - half), round(j - half), round(i + half), round(j + half)]
     frame = round(k)
-    result = run(image_path=str(case), output_dir=str(RUN_DIR), box_xyxy=box, frame_idx=frame,
-                 propagation='both', hu_window=HU_WINDOW, overwrite=True)
+    result = run(image_path=str(case), output_dir=str(RUN_DIR), box_xyxy_pixels=box,
+                 frame_index=frame, propagation='both', hu_window=HU_WINDOW, overwrite=True)
 
     hu = np.asarray(image.dataobj, dtype=np.float32)[:, :, frame].T
     mask = np.asarray(nib.load(result['outputs']['mask']).dataobj)[:, :, frame].T > 0

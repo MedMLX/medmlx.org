@@ -156,7 +156,7 @@ export const runExamples = {
   },
   'medsam2-mlx': {
     id: 'medsam2', extras: 'segment,mcp',
-    args: "image_path=ct.nii.gz frame_idx=40 box_xyxy:='[120, 140, 180, 200]' output_dir=medsam2",
+    args: "image_path=ct.nii.gz frame_index=40 box_xyxy_pixels:='[120, 140, 180, 200]' output_dir=medsam2",
     prompt: 'Use MedMLX to segment the lesion in ct.nii.gz with MedSAM2, from the box [120, 140, 180, 200] on slice 40.',
   },
   'sam3-mlx': {
