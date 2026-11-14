@@ -5,7 +5,7 @@ export const pythonVersion = '3.13';
 export const macosVersion = '14.0';
 export const platformRequirement = `macOS ${macosVersion} or later on Apple Silicon`;
 export const releases = {
-  medmlx: { version: '0.9.0', repository: 'MedMLX/medmlx' },
+  medmlx: { version: '0.9.1', repository: 'MedMLX/medmlx' },
   'mlx-reason-ct': { version: '0.6.0', repository: 'MedMLX/mlx-reason-ct' },
   'fdg-pet-ct-mlx': { version: '0.3.0', repository: 'MedMLX/fdg-pet-ct-mlx' },
   'nnunet-mlx': { version: '0.8.0', repository: 'MedMLX/nnunet-mlx' },
