@@ -46,7 +46,7 @@ test('every runtime card exposes its reviewed source, limits and resource eviden
     if (card.limitations.length) assert.match(body, /Before you run/);
     assert.match(body, /License and terms/);
     for (const weight of card.weights) assert.ok(body.includes(weight.url));
-    if (!card.measurements.length) assert.match(body, /not published for this version/);
+    for (const row of card.measurements.flatMap(fact => fact.table ?? [])) assert.ok(body.includes(row.peak), `${item.slug} ${row.model}`);
   }
   const generation = String(route('/models/mlx-generate-ctmr').body);
   assert.match(generation, /10\.3 GiB/);

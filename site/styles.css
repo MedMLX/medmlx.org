@@ -428,6 +428,13 @@ main:focus { outline: none; }
 .specs.files > div { grid-template-columns: 12rem minmax(0, 1fr); }
 .specs.files dt { color: var(--foreground); }
 
+/* Downloads and memory: one row per model, as in each runtime README. */
+.table-scroll { overflow-x: auto; }
+.memory-table { width: 100%; margin: 24px 0 0; border-collapse: collapse; font-size: 0.9375rem; letter-spacing: -0.016em; }
+.memory-table th, .memory-table td { padding: 12px 24px 12px 0; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+.memory-table thead th { border-top: 1px solid var(--rule); color: var(--muted); font-weight: 400; }
+.memory-table tbody th { font-weight: 400; }
+
 /* Terminal: a dark macOS-style window. */
 
 .terminal { overflow: hidden; border-radius: 18px; background: var(--tile); box-shadow: inset 0 0 0 1px var(--hairline); color: var(--white); }
@@ -1030,6 +1037,10 @@ video.page-media-visual { aspect-ratio: 800 / 520; }
   .tile-center { text-align: left; }
   .tile-center .link-row { justify-content: flex-start; }
   .footer-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 20px; }
+  /* Four columns fit a phone without sideways scrolling at this padding and size. */
+  .memory-table { font-size: 0.875rem; }
+  .memory-table th, .memory-table td { padding-right: 8px; }
+  .memory-table th:last-child, .memory-table td:last-child { padding-right: 0; }
 }
 
 @media (max-width: 380px) {

@@ -56,13 +56,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peaked at **2.7 GB** of memory for a 400×400×284 whole-body CT.",
+        "table": [{"model":"FDG PET/CT","weight":null,"peak":"2.7 GB","input":"400×400×284 whole-body CT"}],
         "sources": [
           "No model weights to download. Peak MLX memory: 2.7 GB for a 400×400×284 whole-body CT."
         ]
       }
     ],
-    "noWeights": true,
     "weights": [],
     "terms": {
       "text": "Software: [Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.3.0/LICENSE).",
@@ -104,7 +103,7 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peak memory: **8.9 GB** (liver) and **14.5 GB** (pancreas) for a 768×768×101 abdominal CT, **7.4 GB** (BraTS) for a 240×240×155 brain MRI and **4.8 GB** (AutoPET) for a 400×400×284 whole-body PET/CT. SIAM needs about **16 GB**.",
+        "table": [{"model": "Liver CT", "weight": 0, "peak": "8.9 GB", "input": "768×768×101 abdominal CT"}, {"model": "Pancreas CT", "weight": 2, "peak": "14.5 GB", "input": "768×768×101 abdominal CT"}, {"model": "PET/CT lesions", "weight": 1, "peak": "4.8 GB", "input": "400×400×284 whole-body PET/CT"}, {"model": "Brain tumor MRI", "weight": 3, "peak": "7.4 GB", "input": "240×240×155 brain MRI"}, {"model": "Head tissue MRI or CT (SIAM)", "weight": 4, "peak": "about 16 GB", "input": "Typical head MRI"}],
         "sources": [
           "| `nnunet-liver` | 125 MB | 8.9 GB | 768×768×101 abdominal CT |",
             "| `nnunet-pancreas` | 410 MB | 14.5 GB | 768×768×101 abdominal CT |",
@@ -114,7 +113,6 @@ export const modelCards = {
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "Liver CT",
@@ -209,13 +207,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "A typical head MRI needs about **16 GB** of memory, more for larger fields of view.",
+        "table": [{"model":"SIAM","weight":0,"peak":"about 16 GB","input":"Typical head MRI; larger fields of view need more"}],
         "sources": [
           "a typical head MRI needs about 16 GB, more for larger fields of view."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "SIAM v0.3 weights",
@@ -263,13 +260,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peak memory: **5.9 GB** to segment all classes of a 768×768×101 abdominal CT, and **11.0 GB** with the CT/MRI version on a 576×468×72 abdominal MRI.",
+        "table": [{"model": "CT model", "weight": 0, "peak": "5.9 GB", "input": "768×768×101 abdominal CT, all classes"}, {"model": "CT/MRI model", "weight": 1, "peak": "11.0 GB", "input": "576×468×72 abdominal MRI"}],
         "sources": [
           "Weights: 872 MB download for each of NV-Segment-CT and NV-Segment-CTMR. Peak MLX memory: 5.9 GB to segment all classes of a 768×768×101 abdominal CT with `mlx-segment-ct`, and 11.0 GB for all classes of a 576×468×72 abdominal MRI with `mlx-segment-ctmr`."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "CT model",
@@ -324,13 +320,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peak memory: **4.0 GB** for a 478×277×161 three-phase kidney CT.",
+        "table": [{"model": "Contrast-enhanced kidney CT", "weight": 0, "peak": "4.0 GB", "input": "478×277×161 three-phase kidney CT"}],
         "sources": [
           "| `segresnet-renal-cect` | 76 MB | 4.0 GB | 478×277×161 three-phase CT |"
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "Contrast-enhanced kidney CT",
@@ -378,13 +373,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peaked at **7.2 GB** of memory for a 478×277×161 contrast CT.",
+        "table": [{"model":"Kidney model","weight":0,"peak":"7.2 GB","input":"478×277×161 contrast CT"}],
         "sources": [
           "Weights: 349 MB download. Peak MLX memory: 7.2 GB for a 478×277×161 contrast CT."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "Kidney model",
@@ -425,13 +419,12 @@ export const modelCards = {
     "limitations": [],
     "measurements": [
       {
-        "text": "Peaked at **7.4 GB** of memory for a 768×768×101 abdominal CT.",
+        "table": [{"model":"Abdominal organ model","weight":0,"peak":"7.4 GB","input":"768×768×101 abdominal CT"}],
         "sources": [
           "Weights: 253 MB download. Peak MLX memory: 7.4 GB for a 768×768×101 abdominal CT."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "Abdominal organ model",
@@ -480,14 +473,13 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peaks at about **5.4 GB** of memory for one image at the default 1008-pixel resolution, and **6.0 GB** for a tracked video session.",
+        "table": [{"model":"SAM 3, one image","weight":0,"peak":"5.4 GB","input":"One image at the default 1008-pixel resolution"},{"model":"SAM 3, tracked video","weight":0,"peak":"6.0 GB","input":"A tracked video session"}],
         "sources": [
           "| `sam3` | 3.4 GB | 5.4 GB | One image at the default 1008-pixel resolution |",
           "| `sam3`, tracked video | 3.4 GB | 6.0 GB | A tracked video session |"
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "SAM 3 image model",
@@ -558,13 +550,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peaked at **1.3 GB** of memory to follow one box prompt through 21 slices of a 512×512×147 chest CT.",
+        "table": [{"model":"CT lesion model","weight":0,"peak":"1.3 GB","input":"One box prompt through 21 slices of a 512×512×147 chest CT"},{"model":"All MedSAM2 models","weight":1,"peak":"—","input":"—"}],
         "sources": [
           "Weights: 156 MB download. Peak MLX memory: 1.3 GB to track one box prompt through 21 slices of a 512×512×147 chest CT."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "CT lesion model",
@@ -627,13 +618,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peaked at **3.8 GB** of memory for four organ prompts on a 768×768×101 abdominal CT.",
+        "table": [{"model":"BioMedParse v2","weight":0,"peak":"3.8 GB","input":"Four organ prompts on a 768×768×101 abdominal CT"}],
         "sources": [
           "Weights: 1.5 GB download. Peak MLX memory: 3.8 GB for four organ prompts on a 768×768×101 abdominal CT."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "BioMedParse v2",
@@ -705,13 +695,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peaked at **5.0 GB** of memory in standard mode on a 768×768×101 abdominal CT.",
+        "table": [{"model":"TotalSegmentator","weight":0,"peak":"5.0 GB","input":"Standard mode, 768×768×101 abdominal CT"}],
         "sources": [
           "| `totalsegmentator` | 824 MB | 5.0 GB | Standard mode, 768×768×101 abdominal CT |"
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "TotalSegmentator models",
@@ -752,13 +741,12 @@ export const modelCards = {
     "limitations": [],
     "measurements": [
       {
-        "text": "Peaked at **11.6 GB** of memory for a 160×192×192 T1 brain MRI with cortical parcellation.",
+        "table": [{"model":"SynthSeg","weight":0,"peak":"11.6 GB","input":"160×192×192 T1 brain MRI with cortical parcellation"}],
         "sources": [
           "Weights: 424 MB download. Peak MLX memory: 11.6 GB for a 160×192×192 T1 MRI with cortical parcellation."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "SynthSeg models",
@@ -807,13 +795,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peaked at **1.2 GB** of memory for a 1929×2207 chest radiograph with the default single model.",
+        "table": [{"model":"FleXray","weight":0,"peak":"1.2 GB","input":"1929×2207 chest radiograph, default single model"}],
         "sources": [
           "Weights: 2.0 GB download, all five ensemble members. Peak MLX memory: 1.2 GB for a 1929×2207 chest radiograph with the default single model."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "FleXray model",
@@ -861,13 +848,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peaked at **0.27 GB** of memory for a 768×576 endoscopy frame.",
+        "table": [{"model":"Instrument segmentation model","weight":0,"peak":"0.27 GB","input":"768×576 endoscopy frame"}],
         "sources": [
           "Weights: 46 MB download. Peak MLX memory: 0.27 GB for a 768×576 endoscopy frame."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "Instrument segmentation model",
@@ -922,13 +908,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peaked at **10.7 GB** of memory for a 512×512×147 chest CT resampled to the model grid.",
+        "table": [{"model":"Lung nodule model","weight":0,"peak":"10.7 GB","input":"512×512×147 chest CT resampled to the model grid"}],
         "sources": [
           "Weights: 85 MB download. Peak MLX memory: 10.7 GB for a 512×512×147 chest CT resampled to the model grid."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "Lung nodule model",
@@ -985,7 +970,7 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Peak memory: **10.3 GiB** for CT (256×256×256, from an anatomy mask), and **9.5 GiB** each for brain MRI (256×256×128) and general MRI (128×256×256).",
+        "table": [{"model": "CT", "weight": 0, "peak": "10.3 GiB", "input": "256×256×256, from an anatomy mask"}, {"model": "Brain MRI", "weight": 0, "peak": "9.5 GiB", "input": "256×256×128"}, {"model": "General MRI", "weight": 0, "peak": "9.5 GiB", "input": "128×256×256"}],
         "sources": [
           "| `mlx-generate-ctmr-ct` | 10.3 GiB | 256³ CT from a mask, ControlNet + four-window decode |",
           "| `mlx-generate-ctmr-mr-brain` | 9.5 GiB | 256×256×128 MR-Brain, guided batch 2 |",
@@ -993,7 +978,6 @@ export const modelCards = {
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "CT and MRI models",
@@ -1048,7 +1032,7 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Tests peaked at **5.19 GB** with the default settings and **3.46 GB** in source mode, for a 160×160×128 crop at 1 mm resolution with 200 generation steps.",
+        "table": [{"model":"LesionDiffusion, default mode","weight":0,"peak":"5.19 GB","input":"160×160×128 crop at 1 mm, 200 generation steps"},{"model":"LesionDiffusion, source mode","weight":0,"peak":"3.46 GB","input":"160×160×128 crop at 1 mm, 200 generation steps"}],
         "sources": [
           "**5.19 GB** peak MLX memory for `lesiondiffusion` in the default conditioned mode and **3.46 GB** in source mode on a 160×160×128, 1 mm RAS crop.",
           "Both measurements used an AMOS case 0008 crop and 200 diffusion steps"
@@ -1061,7 +1045,6 @@ export const modelCards = {
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "LesionDiffusion model",
@@ -1109,13 +1092,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Describing a chest radiograph in up to 256 tokens peaked at **4.4 GB** (MedGemma 1.5 4B), **4.1 GB** (MedGemma 4B) and **17.9 GB** (MedGemma 27B).",
+        "table": [{"model":"MedGemma 1.5 4B","weight":0,"peak":"4.4 GB","input":"1929×2207 chest radiograph, up to 256 tokens"},{"model":"MedGemma 4B","weight":1,"peak":"4.1 GB","input":"1929×2207 chest radiograph, up to 256 tokens"},{"model":"MedGemma 27B","weight":2,"peak":"17.9 GB","input":"1929×2207 chest radiograph, up to 256 tokens"}],
         "sources": [
           "Weights: 3.4 GB (MedGemma 1.5 4B), 3.0 GB (MedGemma 4B) or 16.9 GB (MedGemma 27B) download. Peak MLX memory to describe a 1929×2207 chest radiograph in up to 256 tokens: 4.4 GB (MedGemma 1.5 4B), 4.1 GB (MedGemma 4B) and 17.9 GB (MedGemma 27B)."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "MedGemma 1.5 4B",
@@ -1190,13 +1172,12 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "text": "Each backbone is a separate 28–218 MB download. A 1929×2207 chest radiograph peaked at **0.11–0.44 GB** of memory, depending on the backbone.",
+        "table": [{"model":"DenseNet121","weight":0,"peak":"0.11 GB","input":"1929×2207 chest radiograph","download":"28 MB"},{"model":"InceptionV3","weight":0,"peak":"0.18 GB","input":"1929×2207 chest radiograph","download":"87 MB"},{"model":"ResNet50","weight":0,"peak":"0.19 GB","input":"1929×2207 chest radiograph","download":"94 MB"},{"model":"InceptionResNetV2","weight":0,"peak":"0.44 GB","input":"1929×2207 chest radiograph","download":"218 MB"}],
         "sources": [
           "Weights: one file per backbone, 28 MB (DenseNet121), 87 MB (InceptionV3), 94 MB (ResNet50) or 218 MB (InceptionResNetV2). Peak MLX memory for a 1929×2207 chest radiograph: 0.11 GB (DenseNet121), 0.18 GB (InceptionV3), 0.19 GB (ResNet50) and 0.44 GB (InceptionResNetV2)."
         ]
       }
     ],
-    "noWeights": false,
     "weights": [
       {
         "name": "RadImageNet models",
@@ -1266,7 +1247,6 @@ export const modelCards = {
       }
     ],
     "measurements": [],
-    "noWeights": true,
     "weights": [],
     "terms": {
       "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v1.0.1/LICENSE).",

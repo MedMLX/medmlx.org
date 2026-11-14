@@ -177,9 +177,14 @@ for (const runtime of additionalRuntimes) {
   merged.excerpts.push(
     ...[...card.rows.map(([, fact]) => fact), ...card.limitations, ...card.measurements, card.terms]
       .flatMap(fact => {
-        if (!fact.text?.trim() || !Array.isArray(fact.sources) || !fact.sources.length) {
+        if (!(fact.text?.trim() || fact.table?.length) || !Array.isArray(fact.sources) || !fact.sources.length) {
           throw new Error(`${runtime.slug}: every model-card summary needs supporting source excerpts`);
         }
+        // Each measured peak in a memory table must appear in the excerpts, which must
+        // appear in the tagged README; "—" marks a download with no published measurement.
+        const unsourced = (fact.table ?? []).find(row => row.peak !== '—'
+          && !fact.sources.some(source => source.includes(row.peak.replace(/^about /, ''))));
+        if (unsourced) throw new Error(`${runtime.slug}: peak memory ${unsourced.peak} is absent from its excerpts`);
         return fact.sources;
       }),
     ...card.weights.map(weight => weight.url),

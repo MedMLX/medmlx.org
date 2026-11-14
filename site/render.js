@@ -127,16 +127,6 @@ function runtimeCard(item) {
       <section class="detail-section">
         <h2>Model card</h2>
         ${specList([...card.rows.map(([label, fact]) => [label, cardText(fact.text)]), ['Runs on', platformRequirement]])}
-        <h2>${card.noWeights ? 'Memory' : 'Downloads and memory'}</h2>
-        ${card.weights.length ? html`<ul class="resource-list">
-          ${card.weights.map(weight => html`<li><a href="${weight.url}">${weight.name}</a>${weight.size ? ` · ${weight.size}` : ''}${weight.revision
-    ? html` · revision <a href="${weight.url}/tree/${weight.revision}"><code>${weight.revision.slice(0, 7)}</code></a>` : ''}</li>`)}
-        </ul>` : ''}
-        ${card.measurements.length
-    ? card.measurements.map(fact => html`<p>${cardText(fact.text)}</p>`)
-    : html`<p class="note">${card.noWeights ? 'Peak memory use is' : 'Download size and peak memory use are'} not published for this version.</p>`}
-        ${card.measurements.length && !card.weights.some(weight => weight.size)
-    ? html`<p class="note">Download size is not published for this version.</p>` : ''}
       </section>
       <section class="detail-section">
         ${card.limitations.length ? html`<h2>Before you run</h2>
@@ -147,7 +137,47 @@ function runtimeCard(item) {
         <p>${cardText(card.terms.text)}</p>
         <p class="note"><a href="${item.source}">Developer documentation on GitHub</a></p>
       </section>
-    </div>`;
+    </div>
+    ${memorySection(card)}`;
+}
+
+/**
+ * Render each model's download and measured peak memory as one table, as the READMEs do.
+ * A row's `weight` indexes `card.weights` (null: nothing to download), and its optional
+ * `download` replaces that repository's size when the row is one file from it.
+ */
+function memorySection(card) {
+  const fact = card.measurements.find(other => other.table);
+  if (!fact) return '';
+  const rows = fact.table;
+  const download = row => `${row.weight}|${row.download ?? ''}`;
+  // Consecutive rows with the same download show it once, spanning those rows.
+  const span = index => {
+    const end = rows.findIndex((row, other) => other > index && download(row) !== download(rows[index]));
+    return (end === -1 ? rows.length : end) - index;
+  };
+  return html`
+    <section class="detail-section">
+      <h2>Downloads and memory</h2>
+      <div class="table-scroll">
+        <table class="memory-table">
+          <thead><tr><th scope="col">Model</th><th scope="col">Download</th><th scope="col">Peak memory</th><th scope="col">Measured on</th></tr></thead>
+          <tbody>
+            ${rows.map((row, index) => {
+    const weight = row.weight === null ? null : card.weights[row.weight];
+    const first = index === 0 || download(rows[index - 1]) !== download(row);
+    const cell = weight
+      ? html`<a href="${weight.revision ? `${weight.url}/tree/${weight.revision}` : weight.url}">${row.download ?? weight.size}</a>`
+      : 'None';
+    // Dimensions such as 768×768×101 may wrap after each ×, so four columns fit a phone.
+    const input = row.input.split('×').map((part, at) => at ? html`×<wbr>${part}` : part);
+    return html`<tr><th scope="row">${row.model}</th>${first ? html`<td rowspan="${span(index)}">${cell}</td>` : ''}<td>${row.peak === '—' ? row.peak : html`<strong>${row.peak}</strong>`}</td><td>${input}</td></tr>`;
+  })}
+          </tbody>
+        </table>
+      </div>
+      ${card.measurements.filter(other => other !== fact).map(other => html`<p class="note">${cardText(other.text)}</p>`)}
+    </section>`;
 }
 
 /** Render a button linked to the id of the command it copies. */
