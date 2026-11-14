@@ -15,12 +15,15 @@ from devtools.check_releases import (
     Reference,
     Release,
     ReleaseError,
+    RunExample,
     fetch_text,
     installation_requirements,
     resolve_installation,
+    run_arguments,
     size_label,
     verify_reference,
     verify_release,
+    verify_run,
 )
 
 PYPI = "https://pypi.org/pypi/example/json"
@@ -473,3 +476,20 @@ run.add_argument("--root")
         with self.assertRaisesRegex(ReleaseError, "--force is not an option"):
             self.verify(("run",), ("run",), "example run --force")
 
+
+
+class RunChecks(unittest.TestCase):
+    DOCS = (
+        "Run `medmlx describe example-ct`.\n\n"
+        "| `image_path` | CT NIfTI |\n| `box_xyxy` | Box |\n"
+        'Write `"output_dir": "out"` in arguments.json.\n'
+    )
+
+    def test_model_page_run_needs_its_id_and_argument_names_in_the_release_docs(self) -> None:
+        arguments = run_arguments("image_path=ct.nii.gz box_xyxy:='[1, 2, 3, 4]' output_dir=out")
+        self.assertEqual(arguments, ("image_path", "box_xyxy", "output_dir"))
+        verify_run(RunExample("example", (), "example-ct", arguments), self.DOCS)
+        with self.assertRaisesRegex(ReleaseError, "model ID example is absent"):
+            verify_run(RunExample("example", (), "example", arguments), self.DOCS)
+        with self.assertRaisesRegex(ReleaseError, "argument mask_path is absent"):
+            verify_run(RunExample("example", (), "example-ct", ("mask_path",)), self.DOCS)

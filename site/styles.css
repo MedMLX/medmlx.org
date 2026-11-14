@@ -522,6 +522,9 @@ main:focus { outline: none; }
 }
 
 .command-line code::before { content: '$ '; content: '$ ' / ''; color: var(--muted); }
+/* An agent prompt is not a shell command, and prose after a one-line box needs room. */
+.command-line.prompt code::before { content: none; }
+.command-line + p { margin-top: 16px; }
 
 /* Per-model install, collapsed until requested */
 .install-details { grid-column: 1 / -1; margin-top: 14px; }

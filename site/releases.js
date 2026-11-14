@@ -64,3 +64,33 @@ export function runtimeInstallCommand(name, { exact = false, also = [] } = {}) {
   const requirement = `"${name}${exact ? '==' : '>='}${release.version}"`;
   return `${environmentCommand}\nuv pip install ${[requirement, ...also].join(' ')}`;
 }
+
+// Agent setup for Get started. The Claude Code and Codex lines are the "Use with MedMLX"
+// block every runtime README shares, checked against TotalSegmentator's; the JSON is the
+// medmlx README's. make release-check finds each in its tagged release.
+export const claudeConnectCommand = [
+  'MEDMLX="$(uv tool dir --bin --color never)/medmlx"',
+  'mkdir -p "$HOME/medmlx-work"',
+  'claude mcp add --scope user medmlx -- "$MEDMLX" serve --root "$HOME/medmlx-work"',
+].join('\n');
+export const codexConnectCommand = 'codex mcp add medmlx -- "$MEDMLX" serve --root "$HOME/medmlx-work"';
+export const jsonConnectConfig = `{
+  "mcpServers": {
+    "medmlx": {
+      "command": "/absolute/path/to/medmlx",
+      "args": ["serve", "--root", "/absolute/path/to/medmlx-work"]
+    }
+  }
+}`;
+export const connectExamples = [
+  { distribution: 'totalsegmentator-mlx', path: 'README.md', command: claudeConnectCommand },
+  { distribution: 'totalsegmentator-mlx', path: 'README.md', command: codexConnectCommand },
+  { distribution: 'medmlx', path: 'README.md', command: jsonConnectConfig },
+];
+
+// A small abdominal CT (122x101x30) from TotalSegmentator's Apache-2.0 test files, pinned to
+// one commit. It is not a MedMLX release, so the release check does not cover it.
+export const sampleCtCommand = [
+  'mkdir -p ~/medmlx-work && cd ~/medmlx-work',
+  'curl -L -o ct.nii.gz https://raw.githubusercontent.com/wasserth/TotalSegmentator/d89e47f73d24f5fba732a715aeb6fdc0ae34526b/tests/reference_files/example_ct_sm.nii.gz',
+].join('\n');

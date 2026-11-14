@@ -1,4 +1,4 @@
-import { packageUrl, platformRequirement, runtimeInstallCommand } from './releases.js';
+import { packageUrl, platformRequirement, pythonVersion, runtimeInstallCommand } from './releases.js';
 
 /** Return a standalone Reason-CT command with user values quoted for a POSIX shell. */
 export function reportCommand(parameters) {
@@ -107,3 +107,128 @@ export const additionalRuntimes = [
   package: packageUrl(runtime.distribution),
   install: runtimeInstallCommand(runtime.distribution, install),
 }));
+
+// How to run each runtime page's model through medmlx, keyed by page slug. `extras` is the
+// medmlx install its tagged README gives; `id` and the `--arg` names must appear in that
+// README, which make release-check confirms. A model medmlx itself provides names that
+// `package` and the `docs` page documenting it. `before` lists README setup commands that
+// must run first, and `output` and `also` add one line of README or describe facts.
+export const runExamples = {
+  'fdg-pet-ct-mlx': {
+    id: 'fdg-pet-ct', extras: 'generate,mcp',
+    args: 'image_path=ct.nii.gz labels_path=labels.nii.gz profile_path=profiles.json output_dir=fdg-pet',
+    prompt: 'Use MedMLX to make a synthetic FDG PET from ct.nii.gz, labels.nii.gz and profiles.json in my work folder.',
+    output: 'The synthetic PET is written to `fdg-pet/pet.nii.gz` in SUV.',
+  },
+  'nnunet-mlx': {
+    id: 'nnunet-liver', extras: 'segment,mcp',
+    args: 'image_path=ct.nii.gz output_dir=nnunet-liver',
+    prompt: 'Use MedMLX to segment the liver in ct.nii.gz in my work folder with nnU-Net.',
+    also: '`nnunet-pancreas`, `nnunet-autopet` and `nnunet-brats2021` run the other nnU-Net models.',
+  },
+  siam: {
+    id: 'siam', extras: 'segment,mcp',
+    args: 'image_path=head.nii.gz output_dir=siam',
+    prompt: 'Use MedMLX to segment head.nii.gz in my work folder with SIAM.',
+  },
+  'mlx-segment-ct': {
+    id: 'mlx-segment-ct', extras: 'segment,mcp',
+    args: 'image_path=ct.nii.gz output_dir=segment-ct',
+    prompt: 'Use MedMLX to segment ct.nii.gz in my work folder with NV-Segment-CT.',
+    output: 'The mask is written to `segment-ct/mlx_segment_ct_mask.nii.gz`.',
+    also: '`mlx-segment-ctmr` also takes MRI.',
+  },
+  'segresnet-mlx': {
+    id: 'segresnet-renal-cect', extras: 'segment,mcp',
+    args: 'arterial_path=arterial.nii.gz venous_path=venous.nii.gz excretory_path=excretory.nii.gz output_dir=segresnet',
+    prompt: 'Use MedMLX to run segresnet-renal-cect on arterial.nii.gz, venous.nii.gz and excretory.nii.gz in my work folder.',
+    output: 'The label map is written to the `segresnet` folder.',
+  },
+  'unest-mlx': {
+    id: 'unest', extras: 'segment,mcp',
+    args: 'image_path=ct.nii.gz output_dir=unest',
+    prompt: 'Use MedMLX to segment the kidneys in ct.nii.gz in my work folder with UNesT.',
+  },
+  'swin-unetr-mlx': {
+    id: 'swin-unetr', extras: 'segment,mcp',
+    args: 'image_path=ct.nii.gz output_dir=swin-unetr',
+    prompt: 'Use MedMLX to segment the organs in ct.nii.gz in my work folder with SwinUNETR.',
+  },
+  'medsam2-mlx': {
+    id: 'medsam2', extras: 'segment,mcp',
+    args: "image_path=ct.nii.gz frame_idx=40 box_xyxy:='[120, 140, 180, 200]' output_dir=medsam2",
+    prompt: 'Use MedMLX to segment the lesion in ct.nii.gz with MedSAM2, from the box [120, 140, 180, 200] on slice 40.',
+  },
+  'sam3-mlx': {
+    id: 'sam3', extras: 'segment,mcp',
+    args: 'image_path=image.png text_prompt=kidney output_dir=sam3',
+    prompt: 'Use MedMLX to find the kidney in image.png in my work folder with SAM 3.',
+    output: 'The masks are written to `sam3/masks.npy`, with `sam3/prediction.json`.',
+  },
+  'biomedparse-mlx': {
+    id: 'biomedparse-v2', extras: 'segment,mcp',
+    args: "image_path=ct.nii.gz 'prompt=Visualization of the liver in abdominal CT imaging' output_dir=biomedparse",
+    prompt: 'Use MedMLX to segment the liver in ct.nii.gz in my work folder with BioMedParse.',
+  },
+  'totalsegmentator-mlx': {
+    id: 'totalsegmentator', extras: 'segment,mcp',
+    args: 'image_path=ct.nii.gz output_dir=totalseg',
+    prompt: 'Use MedMLX to segment ct.nii.gz in my work folder with TotalSegmentator.',
+    output: 'The mask is written to `totalseg/mask.nii.gz`.',
+  },
+  'synthseg-mlx': {
+    id: 'synthseg', extras: 'segment,mcp',
+    args: 'image_path=brain.nii.gz output_dir=synthseg',
+    prompt: 'Use MedMLX to segment the brain MRI brain.nii.gz in my work folder with SynthSeg.',
+  },
+  'flexray-mlx': {
+    id: 'flexray', extras: 'segment,mcp',
+    args: 'image_path=xray.png output_dir=flexray',
+    prompt: 'Use MedMLX to segment the radiograph xray.png in my work folder with FleXray.',
+  },
+  'flexible-unet-mlx': {
+    id: 'flexible-unet', extras: 'segment,mcp',
+    args: 'image_path=frame.jpg output_dir=flexible-unet',
+    prompt: 'Use MedMLX to find the surgical instruments in frame.jpg in my work folder with FlexibleUNet.',
+  },
+  'lung-nodule-mlx': {
+    id: 'lung-nodule', extras: 'vision,mcp',
+    args: 'image_path=chest-ct.nii.gz output_dir=nodules',
+    prompt: 'Use MedMLX to find lung nodules in chest-ct.nii.gz in my work folder.',
+  },
+  'mlx-generate-ctmr': {
+    id: 'mlx-generate-ctmr-ct', extras: 'generate,mcp',
+    args: 'output_dir=generated-ct',
+    prompt: 'Use MedMLX to generate a synthetic CT with NV-Generate.',
+    also: '`mlx-generate-ctmr-mr` and `mlx-generate-ctmr-mr-brain` generate MRI.',
+  },
+  'lesiondiffusion-mlx': {
+    id: 'lesiondiffusion', extras: 'generate,mcp',
+    args: 'image_path=ct.nii.gz organ_mask_path=liver.nii.gz organ=liver lesion_type=tumor placement=inside_parenchyma output_dir=lesion',
+    prompt: 'Use MedMLX to add a liver tumor to ct.nii.gz with LesionDiffusion, using the liver mask liver.nii.gz.',
+  },
+  'med-vlm-mlx': {
+    id: 'medgemma', extras: 'mcp', package: 'medmlx', docs: 'docs/medvlm-bridge.md',
+    before: ['uvx --from huggingface_hub hf download mlx-community/medgemma-1.5-4b-it-4bit --revision 762746b7a72b0b68dd8fa3f9aea5dc3980674d23 --local-dir medgemma'],
+    args: "image_path=image.png 'prompt=Describe the image.' weights_path=medgemma output_dir=medgemma-out",
+    prompt: 'Use MedMLX to ask MedGemma to describe image.png in my work folder, with the weights in the medgemma folder.',
+    output: 'The answer is written to `medgemma-out/report.json`. MedGemma needs the local weights the second line downloads.',
+  },
+  mlxradiomics: {
+    id: 'mlxradiomics', extras: 'vision,mcp',
+    args: 'image_path=ct.nii.gz mask_path=mask.nii.gz output_dir=radiomics',
+    prompt: 'Use MedMLX to measure radiomics features in ct.nii.gz within mask.nii.gz in my work folder.',
+  },
+  'radimagenet-mlx': {
+    id: 'radimagenet-resnet50', extras: 'vision,mcp',
+    args: 'image_path=image.png output_dir=features',
+    prompt: 'Use MedMLX to extract RadImageNet features from image.png in my work folder.',
+    also: '`radimagenet-densenet121`, `radimagenet-inceptionv3` and `radimagenet-inceptionresnetv2` use the other backbones.',
+  },
+};
+
+/** The terminal commands for a runtime page: install, any setup, describe, then run. */
+export function runCommand({ id, extras, before = [], args }) {
+  return [`uv tool install --python ${pythonVersion} "medmlx[${extras}]"`, ...before,
+    `medmlx describe ${id}`, `medmlx run ${id} --arg ${args}`].join('\n');
+}

@@ -61,6 +61,20 @@ class Example:
 
 
 @dataclass(frozen=True)
+class RunExample:
+    """A model page's `medmlx run` line: the model ID and `--arg` names its release documents.
+
+    `distribution` is the package whose tagged README (plus `docs`) documents the model;
+    it differs from the page's package when medmlx itself provides the model.
+    """
+
+    distribution: str
+    docs: tuple[str, ...]
+    model_id: str
+    arguments: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class Reference:
     """Subcommands and Python functions a reference page lists for a release."""
 
@@ -129,7 +143,8 @@ def fetch_text(url: str) -> str:
 
 
 def load_catalog() -> tuple[
-    str, str, list[Release], list[Example], list[Model], list[Reference], list[tuple[str, str, str]]
+    str, str, list[Release], list[Example], list[Model], list[Reference], list[RunExample],
+    list[tuple[str, str, str]],
 ]:
     """Read the same modules that render the website, without a browser."""
     result = subprocess.run(
@@ -138,8 +153,8 @@ def load_catalog() -> tuple[
             "--input-type=module",
             "-e",
             """
-import { releases, pythonVersion, macosVersion, medmlxExamples } from './site/releases.js';
-import { models, additionalRuntimes, reportCommand } from './site/models.js';
+import { releases, pythonVersion, macosVersion, medmlxExamples, connectExamples } from './site/releases.js';
+import { models, additionalRuntimes, reportCommand, runExamples } from './site/models.js';
 import { modelCards } from './site/model-cards.js';
 import { mcpExamples } from './site/mcp.js';
 import { developerExamples, developerReference } from './site/developer.js';
@@ -173,6 +188,10 @@ for (const runtime of additionalRuntimes) {
 const slugs = new Set(additionalRuntimes.map(runtime => runtime.slug));
 const orphan = Object.keys(modelCards).find(slug => !slugs.has(slug));
 if (orphan) throw new Error(`${orphan}: model card has no catalog entry`);
+const unrun = additionalRuntimes.find(runtime => !runExamples[runtime.slug]);
+if (unrun) throw new Error(`${unrun.slug}: every runtime page needs a run example`);
+const orphanRun = Object.keys(runExamples).find(slug => !slugs.has(slug));
+if (orphanRun) throw new Error(`${orphanRun}: run example has no catalog entry`);
 console.log(JSON.stringify({
   python: pythonVersion,
   macos: macosVersion,
@@ -186,14 +205,25 @@ console.log(JSON.stringify({
       { distribution: runtime.distribution, package: runtime.links?.package || runtime.package }])).values()],
   examples: [
     ...medmlxExamples,
+    ...connectExamples,
     ...mcpExamples.map(({ distribution, path, command }) => ({ distribution, path, command })),
     ...developerExamples,
     ...additionalRuntimes.map(runtime => ({ distribution: runtime.distribution, path: 'README.md', command: runtime.install })),
+    // Each run block's medmlx install and setup lines come from the page package's README.
+    ...additionalRuntimes.flatMap(runtime => {
+      const run = runExamples[runtime.slug];
+      return [`uv tool install --python ${pythonVersion} "medmlx[${run.extras}]"`, ...(run.before || [])]
+        .map(command => ({ distribution: runtime.distribution, path: 'README.md', command }));
+    }),
     ...models.flatMap(model => Object.entries(model.commands).map(([step, command]) => ({
       distribution: model.distribution, path: step === 'install' ? 'README.md' : 'docs/usage.md', command,
     }))),
   ],
   references: [{ distribution: 'medmlx', script: 'medmlx', module: 'medmlx', ...developerReference }],
+  runs: additionalRuntimes.map(runtime => {
+    const run = runExamples[runtime.slug];
+    return { distribution: run.package || runtime.distribution, docs: run.docs ? [run.docs] : [], id: run.id, args: run.args };
+  }),
   models: models.map(model => ({
     distribution: model.distribution,
     weights: model.links.weights,
@@ -278,7 +308,19 @@ console.log(JSON.stringify({
         for value in sequence(data["weightPins"])
         for item in [mapping(value)]
     ]
-    return string(data["python"]), string(data["macos"]), releases, examples, models, references, pins
+    runs = [
+        RunExample(
+            string(item["distribution"]),
+            tuple(string(path) for path in sequence(item["docs"])),
+            string(item["id"]),
+            run_arguments(string(item["args"])),
+        )
+        for value in sequence(data["runs"])
+        for item in [mapping(value)]
+    ]
+    return (
+        string(data["python"]), string(data["macos"]), releases, examples, models, references, runs, pins
+    )
 
 
 def command_tokens(command: str) -> list[str]:
@@ -581,6 +623,31 @@ def verify_revision(url: str, revision: str, size: str, fetch: Callable[[str], s
         raise ReleaseError(f"site lists {size} of weights; {repository}@{revision[:12]} holds {published}")
 
 
+def run_arguments(arguments: str) -> tuple[str, ...]:
+    """Return the names in a `--arg` list such as `a=1 'b=two words' c:='[1]'`."""
+    names: list[str] = []
+    for token in shlex.split(arguments):
+        match = re.match(r"([A-Za-z_]\w*)(?::=|=)", token)
+        if not match:
+            raise ReleaseError(f"run argument is not NAME=VALUE or NAME:=JSON: {token}")
+        names.append(match.group(1))
+    return tuple(names)
+
+
+def verify_run(run: RunExample, documents: str) -> None:
+    """Require the model ID and every argument name in the release docs.
+
+    The ID counts in a medmlx command or as inline code (a model table row); an
+    argument name counts as inline code, `name=`, `name:` or a JSON key.
+    """
+    model_id = re.escape(run.model_id)
+    if not re.search(rf"medmlx (?:describe|run|readiness|setup) {model_id}(?![\w-])|`{model_id}`", documents):
+        raise ReleaseError(f"model ID {run.model_id} is absent from the release docs")
+    for name in run.arguments:
+        if not re.search(rf"`{name}`|\b{name}=|\b{name}:|\"{name}\"", documents):
+            raise ReleaseError(f"{run.model_id} argument {name} is absent from the release docs")
+
+
 def verify_release(
     release: Release,
     python: str,
@@ -588,6 +655,7 @@ def verify_release(
     fetch: Callable[[str], str] = fetch_text,
     models: tuple[Model, ...] = (),
     references: tuple[Reference, ...] = (),
+    runs: tuple[RunExample, ...] = (),
 ) -> tuple[str, str]:
     """Check one release and return its README path and text at the tag."""
     data = mapping(json.loads(fetch(f"https://pypi.org/pypi/{release.name}/json")))
@@ -707,6 +775,11 @@ def verify_release(
         if not any(model.peak_memory in document for document in documents.values()):
             raise ReleaseError(f"peak memory {model.peak_memory} is absent from the release docs")
         verify_weights(model, fetch)
+
+    for run in runs:
+        if run.distribution == release.name:
+            extra = [source(path) for path in run.docs]
+            verify_run(run, "\n".join([readme, *extra]))
     return readme_path, readme
 
 
@@ -818,7 +891,7 @@ def main() -> int:
         case _:
             print("Usage: python devtools/check_releases.py [--readmes FILE]", file=sys.stderr)
             return 2
-    python, macos, releases, examples, models, references, pins = load_catalog()
+    python, macos, releases, examples, models, references, runs, pins = load_catalog()
     readmes: dict[str, dict[str, str]] = {}
     failures: list[str] = []
     for url, revision, size in pins:
@@ -831,7 +904,14 @@ def main() -> int:
             (
                 release,
                 pool.submit(
-                    verify_release, release, python, examples, fetch_text, tuple(models), tuple(references)
+                    verify_release,
+                    release,
+                    python,
+                    examples,
+                    fetch_text,
+                    tuple(models),
+                    tuple(references),
+                    tuple(runs),
                 ),
             )
             for release in releases
@@ -858,7 +938,8 @@ def main() -> int:
         readmes_file.write_text(json.dumps(readmes), encoding="utf-8")
     print(
         f"Verified {len(releases)} releases, {len(examples)} examples, "
-        f"{sum(release.card is not None for release in releases)} model cards and {len(models) + len(pins)} weight pins "
+        f"{sum(release.card is not None for release in releases)} model cards, {len(runs)} run commands "
+        f"and {len(models) + len(pins)} weight pins "
         "against PyPI, repository tags and Hugging Face; "
         f"resolved {len(requirements)} installs for macOS {macos} arm64 / Python {python}"
     )

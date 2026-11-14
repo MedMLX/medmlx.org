@@ -1,10 +1,11 @@
 // Page markup, routes and page metadata. This module has no DOM access, so the
 // exporter can prerender every route and app.js can render the same markup.
-import { models, additionalRuntimes, reportCommand } from './models.js';
+import { models, additionalRuntimes, reportCommand, runCommand, runExamples } from './models.js';
 import { modelCards } from './model-cards.js';
 import {
   medmlxInstallCommand, medmlxProjectCommand, medmlxRunCommand, medmlxServeCommand, medmlxSetupCommand,
   platformRequirement, pythonVersion, releases, uvInstallCommand,
+  claudeConnectCommand, codexConnectCommand, jsonConnectConfig, sampleCtCommand,
 } from './releases.js';
 import { mcpCalls, mcpCommands, mcpGuideSource, mcpTools, medmlxDoc } from './mcp.js';
 import { cliCommands, cliExamples, pythonExamples, pythonFunctions, readmeSource, setupSource } from './developer.js';
@@ -168,9 +169,9 @@ function terminal(id, label, command, copyLabel = `${label.toLowerCase()} comman
 }
 
 /** Render a one-line command with an inline copy button. */
-function commandLine(id, command, copyLabel) {
+function commandLine(id, command, copyLabel, kind = '') {
   return html`
-    <div class="command-line">
+    <div class="command-line${kind ? ` ${kind}` : ''}">
       <code id="${id}">${command}</code>
       ${copyButton(id, copyLabel)}
     </div>`;
@@ -592,20 +593,26 @@ function gettingStartedPage() {
           <p class="note">For a smaller install, use <code>segment</code>, <code>generate</code> or <code>vision</code> instead of <code>all</code>.
             For a Python project, use <code>${medmlxProjectCommand}</code>. If your shell cannot find <code>medmlx</code>, run <code>uv tool update-shell</code> and open a new terminal window.</p>
         </li>
+        <li id="connect-agent">
+          <h2>Connect your AI agent</h2>
+          <p>Your agent can then find, check and run models for you. For Claude Code:</p>
+          ${terminal('claude-connect-command', 'Connect Claude Code', claudeConnectCommand)}
+          <p>For Codex, run the first two lines above, then:</p>
+          ${commandLine('codex-connect-command', codexConnectCommand, 'Codex command')}
+          <p>Claude Desktop, Cursor and other clients take JSON. <code>uv tool dir --bin</code> prints the folder that holds <code>medmlx</code>:</p>
+          ${terminal('json-connect-config', 'Other clients', jsonConnectConfig, 'client configuration')}
+          <p>Then ask your agent something like <em>“List the MedMLX models, then segment ct.nii.gz in my work folder with TotalSegmentator.”</em></p>
+          <p class="link-row"><a href="/mcp/" data-route>MCP guide</a></p>
+        </li>
         <li>
-          <h2>Run a model</h2>
-          <p>To segment a CT scan, put it in a folder such as <code>~/medmlx-work</code> and run these commands from that folder. <code>describe</code> lists the arguments a model takes, <code>readiness</code> checks that the model can run without downloading anything, and <code>run</code> downloads the weights the first time, then runs the model:</p>
+          <h2>Or run a model from the terminal</h2>
+          <p>No scan yet? This downloads a small sample abdominal CT from the TotalSegmentator repository into a work folder:</p>
+          ${terminal('sample-ct-command', 'Sample CT', sampleCtCommand)}
+          <p>From that folder, <code>describe</code> lists the arguments a model takes, <code>readiness</code> checks that it can run without downloading anything, and <code>run</code> downloads the weights the first time, then runs it:</p>
           ${terminal('medmlx-run-command', 'Run', medmlxRunCommand)}
           <p>To download weights ahead of time for offline use:</p>
           ${terminal('medmlx-setup-command', 'Download weights', medmlxSetupCommand)}
-          <p class="note">MedGemma runs in a separate med-vlm-mlx environment and needs local weights. MRSegmentator also needs local weights. Pass the folder as <code>weights_path</code>.</p>
           <p class="link-row"><a href="/cli/" data-route>Command line</a><a href="/python/" data-route>Python API</a></p>
-        </li>
-        <li>
-          <h2>Connect an AI agent <span class="optional">(optional)</span></h2>
-          <p>An MCP client can list, check and run models for you. Give this command to your client as the server to start. The folder must already exist:</p>
-          ${terminal('medmlx-serve-command', 'MCP server', medmlxServeCommand)}
-          <p class="link-row"><a href="/mcp/" data-route>MCP guide</a></p>
         </li>
       </ol>
 
@@ -920,6 +927,20 @@ function notFoundPage() {
     </section>`;
 }
 
+/** Render how to run one runtime page's model: an agent prompt, then the terminal commands. */
+function runSection(item) {
+  const run = runExamples[item.slug];
+  return html`
+    <section class="detail-section run-it" id="run-it">
+      <h2>Run it</h2>
+      <p>Ask your agent, once it is <a href="/get-started/#connect-agent" data-route>connected to MedMLX</a>:</p>
+      ${commandLine('agent-prompt', run.prompt, 'agent prompt', 'prompt')}
+      <p>Or run it from the terminal, in the folder that holds your files. Weights download on the first run.</p>
+      ${terminal('model-run-command', `Run ${item.name}`, runCommand(run))}
+      <p class="note">${run.output ? html`${cardText(run.output)} ` : ''}${run.also ? html`${cardText(run.also)} ` : ''}<code>describe</code> lists every argument the model takes.</p>
+    </section>`;
+}
+
 /** Render a published model's card, setup link and related models. */
 function runtimePage(item) {
   const related = catalog.filter(other => other.task === item.task && other !== item);
@@ -938,7 +959,7 @@ function runtimePage(item) {
           <a href="${item.upstream.repository}">Repository</a> · <a href="${item.upstream.paper}">Paper</a></p>` : ''}
         <p class="meta">${item.slug === item.distribution ? 'Version' : `Runs in ${item.distribution}`} <a href="${item.source}">${item.version}</a> · <a href="${item.latest}">Latest release</a> · Apple Silicon</p>
         <div class="actions">
-          <a class="button" href="/get-started/" data-route>Get started</a>
+          <a class="button" href="#run-it">Run it</a>
           <a class="button secondary" href="${item.source}">GitHub repository</a>
         </div>
       </div>
@@ -946,6 +967,7 @@ function runtimePage(item) {
     </section>
 
     <div class="container page-body">
+      ${runSection(item)}
       ${runtimeCard(item)}
       ${related.length ? html`<section class="detail-section">
         <h2>More ${item.task.toLowerCase()}</h2>

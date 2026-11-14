@@ -7,6 +7,7 @@ import { catalogJson, llmsFullText, llmsText, markdownUrl, modelMarkdown, preren
 import { catalog, route, routes, siteUrl } from '../site/render.js';
 import { releases } from '../site/releases.js';
 import { modelCards } from '../site/model-cards.js';
+import { runExamples } from '../site/models.js';
 
 const shell = readFileSync(new URL('../site/index.html', import.meta.url), 'utf8');
 const tag = (html, pattern) => html.match(pattern)?.[1];
@@ -39,6 +40,7 @@ test('every runtime card exposes its reviewed source, limits and resource eviden
     assert.match(body, /Model card/);
     assert.ok(body.includes(item.source), item.distribution);
     if (item.slug === 'mlx-reason-ct') continue;
+    assert.ok(body.includes(`medmlx run ${runExamples[item.slug].id} --arg`), `${item.slug} run command`);
     const card = modelCards[item.slug];
     assert.equal(card.version, item.version);
     if (card.limitations.length) assert.match(body, /Before you run/);
