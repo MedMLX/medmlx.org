@@ -116,7 +116,7 @@ export const additionalRuntimes = [
 export const runExamples = {
   'fdg-pet-ct-mlx': {
     id: 'fdg-pet-ct', extras: 'generate,mcp',
-    args: 'image_path=ct.nii.gz labels_path=labels.nii.gz profile_path=profiles.json output_dir=fdg-pet',
+    args: 'image_path=ct.nii.gz mask_path=labels.nii.gz profile_path=profiles.json output_dir=fdg-pet',
     prompt: 'Use MedMLX to make a synthetic FDG PET from ct.nii.gz, labels.nii.gz and profiles.json in my work folder.',
     output: 'The synthetic PET is written to `fdg-pet/pet.nii.gz` in SUV.',
   },
@@ -135,14 +135,14 @@ export const runExamples = {
     id: 'mlx-segment-ct', extras: 'segment,mcp',
     args: 'image_path=ct.nii.gz output_dir=segment-ct',
     prompt: 'Use MedMLX to segment ct.nii.gz in my work folder with NV-Segment-CT.',
-    output: 'The mask is written to `segment-ct/mlx_segment_ct_mask.nii.gz`.',
+    output: 'The mask is written to `segment-ct/mask.nii.gz`.',
     also: '`mlx-segment-ctmr` also takes MRI.',
   },
   'segresnet-mlx': {
     id: 'segresnet-renal-cect', extras: 'segment,mcp',
-    args: 'arterial_path=arterial.nii.gz venous_path=venous.nii.gz excretory_path=excretory.nii.gz output_dir=segresnet',
+    args: `image_paths:='{"arterial": "arterial.nii.gz", "venous": "venous.nii.gz", "excretory": "excretory.nii.gz"}' output_dir=segresnet`,
     prompt: 'Use MedMLX to run segresnet-renal-cect on arterial.nii.gz, venous.nii.gz and excretory.nii.gz in my work folder.',
-    output: 'The label map is written to the `segresnet` folder.',
+    output: 'The label map is written to `segresnet/mask.nii.gz`.',
   },
   'unest-mlx': {
     id: 'unest', extras: 'segment,mcp',
@@ -161,7 +161,7 @@ export const runExamples = {
   },
   'sam3-mlx': {
     id: 'sam3', extras: 'segment,mcp',
-    args: 'image_path=image.png text_prompt=kidney output_dir=sam3',
+    args: 'image_path=image.png prompt=kidney output_dir=sam3',
     prompt: 'Use MedMLX to find the kidney in image.png in my work folder with SAM 3.',
     output: 'The masks are written to `sam3/masks.npy`, with `sam3/prediction.json`.',
   },
