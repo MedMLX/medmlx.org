@@ -1195,7 +1195,7 @@ export const modelCards = {
     }
   },
   "mlxradiomics": {
-    "version": "1.1.0",
+    "version": "1.2.0",
     "rows": [
       [
         "Input",
@@ -1250,7 +1250,7 @@ export const modelCards = {
     "measurements": [],
     "weights": [],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v1.1.0/LICENSE).",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v1.2.0/LICENSE).",
       "sources": [
         "[Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/main/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-radiomics/blob/main/THIRD_PARTY_NOTICES.md), including CC BY 4.0 attribution"
       ]

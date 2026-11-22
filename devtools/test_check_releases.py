@@ -341,7 +341,9 @@ def main():
     )
     download.add_argument("--revision", required=True)
     report = commands.add_parser("report")
-    report.add_argument("--input", required=True)
+    chat = commands.add_parser("chat")
+    for command in (report, chat):
+        command.add_argument("--input", required=True)
     region = report.add_mutually_exclusive_group()
     region.add_argument("--anatomy-region", choices=["chest", "abdomen"])
     report.add_argument("--precision", choices=tuple(PROFILES))
@@ -404,6 +406,7 @@ class ModelChecks(unittest.TestCase):
             ("example report --input=ct.nii.gz --anatomy-region=pelvis", "pelvis is not a release choice"),
             ("example convert --input=ct.nii.gz", "subcommand the release does not declare"),
             ("other report --input=ct.nii.gz", "does not run a console script"),
+            ("example download --input=ct.nii.gz", "--input is not an option of example download"),
             # A download option is not valid for the report subcommand.
             ("example report --input=ct.nii.gz --revision=abc", "--revision is not an option of example report"),
         ]

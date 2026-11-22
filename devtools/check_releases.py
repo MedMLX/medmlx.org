@@ -468,6 +468,21 @@ def cli_options(tree: ast.Module) -> Options:
             and node.func.value.id in parsers
         ):
             _declare_option(options[parsers[node.func.value.id]], node)
+    # A CLI can declare the same option on several subcommands in one loop.
+    for loop in ast.walk(tree):
+        if not isinstance(loop, ast.For) or not isinstance(loop.target, ast.Name):
+            continue
+        if not isinstance(loop.iter, (ast.Tuple, ast.List)):
+            continue
+        names = [parsers[item.id] for item in loop.iter.elts if isinstance(item, ast.Name) and item.id in parsers]
+        for statement in loop.body:
+            if not isinstance(statement, ast.Expr) or not isinstance(statement.value, ast.Call):
+                continue
+            call = statement.value
+            if (isinstance(call.func, ast.Attribute) and call.func.attr == "add_argument"
+                and isinstance(call.func.value, ast.Name) and call.func.value.id == loop.target.id):
+                for name in names:
+                    _declare_option(options[name], call)
     # A helper function can add shared options to the parser passed as its first
     # argument, as in `_add_argument_options(run, ...)`; credit them to that parser.
     helpers: dict[str, list[ast.Call]] = {}

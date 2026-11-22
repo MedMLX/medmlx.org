@@ -84,7 +84,7 @@ test('scrub videos retry failures, cancel on navigation and release their blob U
     await settle();
     visible();
     assert.equal(requests.length, 3, 'HTTP errors can also be retried');
-    requests[2].resolve({ ok: true, blob: async () => new Blob(['film']) });
+    requests[2].resolve(new Response('film'));
     await settle();
     assert.equal(video.attributes.get('src'), 'blob:test-1');
     // Navigate to a route without media, then return with a fresh view lifecycle.
@@ -103,7 +103,7 @@ test('scrub videos retry failures, cancel on navigation and release their blob U
     window.dispatchEvent(new Event('popstate'));
     assert.equal(requests[3].signal.aborted, true, 'navigation cancels the download');
     // A response that races cancellation must not attach or leak a new blob URL.
-    requests[3].resolve({ ok: true, blob: async () => new Blob(['late film']) });
+    requests[3].resolve(new Response('late film'));
     await settle();
     assert.equal(urls.length, 1);
     assert.equal(video.hasAttribute('src'), false);

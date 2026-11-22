@@ -22,7 +22,7 @@ const developerLinks = [
   ['MCP guide', '/mcp/'],
 ];
 const labUrl = 'https://ai-ir.org/';
-export const articleUrl = 'https://doi.org/10.64898/2026.10.28.26366762';
+export const articleUrl = 'https://www.medrxiv.org/content/10.64898/2026.10.28.26366762v1';
 export const article = {
   title: 'MedMLX: On-Device Medical Imaging AI for Apple Silicon',
   authors: ['Joseph Sandoval', 'Alfredo Sandoval Jr.', 'Arsalan Saleem'],
@@ -279,7 +279,7 @@ function pageMedia({ slug, distribution, name }) {
         ${hidden ? html`hidden` : ''}
         aria-label="${name} ${mode === 'turn' ? 'surfaces from a real segmentation. Drag, or use the arrow keys, to rotate.'
           : 'output over its scan, slice by slice. Drag up or down, or use the arrow keys, to move through the slices.'}">
-        <video muted loop playsinline preload="none" width="960" height="720" disablepictureinpicture
+        <video muted loop playsinline preload="metadata" width="960" height="720" disablepictureinpicture
           poster="/assets/hero/${asset}-poster.webp" data-src="/assets/hero/${asset}.mp4"></video>
       </div>`;
   if (media.spin || media.slices) {
@@ -299,8 +299,11 @@ function pageMedia({ slug, distribution, name }) {
   }
   return html`<figure class="page-media">
     ${media.loop ? html`
-      <video class="page-media-visual" muted loop playsinline preload="none" width="800" height="520" aria-hidden="true"
-        poster="/assets/hero/${media.loop}-poster.webp" data-src="/assets/hero/${media.loop}.mp4"></video>
+      <div class="page-media-visual scrub" data-scrub="loop" data-fps="24" tabindex="0" role="img"
+        aria-label="${name} output. Drag or use the arrow keys to move through the animation.">
+        <video muted loop playsinline preload="metadata" width="800" height="520"
+          poster="/assets/hero/${media.loop}-poster.webp" data-src="/assets/hero/${media.loop}.mp4"></video>
+      </div>
       <button class="media-toggle" type="button" data-media-toggle aria-label="Pause ${name} output animation" hidden>${pauseIcon}</button>` : html`
       <img class="page-media-visual" src="/assets/hero/${media.image}.webp" alt="" width="960" height="720" decoding="async">`}
     <figcaption>Output from ${source}.${media.loop ? ' Drag to scrub.' : ''} <a href="/assets/hero/credits.html">Image credits</a></figcaption>
@@ -365,7 +368,7 @@ function homePage() {
           ${installAll('hero-install')}
         </div>
         <div class="hero-media" aria-hidden="true">
-          <video class="hero-video" muted loop playsinline preload="none" width="1600" height="1000"
+          <video class="hero-video" muted loop playsinline preload="metadata" width="1600" height="1000"
             poster="/assets/hero/poster.webp" data-src="/assets/hero/outputs.mp4" data-scenes="6" tabindex="-1"></video>
         </div>
       </div>

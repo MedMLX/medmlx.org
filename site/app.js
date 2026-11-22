@@ -56,12 +56,11 @@ function filterCatalog({ updateQuery = false } = {}) {
 // Routing
 
 /**
- * Play task-card and model-page loops only while they are on screen. Reduced motion and data
+ * Play task-card loops only while they are on screen. Reduced motion and data
  * saving keep the poster, and each loop has its own pause button.
  */
 function setupTaskLoops() {
-  // Only loops with a pause button; turntables have their own controls.
-  const items = [...document.querySelectorAll('.task-item, .page-media')]
+  const items = [...document.querySelectorAll('.task-item')]
     .filter(item => item.querySelector('video') && item.querySelector('[data-media-toggle]'));
   if (!items.length) return () => {};
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -102,7 +101,7 @@ function setupTaskLoops() {
     }
   };
   const onClick = event => {
-    const item = event.target.closest('[data-media-toggle]')?.closest('.task-item, .page-media');
+    const item = event.target.closest('[data-media-toggle]')?.closest('.task-item');
     if (!item) return;
     if (paused.has(item)) paused.delete(item);
     else paused.add(item);
@@ -119,32 +118,6 @@ function setupTaskLoops() {
   motion.addEventListener('change', sync);
   document.addEventListener('visibilitychange', sync);
   document.addEventListener('click', onClick);
-  // On model pages a loop is also a scrubber: dragging pauses it and moves through it,
-  // a full-width drag covering the whole loop. Its button resumes playback.
-  let drag = null;
-  const onDown = event => {
-    const item = event.target.closest('.page-media');
-    if (!item || !items.includes(item) || event.target.closest('[data-media-toggle]')) return;
-    const video = item.querySelector('video');
-    if (!video.hasAttribute('src')) video.src = video.dataset.src;
-    paused.add(item);
-    sync();
-    drag = { item, video, x: event.clientX, time: video.currentTime, id: event.pointerId };
-    item.setPointerCapture(event.pointerId);
-  };
-  const onMove = event => {
-    if (!drag || event.pointerId !== drag.id || !drag.video.duration) return;
-    const { duration } = drag.video;
-    const shift = (event.clientX - drag.x) / drag.item.clientWidth * duration;
-    drag.video.currentTime = (((drag.time + shift) % duration) + duration) % duration;
-  };
-  const onUp = event => {
-    if (drag && event.pointerId === drag.id) drag = null;
-  };
-  document.addEventListener('pointerdown', onDown);
-  document.addEventListener('pointermove', onMove);
-  document.addEventListener('pointerup', onUp);
-  document.addEventListener('pointercancel', onUp);
   sync();
   return () => {
     disposed = true;
@@ -152,10 +125,6 @@ function setupTaskLoops() {
     motion.removeEventListener('change', sync);
     document.removeEventListener('visibilitychange', sync);
     document.removeEventListener('click', onClick);
-    document.removeEventListener('pointerdown', onDown);
-    document.removeEventListener('pointermove', onMove);
-    document.removeEventListener('pointerup', onUp);
-    document.removeEventListener('pointercancel', onUp);
     for (const item of items) {
       const video = item.querySelector('video');
       video.pause();
@@ -163,6 +132,41 @@ function setupTaskLoops() {
       video.load();
     }
   };
+}
+
+/** Download a seekable clip even when the static host serves only whole files. */
+function setupSeekableVideo(video, onSourceReady) {
+  const download = new AbortController();
+  let pending = false;
+  let objectUrl = '';
+  const load = async () => {
+    if (pending || objectUrl || download.signal.aborted) return;
+    pending = true;
+    let blob;
+    try {
+      const response = await fetch(video.dataset.src, { signal: download.signal });
+      if (!response.ok) return;
+      // A response-backed blob can stall on paused seeks in WebKit.
+      blob = new Blob([await response.arrayBuffer()], { type: 'video/mp4' });
+    } catch {
+      // Keep the poster. A later visit or gesture can retry the download.
+      return;
+    } finally {
+      pending = false;
+    }
+    if (download.signal.aborted) return;
+    objectUrl = URL.createObjectURL(blob);
+    video.src = objectUrl;
+    onSourceReady();
+  };
+  const dispose = () => {
+    download.abort();
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+  };
+  return { load, dispose };
 }
 
 /**
@@ -175,70 +179,73 @@ function setupTaskLoops() {
 function setupScrubs() {
   const views = [...document.querySelectorAll('[data-scrub]')];
   if (!views.length) return () => {};
-  let disposed = false;
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const cleanups = [];
   const syncs = new Map();
   for (const view of views) {
     const video = view.querySelector('video');
+    const slices = view.dataset.scrub === 'slices';
+    const toggle = view.dataset.scrub === 'loop' && view.parentElement.querySelector('[data-media-toggle]');
     const turn = view.dataset.scrub === 'turn';
     const fps = Number(view.dataset.fps);
     let touched = false;
     let visible = false;
     let drag = null;
-    // A local blob makes every frame seekable once the download finishes.
-    let objectUrl = '';
-    let pending = null;
-    const download = new AbortController();
-    const load = () => {
-      if (disposed || video.hasAttribute('src') || pending) return;
-      pending = fetch(video.dataset.src, { signal: download.signal })
-        .then(response => {
-          if (!response.ok) throw new Error(`${response.status} ${video.dataset.src}`);
-          return response.blob();
-        })
-        .then(blob => {
-          if (disposed) return;
-          objectUrl = URL.createObjectURL(blob);
-          video.src = objectUrl;
-          video.addEventListener('loadedmetadata', sync, { once: true });
-        })
-        // Keep the poster on failure; a later visit or gesture can retry.
-        .catch(() => {})
-        .finally(() => { pending = null; });
-    };
+    let pendingPosition = null;
+    const { load, dispose } = setupSeekableVideo(video, () => {
+      video.addEventListener('loadedmetadata', onMetadata, { once: true });
+    });
     // Distinct frames: every angle, or each slice once (the video also runs back up).
     const count = () => {
       const total = Math.round((video.duration || 0) * fps);
-      return turn ? total : (total + 2) / 2;
+      return slices && total ? (total + 2) / 2 : total;
     };
     const current = () => {
       const total = Math.round((video.duration || 0) * fps);
       const frame = Math.floor(video.currentTime * fps) % Math.max(total, 1);
       const n = count();
-      return turn || frame < n ? frame : 2 * (n - 1) - frame;
+      return !slices || frame < n ? frame : 2 * (n - 1) - frame;
     };
-    const show = index => {
+    // Retain the requested position if the user interacts before metadata arrives.
+    const show = (position, offset = 0) => {
       load();
       const n = count();
-      if (!n || !video.hasAttribute('src')) return;
-      const frame = turn ? ((index % n) + n) % n : Math.min(Math.max(index, 0), n - 1);
+      if (!n) {
+        pendingPosition = { position, offset };
+        return;
+      }
+      pendingPosition = null;
+      const index = position(n) + offset;
+      const frame = slices ? Math.min(Math.max(index, 0), n - 1) : ((index % n) + n) % n;
       // Seek to the middle of the frame so rounding never lands on its neighbour.
       video.currentTime = (frame + 0.5) / fps;
     };
     const sync = () => {
       const still = motion.matches || navigator.connection?.saveData;
+      if (toggle) {
+        toggle.hidden = Boolean(still);
+        toggle.setAttribute('aria-label', toggle.getAttribute('aria-label').replace(/^(Play|Pause)/, touched ? 'Play' : 'Pause'));
+        toggle.innerHTML = touched ? playIcon : pauseIcon;
+      }
       if (visible && !view.hidden && !touched && !still && !document.hidden) {
         load();
         if (video.hasAttribute('src')) {
           // The view's default playback speed; dragging is unaffected.
           video.playbackRate = Number(view.dataset.rate) || 1;
-          video.play().catch(() => {});
+          video.play().catch(error => {
+            if (toggle && error.name === 'NotAllowedError') stop();
+          });
         }
       } else {
         video.pause();
       }
     };
+    const onMetadata = () => {
+      if (pendingPosition) show(pendingPosition.position, pendingPosition.offset);
+      sync();
+    };
+    const onToggle = () => { touched = !touched; sync(); };
+    if (toggle) toggle.addEventListener('click', onToggle);
     syncs.set(view, sync);
     const stop = () => { touched = true; sync(); };
     const down = event => {
@@ -249,19 +256,18 @@ function setupScrubs() {
       view.classList.add('dragging');
     };
     const move = event => {
-      if (!drag || event.pointerId !== drag.id || !count()) return;
-      if (turn) {
-        // A drag across the whole view turns about 300 degrees.
-        const perFrame = view.clientWidth / (count() * 0.83);
-        show(drag.frame - Math.round((event.clientX - drag.x) / perFrame));
-        return;
-      }
-      // Slices follow the larger movement: down moves inferior, as in a scan viewer.
-      // One and a half view heights cross every slice.
+      if (!drag || event.pointerId !== drag.id) return;
+      const { frame } = drag;
       const dx = event.clientX - drag.x;
       const dy = event.clientY - drag.y;
-      const perFrame = Math.max(view.clientHeight * 1.5 / count(), 1.5);
-      show(drag.frame + Math.round((Math.abs(dy) >= Math.abs(dx) ? dy : dx) / perFrame));
+      if (!slices) {
+        // A full-width drag spans one loop or about 300 degrees of a turntable.
+        const fraction = dx / view.clientWidth * (turn ? -0.83 : 1);
+        show(n => frame + Math.round(fraction * n));
+        return;
+      }
+      const distance = Math.abs(dy) >= Math.abs(dx) ? dy : dx;
+      show(n => frame + Math.round(distance / Math.max(view.clientHeight * 1.5 / n, 1.5)));
     };
     const up = event => {
       if (drag && event.pointerId === drag.id) drag = null;
@@ -274,7 +280,9 @@ function setupScrubs() {
       if (!step) return;
       event.preventDefault();
       stop();
-      show(current() + step * (turn ? 3 : 1));
+      const offset = step * (turn ? 3 : 1);
+      const base = current();
+      show(pendingPosition?.position ?? (() => base), (pendingPosition?.offset ?? 0) + offset);
     };
     const observer = new IntersectionObserver(entries => {
       for (const entry of entries) visible = entry.isIntersecting;
@@ -289,15 +297,12 @@ function setupScrubs() {
     motion.addEventListener('change', sync);
     document.addEventListener('visibilitychange', sync);
     cleanups.push(() => {
-      download.abort();
       observer.disconnect();
       motion.removeEventListener('change', sync);
       document.removeEventListener('visibilitychange', sync);
-      video.removeEventListener('loadedmetadata', sync);
-      video.pause();
-      video.removeAttribute('src');
-      video.load();
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      video.removeEventListener('loadedmetadata', onMetadata);
+      if (toggle) toggle.removeEventListener('click', onToggle);
+      dispose();
     });
   }
   const onSwitch = event => {
@@ -315,7 +320,6 @@ function setupScrubs() {
   document.addEventListener('click', onSwitch);
   cleanups.push(() => document.removeEventListener('click', onSwitch));
   return () => {
-    disposed = true;
     cleanups.forEach(cleanup => cleanup());
   };
 }
@@ -337,24 +341,29 @@ function setupHeroFilm() {
   let userPaused = false;
   let disposed = false;
 
+  const source = setupSeekableVideo(video, () => sync());
   const updateControl = () => {
     const paused = video.paused;
     const label = paused ? 'Play film' : 'Pause film';
     toggle.querySelector('span').textContent = label;
     toggle.title = label;
     toggle.querySelector('path').setAttribute('d', paused ? 'M4 2l8 5-8 5z' : 'M3 2h3v10H3zm5 0h3v10H8z');
-    back.disabled = next.disabled = !Number.isFinite(video.duration) || video.duration <= 0;
+    const ready = Number.isFinite(video.duration) && video.duration > 0;
+    controls.hidden = !video.hasAttribute('src') || motion.matches || Boolean(connection?.saveData);
+    back.disabled = next.disabled = !ready;
   };
   const sync = () => {
     const still = motion.matches || connection?.saveData;
-    controls.hidden = Boolean(still);
+    updateControl();
     if (disposed || still || userPaused || !inView || document.hidden) {
       video.pause();
       if (still) hero.classList.remove('film-playing');
-      updateControl();
       return;
     }
-    if (!video.hasAttribute('src')) video.src = video.dataset.src;
+    if (!video.hasAttribute('src')) {
+      source.load();
+      return;
+    }
     video.muted = true;
     video.play().catch(error => {
       // A later pause() or source reset aborts a pending play(); nothing to undo.
@@ -409,9 +418,7 @@ function setupHeroFilm() {
     video.removeEventListener('pause', updateControl);
     video.removeEventListener('loadedmetadata', updateControl);
     video.removeEventListener('seeked', onSeeked);
-    video.pause();
-    video.removeAttribute('src');
-    video.load();
+    source.dispose();
   };
 }
 
@@ -582,7 +589,9 @@ menuButton.addEventListener('click', event => {
 
 // This is a disclosure, so Tab can leave the links without a focus trap.
 header.addEventListener('focusout', event => {
-  if (!header.contains(event.relatedTarget)) closeMenu();
+  // WebKit can clear focus during a pointer click inside the menu.
+  // Outside clicks are handled separately from keyboard focus changes.
+  if (event.relatedTarget && !header.contains(event.relatedTarget)) closeMenu();
 });
 
 // The phone menu does not survive a resize to the desktop layout.

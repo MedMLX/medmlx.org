@@ -6,7 +6,7 @@ export const macosVersion = '14.0';
 export const platformRequirement = `macOS ${macosVersion} or later on Apple Silicon`;
 export const releases = {
   medmlx: { version: '0.10.0', repository: 'MedMLX/medmlx' },
-  'mlx-reason-ct': { version: '0.7.0', repository: 'MedMLX/mlx-reason-ct' },
+  'mlx-reason-ct': { version: '0.8.0', repository: 'MedMLX/mlx-reason-ct' },
   'fdg-pet-ct-mlx': { version: '0.4.0', repository: 'MedMLX/fdg-pet-ct-mlx' },
   'nnunet-mlx': { version: '0.9.0', repository: 'MedMLX/nnunet-mlx' },
   'mlx-segment-ct': { version: '0.4.0', repository: 'MedMLX/mlx-segment-ct' },
@@ -25,7 +25,7 @@ export const releases = {
   'lesiondiffusion-mlx': { version: '0.3.0', repository: 'MedMLX/lesiondiffusion-mlx' },
   'med-vlm-mlx': { version: '0.3.4', repository: 'MedMLX/med-vlm-mlx' },
   'radimagenet-mlx': { version: '0.4.0', repository: 'MedMLX/radimagenet-mlx' },
-  mlxradiomics: { version: '1.1.0', repository: 'MedMLX/mlx-radiomics' },
+  mlxradiomics: { version: '1.2.0', repository: 'MedMLX/mlx-radiomics' },
 };
 
 // From uv's installation docs; uv is not a reviewed MedMLX release.
