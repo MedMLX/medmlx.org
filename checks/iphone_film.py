@@ -21,6 +21,7 @@ class Film(TypedDict):
     duration: float
     paused: bool
     seeking: bool
+    visible: bool
     ready: bool
 
 
@@ -29,6 +30,7 @@ async def state(driver: WebDriver) -> Film:
     return cast(Film, await driver.execute_script("""
         const v = document.querySelector('.hero-video');
         return {time: v.currentTime, duration: v.duration, paused: v.paused, seeking: v.seeking,
+                visible: getComputedStyle(v).opacity === "1",
                 ready: !document.querySelector('.film-controls').hidden
                     && !document.querySelector('[data-film-next]').disabled};
     """))
@@ -71,7 +73,7 @@ async def check(driver: WebDriver) -> None:
     film = await wait(driver, lambda f: f["ready"], "Controls unavailable")
     if film["paused"]:
         await tap(driver, "toggle")
-    await wait(driver, lambda f: not f["paused"] and f["time"] > film["time"] + 0.2, "Play")
+    await wait(driver, lambda f: f["visible"] and not f["paused"] and f["time"] > film["time"] + 0.2, "Play")
     await tap(driver, "toggle")
     paused = await wait(driver, lambda f: f["paused"], "Pause")
     await asyncio.sleep(0.35)
