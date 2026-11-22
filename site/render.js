@@ -282,11 +282,13 @@ function pageMedia({ slug, distribution, name }) {
         <video muted loop playsinline preload="metadata" width="960" height="720" disablepictureinpicture
           poster="/assets/hero/${asset}-poster.webp" data-src="/assets/hero/${asset}.mp4"></video>
       </div>`;
+  const playbackButton = html`<button class="media-toggle" type="button" data-media-toggle aria-label="Pause ${name} output animation" hidden>${pauseIcon}</button>`;
   if (media.spin || media.slices) {
     const both = media.spin && media.slices;
     return html`<figure class="page-media">
       ${media.spin ? scrub('turn', media.spin, false) : ''}
       ${media.slices ? scrub('slices', media.slices, Boolean(media.spin)) : ''}
+      ${playbackButton}
       <figcaption>
         ${both ? html`<span class="view-switch" role="group" aria-label="View">
           <button type="button" data-view="turn" aria-pressed="true">3D</button>
@@ -304,7 +306,7 @@ function pageMedia({ slug, distribution, name }) {
         <video muted loop playsinline preload="metadata" width="800" height="520"
           poster="/assets/hero/${media.loop}-poster.webp" data-src="/assets/hero/${media.loop}.mp4"></video>
       </div>
-      <button class="media-toggle" type="button" data-media-toggle aria-label="Pause ${name} output animation" hidden>${pauseIcon}</button>` : html`
+      ${playbackButton}` : html`
       <img class="page-media-visual" src="/assets/hero/${media.image}.webp" alt="" width="960" height="720" decoding="async">`}
     <figcaption>Output from ${source}.${media.loop ? ' Drag to scrub.' : ''} <a href="/assets/hero/credits.html">Image credits</a></figcaption>
   </figure>`;

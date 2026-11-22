@@ -185,7 +185,7 @@ function setupScrubs() {
   for (const view of views) {
     const video = view.querySelector('video');
     const slices = view.dataset.scrub === 'slices';
-    const toggle = view.dataset.scrub === 'loop' && view.parentElement.querySelector('[data-media-toggle]');
+    const toggle = view.parentElement.querySelector('[data-media-toggle]');
     const turn = view.dataset.scrub === 'turn';
     const fps = Number(view.dataset.fps);
     let touched = false;
@@ -206,6 +206,33 @@ function setupScrubs() {
       const n = count();
       return !slices || frame < n ? frame : 2 * (n - 1) - frame;
     };
+    const play = () => video.play().catch(error => {
+      if (error.name === 'NotAllowedError') stop();
+      else if (error.name !== 'AbortError') throw error;
+    });
+    let frameCallback = 0;
+    const seek = time => {
+      if (video.currentTime === time && (video.paused || frameCallback)) return;
+      video.cancelVideoFrameCallback(frameCallback);
+      // Keep the decoder running until Safari presents the new frame. Slow the
+      // clock while inspecting; normal playback restores the view's rate.
+      video.playbackRate = 0.25;
+      if (video.paused) play();
+      video.currentTime = time;
+      const holdPresentedFrame = (_, { mediaTime }) => {
+        frameCallback = 0;
+        if (!touched || video.paused) return;
+        if (video.seeking || Math.abs(mediaTime - video.currentTime) > 1 / fps) {
+          frameCallback = video.requestVideoFrameCallback(holdPresentedFrame);
+        } else {
+          video.pause();
+          // Presentation callbacks can arrive a frame late. Hold the requested
+          // frame so the next arrow press advances from the selected slice.
+          if (Math.floor(video.currentTime * fps) !== Math.floor(time * fps)) video.currentTime = time;
+        }
+      };
+      frameCallback = video.requestVideoFrameCallback(holdPresentedFrame);
+    };
     // Retain the requested position if the user interacts before metadata arrives.
     const show = (position, offset = 0) => {
       load();
@@ -218,11 +245,11 @@ function setupScrubs() {
       const index = position(n) + offset;
       const frame = slices ? Math.min(Math.max(index, 0), n - 1) : ((index % n) + n) % n;
       // Seek to the middle of the frame so rounding never lands on its neighbour.
-      video.currentTime = (frame + 0.5) / fps;
+      seek((frame + 0.5) / fps);
     };
     const sync = () => {
       const still = motion.matches || navigator.connection?.saveData;
-      if (toggle) {
+      if (toggle && !view.hidden) {
         toggle.hidden = Boolean(still);
         toggle.setAttribute('aria-label', toggle.getAttribute('aria-label').replace(/^(Play|Pause)/, touched ? 'Play' : 'Pause'));
         toggle.innerHTML = touched ? playIcon : pauseIcon;
@@ -232,11 +259,9 @@ function setupScrubs() {
         if (video.hasAttribute('src')) {
           // The view's default playback speed; dragging is unaffected.
           video.playbackRate = Number(view.dataset.rate) || 1;
-          video.play().catch(error => {
-            if (toggle && error.name === 'NotAllowedError') stop();
-          });
+          play();
         }
-      } else {
+      } else if (!visible || view.hidden || document.hidden || !frameCallback) {
         video.pause();
       }
     };
@@ -244,14 +269,18 @@ function setupScrubs() {
       if (pendingPosition) show(pendingPosition.position, pendingPosition.offset);
       sync();
     };
-    const onToggle = () => { touched = !touched; sync(); };
+    const onToggle = () => {
+      if (!view.hidden) { touched = !touched; sync(); }
+    };
     if (toggle) toggle.addEventListener('click', onToggle);
     syncs.set(view, sync);
     const stop = () => { touched = true; sync(); };
     const down = event => {
+      if (drag) return;
+      const wasPaused = touched;
       stop();
       load();
-      drag = { x: event.clientX, y: event.clientY, frame: current(), id: event.pointerId };
+      drag = { x: event.clientX, y: event.clientY, frame: current(), id: event.pointerId, wasPaused, moved: false };
       view.setPointerCapture(event.pointerId);
       view.classList.add('dragging');
     };
@@ -260,6 +289,8 @@ function setupScrubs() {
       const { frame } = drag;
       const dx = event.clientX - drag.x;
       const dy = event.clientY - drag.y;
+      if (!drag.moved && Math.max(Math.abs(dx), Math.abs(dy)) < 4) return;
+      drag.moved = true;
       if (!slices) {
         // A full-width drag spans one loop or about 300 degrees of a turntable.
         const fraction = dx / view.clientWidth * (turn ? -0.83 : 1);
@@ -270,7 +301,10 @@ function setupScrubs() {
       show(n => frame + Math.round(distance / Math.max(view.clientHeight * 1.5 / n, 1.5)));
     };
     const up = event => {
-      if (drag && event.pointerId === drag.id) drag = null;
+      if (!drag || event.pointerId !== drag.id) return;
+      // A second tap restarts playback. A drag or canceled touch leaves the frame held.
+      if (event.type === 'pointerup' && drag.wasPaused && !drag.moved) onToggle();
+      drag = null;
       view.classList.remove('dragging');
     };
     const key = event => {
@@ -301,6 +335,7 @@ function setupScrubs() {
       motion.removeEventListener('change', sync);
       document.removeEventListener('visibilitychange', sync);
       video.removeEventListener('loadedmetadata', onMetadata);
+      video.cancelVideoFrameCallback(frameCallback);
       if (toggle) toggle.removeEventListener('click', onToggle);
       dispose();
     });

@@ -91,6 +91,7 @@ code { font-size: 0.9em; }
 img { max-width: 100%; }
 
 button, input, select, textarea { font: inherit; color: inherit; letter-spacing: inherit; }
+button { touch-action: manipulation; }
 
 :focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
 main { flex: 1; min-width: 0; }
@@ -268,7 +269,6 @@ main:focus { outline: none; }
 .film-controls[hidden] { display: none; }
 
 .film-toggle {
-  touch-action: manipulation;
   display: inline-flex;
   align-items: center;
   justify-content: center;

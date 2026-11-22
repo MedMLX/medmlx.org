@@ -12,6 +12,7 @@ class Element extends EventTarget {
   hasAttribute(name) { return this.attributes.has(name); }
   removeAttribute(name) { this.attributes.delete(name); }
   focus() {}
+  cancelVideoFrameCallback() {}
   pause() {}
   load() {}
   set src(value) { this.setAttribute('src', value); }
@@ -33,6 +34,7 @@ test('scrub videos retry failures, cancel on navigation and release their blob U
   const label = new Element();
   menu.querySelector = () => label;
   const view = new Element();
+  view.parentElement = new Element();
   const video = new Element();
   view.dataset = { scrub: 'turn', fps: '24' };
   video.dataset.src = '/film.mp4';

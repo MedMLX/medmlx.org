@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := qa
-.PHONY: env check-env serve lint typecheck test site-check release-check bump build pages deploy qa loc clean film-check iphone-film-check
+.PHONY: env check-env serve lint typecheck test site-check release-check bump build pages deploy qa loc clean film-check iphone-film-check iphone-model-check
 
 PORT ?= 4173
 PYTHON ?= .venv/bin/python
@@ -72,6 +72,9 @@ film-check:
 
 iphone-film-check:
 	uv run --script checks/iphone_film.py
+
+iphone-model-check:
+	uv run --script checks/iphone_models.py
 
 qa: SITE_PYTHON = $(PYTHON)
 qa: lint typecheck site-check release-check

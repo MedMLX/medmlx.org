@@ -6,7 +6,7 @@
 
 import asyncio
 import os
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from io import BytesIO
 from typing import TypedDict, cast
 
@@ -48,18 +48,30 @@ async def wait(driver: WebDriver, predicate: Callable[[Film], bool], label: str)
         raise AssertionError(f"{label}: {await state(driver)}") from error
 
 
-async def tap(driver: WebDriver, control: str) -> None:
-    """Send a touch down and up at the control's viewport coordinates."""
-    point = cast(dict[str, int], await driver.execute_script("""
-        const button = document.querySelector('[data-film-' + arguments[0] + ']');
-        button.scrollIntoView({block: 'nearest', behavior: 'instant'});
-        const box = button.getBoundingClientRect();
-        return {x: Math.round(box.left + box.width / 2), y: Math.round(box.top + box.height / 2)};
-    """, control))
-    finger = {"sourceId": "finger", "location": point}
+async def touch(driver: WebDriver, selector: str, start: tuple[float, float] = (0.5, 0.5),
+                end: tuple[float, float] | None = None, *, block: str = "nearest") -> None:
+    """Tap or drag inside the element using normalized coordinates and one physical touch contact."""
+    rect = cast(list[float], await driver.execute_script("""
+        const node = document.querySelector(arguments[0]);
+        node.scrollIntoView({block: arguments[1], behavior: 'instant'});
+        const box = node.getBoundingClientRect();
+        return [box.x, box.y, box.width, box.height];
+    """, selector, block))
+    x, y, width, height = rect
+    points = [start]
+    if end is not None:
+        # Deliver intermediate pointer moves just as a finger travels across the view.
+        for step in range(1, 6):
+            points.append((start[0] + (end[0] - start[0]) * step / 5,
+                           start[1] + (end[1] - start[1]) * step / 5))
+    fingers = [
+        {"sourceId": "finger", "location": {"x": round(x + dx * width), "y": round(y + dy * height)}}
+        for dx, dy in points
+    ]
     await driver.session.perform_interaction_sequence(
         [{"sourceId": "finger", "sourceType": "Touch"}],
-        [{"states": [{**finger, "pressedButton": "Left"}]}, {"states": [finger]}],
+        [{"states": [{**finger, "pressedButton": "Left"}]} for finger in fingers]
+        + [{"states": [fingers[-1]]}],
     )
 
 
@@ -72,9 +84,9 @@ def difference(first: Image.Image, second: Image.Image) -> float:
 async def check(driver: WebDriver) -> None:
     film = await wait(driver, lambda f: f["ready"], "Controls unavailable")
     if film["paused"]:
-        await tap(driver, "toggle")
+        await touch(driver, "[data-film-toggle]")
     await wait(driver, lambda f: f["visible"] and not f["paused"] and f["time"] > film["time"] + 0.2, "Play")
-    await tap(driver, "toggle")
+    await touch(driver, "[data-film-toggle]")
     paused = await wait(driver, lambda f: f["paused"], "Pause")
     await asyncio.sleep(0.35)
     held = await state(driver)
@@ -93,7 +105,7 @@ async def check(driver: WebDriver) -> None:
     previous: Image.Image | None = None
     for direction in [1] * 7 + [-1] * 6:
         scene = (scene + direction) % 6
-        await tap(driver, "next" if direction == 1 else "back")
+        await touch(driver, "[data-film-next]" if direction == 1 else "[data-film-back]")
         await wait(driver, lambda f, target=scene: f["paused"] and not f["seeking"] and int(f["time"] / duration) == target,
                    f"Seek to scene {scene + 1}")
         try:
@@ -115,11 +127,11 @@ async def check(driver: WebDriver) -> None:
         previous = frame
 
     stopped = await state(driver)
-    await tap(driver, "toggle")
+    await touch(driver, "[data-film-toggle]")
     await wait(driver, lambda f: not f["paused"] and f["time"] > stopped["time"] + 0.2, "Resume")
 
 
-async def main() -> None:
+async def run_safari(check_page: Callable[[WebDriver], Awaitable[None]]) -> None:
     url = os.environ.get("FILM_URL", "https://medmlx.org/")
     async with await create_using_usbmux(connection_type="USB") as phone:
         assert phone.device_class == DeviceClass.IPHONE, "Connect a physical iPhone by USB"
@@ -131,11 +143,11 @@ async def main() -> None:
                 await driver.start_session()
                 await driver.get(url)
                 print(f"Physical {phone.product_type}, iOS {phone.product_version}, Safari at {url}", flush=True)
-                await check(driver)
-                print("Passed touch playback, pause, all six pictures, wraparound, previous and resume.")
+                await check_page(driver)
             finally:
                 await session.stop_session()
 
 
 if __name__ == "__main__":
-    asyncio.run(asyncio.wait_for(main(), 120))
+    asyncio.run(asyncio.wait_for(run_safari(check), 120))
+    print("Passed touch playback, pause, all six pictures, wraparound, previous and resume.")
