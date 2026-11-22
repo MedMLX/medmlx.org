@@ -22,6 +22,13 @@ not build the site, and there is no workers.dev or preview address.
 - `make serve` previews the site locally; `make test` runs hermetic regression
   tests. `make qa` also runs lint, type checks, local asset checks and the live
   release check.
+- Run `npm ci` to install the browser test dependencies. `make film-check`
+  exercises the local homepage in headless Chrome. `make deploy` runs the same
+  check against the built export before uploading it.
+- `make iphone-film-check` tests medmlx.org in Safari on a paired physical
+  iPhone. Connect the phone by USB, unlock it, and enable Web Inspector and Remote
+  Automation in Safari's Advanced settings. Set `FILM_URL` to test a preview
+  reachable from the phone. [Apple's WebDriver setup](https://developer.apple.com/documentation/safari-developer-tools/ios-enabling-webdriver)
 - `make release-check` requires network access to PyPI, tagged GitHub source
   and Hugging Face. It rejects stale or yanked releases, mismatched names,
   Python requirements, extras or README content, and examples missing from the

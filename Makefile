@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := qa
-.PHONY: env check-env serve lint typecheck test site-check release-check bump build pages deploy qa loc clean
+.PHONY: env check-env serve lint typecheck test site-check release-check bump build pages deploy qa loc clean film-check iphone-film-check
 
 PORT ?= 4173
 PYTHON ?= .venv/bin/python
@@ -60,11 +60,18 @@ pages: site-check
 # login` once and set CLOUDFLARE_ACCOUNT_ID to the account that owns the zone.
 WRANGLER ?= npx --yes wrangler@4.151.1
 deploy: pages
+	$(SITE_PYTHON) devtools/check_local_film.py dist/pages
 	$(WRANGLER) deploy
 
 test: check-env
 	$(PYTHON) -m unittest devtools.test_check_releases
 	node --test $(NODE_TEST_ARGS) $(TESTS)
+
+film-check:
+	$(SITE_PYTHON) devtools/check_local_film.py site
+
+iphone-film-check:
+	uv run --script checks/iphone_film.py
 
 qa: SITE_PYTHON = $(PYTHON)
 qa: lint typecheck site-check release-check

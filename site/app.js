@@ -343,7 +343,7 @@ function setupHeroFilm() {
 
   const source = setupSeekableVideo(video, () => sync());
   const updateControl = () => {
-    const paused = video.paused;
+    const paused = userPaused || video.paused;
     const label = paused ? 'Play film' : 'Pause film';
     toggle.querySelector('span').textContent = label;
     toggle.title = label;
@@ -352,18 +352,7 @@ function setupHeroFilm() {
     controls.hidden = !video.hasAttribute('src') || motion.matches || Boolean(connection?.saveData);
     back.disabled = next.disabled = !ready;
   };
-  const sync = () => {
-    const still = motion.matches || connection?.saveData;
-    updateControl();
-    if (disposed || still || userPaused || !inView || document.hidden) {
-      video.pause();
-      if (still) hero.classList.remove('film-playing');
-      return;
-    }
-    if (!video.hasAttribute('src')) {
-      source.load();
-      return;
-    }
+  const play = () => {
     video.muted = true;
     video.play().catch(error => {
       // A later pause() or source reset aborts a pending play(); nothing to undo.
@@ -373,21 +362,43 @@ function setupHeroFilm() {
       if (!disposed) updateControl();
     });
   };
+  const sync = () => {
+    const still = motion.matches || connection?.saveData;
+    updateControl();
+    if (disposed || still || userPaused || !inView || document.hidden) {
+      if (disposed || still || !inView || document.hidden || !video.seeking) video.pause();
+      if (still) hero.classList.remove('film-playing');
+      return;
+    }
+    if (!video.hasAttribute('src')) {
+      source.load();
+      return;
+    }
+    play();
+  };
   const onPlaying = () => {
     hero.classList.add('film-playing');
     updateControl();
   };
-  const onToggle = () => { userPaused = !video.paused; sync(); };
+  const onToggle = () => { userPaused = !(userPaused || video.paused); sync(); };
   const stepScene = direction => {
     const sceneDuration = video.duration / sceneCount;
     const current = Math.floor(video.currentTime / sceneDuration);
     const target = (current + direction + sceneCount) % sceneCount;
+    // iPhone Safari can leave a paused seek pending. Run the decoder until
+    // seeked, then hold the requested scene if the user still wants it paused.
+    if (video.paused) {
+      userPaused = true;
+      play();
+    }
     // Land one frame into the scene, clear of the preceding dissolve.
     video.currentTime = target * sceneDuration + 1 / 24;
   };
   const onBack = () => stepScene(-1);
   const onNext = () => stepScene(1);
   const onSeeked = () => {
+    if (video.seeking) return;
+    if (userPaused) video.pause();
     hero.classList.add('film-playing');
     updateControl();
   };
