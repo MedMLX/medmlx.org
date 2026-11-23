@@ -62,7 +62,7 @@ class Example:
 
 @dataclass(frozen=True)
 class RunExample:
-    """A model page's `medmlx run` line: the model ID and `--arg` names its release documents.
+    """A model page's `medmlx run` line: the model ID and argument names its release documents.
 
     `distribution` is the package whose tagged README (plus `docs`) documents the model;
     it differs from the page's package when medmlx itself provides the model.
@@ -419,8 +419,8 @@ def project_version(
 Options = dict[str, dict[str, frozenset[str] | None]]
 
 
-def cli_options(tree: ast.Module) -> Options:
-    """Map argparse subcommands to their options and literal choices, read as data."""
+def _parsers(tree: ast.Module) -> dict[str, str]:
+    """Map each variable holding a subcommand parser, or one of its groups, to the subcommand."""
     calls = [
         (node, node.value)
         for node in ast.walk(tree)
@@ -447,6 +447,12 @@ def cli_options(tree: ast.Module) -> Options:
         ):
             name = parsers[call.func.value.id]
             parsers.update({t.id: name for t in node.targets if isinstance(t, ast.Name)})
+    return parsers
+
+
+def cli_options(tree: ast.Module) -> Options:
+    """Map argparse subcommands to their options and literal choices, read as data."""
+    parsers = _parsers(tree)
     options: Options = {name: {} for name in parsers.values()}
     # A subcommand with no options is often declared without keeping its parser.
     for node in ast.walk(tree):
@@ -512,6 +518,171 @@ def cli_options(tree: ast.Module) -> Options:
     return options
 
 
+CORE_CLI = "medmlx_core.cli"
+
+
+def _absolute(node: ast.ImportFrom, module: str) -> str:
+    """Return the dotted module an import names, resolving relative imports against `module`."""
+    parts = module.split(".")[: -node.level] if node.level else []
+    if node.module:
+        parts.append(node.module)
+    return ".".join(parts)
+
+
+def read_module(module: str, source: Callable[[str], str]) -> str | None:
+    """Return a module's source from a src or flat layout, or None when it is absent."""
+    path = module.replace(".", "/") + ".py"
+    for candidate in (f"src/{path}", path):
+        try:
+            return source(candidate)
+        except ReleaseError:
+            continue
+    return None
+
+
+def _is_partial(call: ast.Call) -> bool:
+    function = call.func
+    return (isinstance(function, ast.Name) and function.id == "partial") or (
+        isinstance(function, ast.Attribute) and function.attr == "partial"
+    )
+
+
+def _members(annotation: ast.expr, aliases: dict[str, ast.expr], depth: int = 0) -> list[ast.expr]:
+    """Flatten unions, `Optional` and module-level aliases into the non-None members."""
+    if isinstance(annotation, ast.Constant):
+        if annotation.value is None:
+            return []
+        if isinstance(annotation.value, str) and depth < 8:
+            try:
+                parsed = ast.parse(annotation.value, mode="eval").body
+            except SyntaxError:
+                return [annotation]
+            return _members(parsed, aliases, depth + 1)
+    if isinstance(annotation, ast.BinOp) and isinstance(annotation.op, ast.BitOr):
+        return _members(annotation.left, aliases, depth) + _members(annotation.right, aliases, depth)
+    if isinstance(annotation, ast.Subscript):
+        head = annotation.value
+        label = head.id if isinstance(head, ast.Name) else head.attr if isinstance(head, ast.Attribute) else ""
+        if label in {"Union", "Optional"}:
+            items = annotation.slice.elts if isinstance(annotation.slice, ast.Tuple) else [annotation.slice]
+            return [member for item in items for member in _members(item, aliases, depth)]
+    if isinstance(annotation, ast.Name) and annotation.id in aliases and depth < 8:
+        return _members(aliases[annotation.id], aliases, depth + 1)
+    return [annotation]
+
+
+def _choices(literal: ast.Subscript) -> frozenset[str] | None:
+    items = literal.slice.elts if isinstance(literal.slice, ast.Tuple) else [literal.slice]
+    try:
+        values = [cast(object, ast.literal_eval(item)) for item in items]
+    except ValueError:
+        return None  # A computed Literal member cannot be read without importing the runtime.
+    return frozenset(str(value) for value in values)
+
+
+def run_options(
+    module: str, name: str, bound: frozenset[str], source: Callable[[str], str]
+) -> dict[str, frozenset[str] | None]:
+    """Derive the options `medmlx_core.cli` generates from a runner's signature, read as data."""
+    text = read_module(module, source)
+    if text is None:
+        raise ReleaseError(f"Cannot find the {module} runner source in the release")
+    tree = ast.parse(text)
+    aliases: dict[str, ast.expr] = {}
+    function: ast.FunctionDef | None = None
+    for node in tree.body:
+        if isinstance(node, ast.FunctionDef) and node.name == name:
+            function = node
+        elif isinstance(node, ast.TypeAlias):
+            aliases[node.name.id] = node.value
+        elif isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+            aliases[node.targets[0].id] = node.value
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.value:
+            aliases[node.target.id] = node.value
+    if function is None:
+        raise ReleaseError(f"Cannot find the {name} runner in {module}")
+    options: dict[str, frozenset[str] | None] = {"--help": None}
+    for parameter in [*function.args.args, *function.args.kwonlyargs]:
+        if parameter.arg in bound:
+            continue
+        flag = "--" + parameter.arg.replace("_", "-")
+        members = _members(parameter.annotation, aliases) if parameter.annotation else []
+        shape = members[0] if len(members) == 1 else None
+        options[flag] = None
+        if isinstance(shape, ast.Name) and shape.id == "bool":
+            options["--no-" + flag.removeprefix("--")] = None
+        elif isinstance(shape, ast.Subscript):
+            head = shape.value
+            if (isinstance(head, ast.Name) and head.id == "Literal") or (
+                isinstance(head, ast.Attribute) and head.attr == "Literal"
+            ):
+                options[flag] = _choices(shape)
+    return options
+
+
+def generated_options(tree: ast.Module, module: str, source: Callable[[str], str]) -> Options:
+    """Map subcommands generated by `medmlx_core.cli` to the options of their `run` function.
+
+    `main(run, ...)` makes the whole CLI one command, keyed by the empty name. A
+    parameter bound with `functools.partial` has no option.
+    """
+    imports: dict[str, tuple[str, str]] = {}
+    modules: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom):
+            for alias in node.names:
+                imports[alias.asname or alias.name] = (_absolute(node, module), alias.name)
+        elif isinstance(node, ast.Import):
+            modules.update(alias.asname for alias in node.names if alias.name == CORE_CLI and alias.asname)
+    modules.update(local for local, target in imports.items() if target == ("medmlx_core", "cli"))
+    partials = {
+        node.targets[0].id: node.value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Assign)
+        and len(node.targets) == 1
+        and isinstance(node.targets[0], ast.Name)
+        and isinstance(node.value, ast.Call)
+        and _is_partial(node.value)
+    }
+    parsers = _parsers(tree)
+    generated: Options = {}
+    for call in (node for node in ast.walk(tree) if isinstance(node, ast.Call)):
+        function = call.func
+        if isinstance(function, ast.Name) and imports.get(function.id, ("", ""))[0] == CORE_CLI:
+            entry = imports[function.id][1]
+        elif isinstance(function, ast.Attribute) and isinstance(function.value, ast.Name) and function.value.id in modules:
+            entry = function.attr
+        else:
+            continue
+        if entry not in {"main", "add_options"}:
+            continue
+        if entry == "main":
+            scope, position = "", 0
+        else:
+            parser = call.args[0] if call.args else None
+            if not isinstance(parser, ast.Name) or parser.id not in parsers:
+                raise ReleaseError("add_options is not called on a named subcommand parser")
+            scope, position = parsers[parser.id], 1
+        expression = call.args[position] if len(call.args) > position else None
+        bound: set[str] = set()
+        for _ in range(16):
+            if isinstance(expression, ast.Name) and expression.id in partials:
+                expression = partials[expression.id]
+            elif isinstance(expression, ast.Call) and _is_partial(expression) and expression.args:
+                bound.update(keyword.arg for keyword in expression.keywords if keyword.arg)
+                expression = expression.args[0]
+            else:
+                break
+        runner = imports.get(expression.id) if isinstance(expression, ast.Name) else None
+        if runner is None:
+            raise ReleaseError(f"Cannot resolve the runner passed to {entry} to an import")
+        declared = run_options(runner[0], runner[1], frozenset(bound), source)
+        if entry == "main":
+            declared["--version"] = None
+        generated.setdefault(scope, {}).update(declared)
+    return generated
+
+
 def _declare_option(declared: dict[str, frozenset[str] | None], call: ast.Call) -> None:
     """Record an `add_argument` call's option strings with their literal choices."""
     choices: frozenset[str] | None = None
@@ -539,24 +710,27 @@ def verify_command(command: str, scripts: dict[str, object], source: Callable[[s
     tokens = command_tokens(command)
     if not tokens or tokens[0] not in scripts:
         raise ReleaseError(f"site command does not run a console script of the release: {command}")
-    module = string(scripts[tokens[0]]).split(":", 1)[0].replace(".", "/") + ".py"
-    for path in (f"src/{module}", module):
-        try:
-            text = source(path)
-        except ReleaseError:
-            continue
-        break
-    else:
+    cli_module = string(scripts[tokens[0]]).split(":", 1)[0]
+    text = read_module(cli_module, source)
+    if text is None:
         raise ReleaseError(f"Cannot find the {tokens[0]} CLI source in the release")
-    options = cli_options(ast.parse(text))
-    if len(tokens) < 2 or tokens[1] not in options:
+    tree = ast.parse(text)
+    options = cli_options(tree)
+    for name, generated in generated_options(tree, cli_module, source).items():
+        options.setdefault(name, {}).update(generated)
+    # A CLI generated by `main(run, ...)` is one command with no subcommand.
+    if "" in options:
+        scope, start = tokens[0], 1
+    elif len(tokens) < 2 or tokens[1] not in options:
         raise ReleaseError(f"site command uses a subcommand the release does not declare: {command}")
-    declared = options[tokens[1]]
-    for index, token in enumerate(tokens[2:], start=2):
+    else:
+        scope, start = f"{tokens[0]} {tokens[1]}", 2
+    declared = options[tokens[1] if start == 2 else ""]
+    for index, token in enumerate(tokens[start:], start=start):
         if not token.startswith("-"):
             continue
         if token not in declared:
-            raise ReleaseError(f"{token} is not an option of {tokens[0]} {tokens[1]} in the release")
+            raise ReleaseError(f"{token} is not an option of {scope} in the release")
         choices = declared[token]
         if choices is not None and index + 1 < len(tokens) and tokens[index + 1] not in choices:
             raise ReleaseError(f"{tokens[index + 1]} is not a release choice for {token}")
@@ -644,7 +818,7 @@ def verify_revision(url: str, revision: str, size: str, fetch: Callable[[str], s
 
 
 def run_arguments(arguments: str) -> tuple[str, ...]:
-    """Return the names in a `--arg` list such as `a=1 'b=two words' c:='[1]'`."""
+    """Return the names in a `KEY=VALUE` list such as `a=1 'b=two words' c:='[1]'`."""
     names: list[str] = []
     for token in shlex.split(arguments):
         match = re.match(r"([A-Za-z_]\w*)(?::=|=)", token)

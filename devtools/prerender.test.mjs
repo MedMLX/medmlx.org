@@ -40,7 +40,7 @@ test('every runtime card exposes its reviewed source, limits and resource eviden
     assert.match(body, /Model card/);
     assert.ok(body.includes(item.source), item.distribution);
     if (item.slug === 'mlx-reason-ct') continue;
-    assert.ok(body.includes(`medmlx run ${runExamples[item.slug].id} --arg`), `${item.slug} run command`);
+    assert.ok(body.includes(`medmlx run ${runExamples[item.slug].id} `), `${item.slug} run command`);
     const card = modelCards[item.slug];
     assert.equal(card.version, item.version);
     if (card.limitations.length) assert.match(body, /Before you run/);

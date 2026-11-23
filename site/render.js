@@ -218,7 +218,7 @@ function installAll(id) {
 }
 
 // Keep recognizable entry points first in both the homepage and catalog.
-const featuredNames = ['nnU-Net', 'TotalSegmentator', 'MedSAM2', 'BioMedParse'];
+const featuredNames = ['nnU-Net', 'TotalSegmentator', 'MedSAM2', 'BiomedParse'];
 export const catalog = [
   ...models.map(model => ({
     name: model.name, task: model.task, description: model.description, distribution: model.distribution,
@@ -245,7 +245,7 @@ export const tasks = [...new Set(catalog.map(item => item.task))].sort((a, b) =>
   return rank(a) - rank(b) || a.localeCompare(b);
 });
 
-const featuredImages = { 'nnU-Net': 'featured-liver', TotalSegmentator: 'featured-anatomy', MedSAM2: 'featured-medsam', BioMedParse: 'featured-prompt' };
+const featuredImages = { 'nnU-Net': 'featured-liver', TotalSegmentator: 'featured-anatomy', MedSAM2: 'featured-medsam', BiomedParse: 'featured-prompt' };
 /** Let a camel-case name wrap between its words (Total|Segmentator) rather than overflow. */
 const breakable = name => name.split(/(?<=[a-z])(?=[A-Z][a-z])/).flatMap((part, i) => (i ? [html`<wbr>`, part] : [part]));
 // Task cards that loop a saved model run; each has <name>.mp4, <name>-poster.webp and <name>-run.json.
@@ -643,7 +643,7 @@ function gettingStartedPage() {
           <h2>Or run a model from the terminal</h2>
           <p>No scan yet? This downloads a small sample abdominal CT from the TotalSegmentator repository into a work folder:</p>
           ${terminal('sample-ct-command', 'Sample CT', sampleCtCommand)}
-          <p>From that folder, <code>describe</code> lists the arguments a model takes, <code>readiness</code> checks that it can run without downloading anything, and <code>run</code> downloads the weights the first time, then runs it:</p>
+          <p>From that folder, <code>describe</code> lists the arguments a model takes, <code>check</code> checks a run without downloading anything, and <code>run</code> downloads the weights the first time, then runs it:</p>
           ${terminal('medmlx-run-command', 'Run', medmlxRunCommand)}
           <p>To download weights ahead of time for offline use:</p>
           ${terminal('medmlx-setup-command', 'Download weights', medmlxSetupCommand)}
@@ -750,7 +750,7 @@ function mcpPage() {
             ${mcpTools.map(([tool, args, purpose]) => html`
               <li><code class="tool-name">${tool}</code><span class="tool-args">${args === 'None' ? 'No arguments' : inlineCode(args)}</span><p>${inlineCode(purpose)}</p></li>`)}
           </ul>
-          <p>If a model is missing, check that its family is installed and look at <code>discovery_errors</code>. If a run is blocked, check <code>runtime_info</code>, the reason and hint from readiness, and the job's error and log. <code>list_checkpoints</code> shows where checkpoints come from. It doesn't mean they're installed or tested.</p>
+          <p>If a model is missing, check that its family is installed and look at <code>discovery_errors</code>. If a run is blocked, check <code>runtime_info</code>, the reason and hint from <code>check_run</code>, and the job's error and log. <code>list_checkpoints</code> shows where checkpoints come from. It doesn't mean they're installed or tested.</p>
         </section>
 
         <section class="guide-section" id="run" aria-labelledby="run-title">
@@ -759,7 +759,7 @@ function mcpPage() {
           <ol class="sequence">
             <li>Call <code>runtime_info</code> and <code>list_models</code> to see what this Mac supports and which models are installed.</li>
             <li>Call <code>describe_model</code> for the model you want. <code>parameters</code> lists its arguments, and <code>instructions</code> is the model author's own documentation. Follow it for inputs, weights, units and outputs.</li>
-            <li>Call <code>model_readiness</code> with the model ID and the arguments you plan to use, and fix anything it reports.</li>
+            <li>Call <code>check_run</code> with the model ID and the arguments you plan to use, and fix anything it reports.</li>
             <li>Call <code>run_model</code>, keep the <code>job_id</code> it returns, and call <code>get_job</code> until the job finishes. Then read the result or error and open the output files.</li>
           </ol>
           <h3>Example: TotalSegmentator</h3>
@@ -771,8 +771,8 @@ function mcpPage() {
 
         <section class="guide-section" id="jobs" aria-labelledby="jobs-title">
           <h2 id="jobs-title">Readiness and jobs</h2>
-          <p><code>model_readiness</code> reports <code>ready</code> and <code>runtime_ready</code>, which always match. They say that the model's package loads and Metal works, not that a particular run will succeed. <code>run_ready</code> is <code>false</code> when there's a known problem, and <code>null</code> when none was found but the input and checkpoint files weren't checked. In this version it is never <code>true</code>.</p>
-          <p>When you pass arguments, pass exactly one model ID. The check confirms the argument names, that required arguments are present and that input and weight paths exist. It doesn't open the images, check their geometry, check that a checkpoint fits the model, or check whether outputs would be overwritten. <code>run_model</code> repeats the argument and Metal checks before starting. The model checks its own inputs when it runs, so a run can still fail.</p>
+          <p><code>model_readiness</code> reports <code>runtime_ready</code>: the model's package loads and Metal works. It doesn't check a run. <code>check_run</code> checks one run of one model. Its <code>run_ready</code> is <code>false</code> when there's a known problem, <code>true</code> when every check passed, and <code>null</code> when none was found but something couldn't be checked, such as weights the run would download first.</p>
+          <p>The check confirms the argument names, that required arguments are present, that input and weight paths exist, that the weights are supplied or already downloaded, and that each NIfTI input has a readable header. It doesn't check that the images suit the model, that a checkpoint fits it, or whether outputs would be overwritten. <code>run_model</code> repeats the argument and Metal checks before starting. The model checks its own inputs when it runs, so a run can still fail.</p>
           <p>A job is <code>running</code>, <code>completed</code>, <code>failed</code> or <code>cancelled</code>. <code>get_job</code> can wait up to 60 seconds for a change with <code>wait_seconds</code>, which defaults to 0. It returns the end of the log and, when ready, the result or error. <code>list_jobs</code> lists this session's jobs, and <code>cancel_job</code> stops a running job and anything it started. Jobs belong to the session: when the client disconnects, running jobs stop, and a new session can't see them. Cancelling doesn't delete files a model has already written.</p>
         </section>
 
@@ -838,7 +838,7 @@ function cliPage() {
           <h2 id="run-title">Run a model</h2>
           <p>From the folder that holds the scan:</p>
           ${terminal('cli-run', 'Run a model', cliExamples.run)}
-          <p><code>describe</code> lists the arguments a model takes. <code>readiness</code> checks that the model can run on this Mac, without downloading anything. <code>run</code> runs the model and waits for it to finish. Each <code>--arg</code> value is converted to the type the model declares; give lists and other JSON values as <code>KEY:=JSON</code>, for example <code>points:='[[120, 140, 60]]'</code>. <code>--arguments FILE</code> reads the arguments from a JSON file instead. Relative paths are read from the current folder, or from <code>--root</code>.</p>
+          <p><code>describe</code> lists the arguments a model takes. <code>check</code> checks one run without running it or downloading anything. <code>run</code> runs the model and waits for it to finish. Each <code>KEY=VALUE</code> is converted to the type the model declares; give lists and other JSON values as <code>KEY:=JSON</code>, for example <code>points:='[[120, 140, 60]]'</code>. <code>--arguments FILE</code> reads the arguments from a JSON file instead. Relative paths are read from the current folder, or from <code>--root</code>.</p>
           <p>Most models download their weights the first time they run, so you can leave out <code>weights_path</code>. Later runs reuse that download, and each run records which weights it used. To use your own weights, pass a local folder as <code>weights_path</code>. MedGemma and MRSegmentator need local weights for now.</p>
         </section>
 

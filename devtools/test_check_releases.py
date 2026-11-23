@@ -350,6 +350,47 @@ def main():
     report.add_argument("--enable-thinking", action="store_true")
     raise RuntimeError("Do not execute source")
 """
+GENERATED_CLI = """import argparse
+from functools import partial
+
+from medmlx_core.cli import add_options, call, execute
+
+from .medmlx import run
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    commands = parser.add_subparsers()
+    download = commands.add_parser("download")
+    download.add_argument("--revision", required=True)
+    report = commands.add_parser("report")
+    add_options(report, partial(run, slice_batch_size=2))
+    segment = commands.add_parser("segment")
+    add_options(segment, run)
+    raise RuntimeError("Do not execute source")
+"""
+SINGLE_CLI = """from medmlx_core import cli
+
+from example.medmlx import run as _run
+
+
+def main():
+    return cli.main(_run, prog="example")
+"""
+RUNNER = """from typing import Literal
+
+type Mode = Literal["fast", "exact"]
+
+
+def run(
+    *,
+    input: str,
+    mode: Mode | None = None,
+    apply_filter: bool = True,
+    slice_batch_size: int = 1,
+) -> object:
+    raise RuntimeError("Do not execute source")
+"""
 DOWNLOAD = f"example download \\\n  --repo MedMLX/Example \\\n  --revision {REVISION}"
 
 
@@ -420,6 +461,42 @@ class ModelChecks(unittest.TestCase):
         self.sources["example/cli.py"] = self.sources.pop("src/example/cli.py")
         self.commands = ["example report --input=ct.nii.gz --precision=bfloat16"]
         self.verify()
+
+    def test_generated_cli_options_come_from_the_run_signature(self) -> None:
+        self.sources["src/example/cli.py"] = GENERATED_CLI
+        self.sources["src/example/medmlx.py"] = RUNNER
+        self.commands = [
+            "example report --input=ct.nii.gz --mode=fast --apply-filter --no-apply-filter --help",
+            "example segment --input=ct.nii.gz --slice-batch-size=2",
+            "example download --revision=abc",
+        ]
+        self.verify()
+        cases = [
+            ("example report --input=ct.nii.gz --mode=slow", "slow is not a release choice for --mode"),
+            ("example report --input=ct.nii.gz --invented", "--invented is not an option of example report"),
+            ("example report --slice-batch-size=2", "--slice-batch-size is not an option of example report"),
+            ("example download --input=ct.nii.gz", "--input is not an option of example download"),
+            ("example convert --input=ct.nii.gz", "subcommand the release does not declare"),
+        ]
+        for command, message in cases:
+            with self.subTest(command=command):
+                self.commands = [command]
+                with self.assertRaisesRegex(ReleaseError, message):
+                    self.verify()
+
+    def test_main_runner_is_one_command_without_a_subcommand(self) -> None:
+        self.sources["src/example/cli.py"] = SINGLE_CLI
+        self.sources["src/example/medmlx.py"] = RUNNER
+        self.commands = ["example --input=ct.nii.gz --mode=fast --no-apply-filter --version"]
+        self.verify()
+        for command, message in [
+            ("example --input=ct.nii.gz --mode=slow", "slow is not a release choice for --mode"),
+            ("example --invented", "--invented is not an option of example"),
+        ]:
+            with self.subTest(command=command):
+                self.commands = [command]
+                with self.assertRaisesRegex(ReleaseError, message):
+                    self.verify()
 
     def test_pinned_weights_must_exist_and_match_the_listed_size(self) -> None:
         self.verify()

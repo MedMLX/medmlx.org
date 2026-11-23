@@ -14,11 +14,12 @@ export const setupSource = tagged('docs/setup.md');
 export const cliCommands = [
   ['models', '--task, --family', 'Lists the installed models.'],
   ['describe', 'MODEL_ID', 'Shows the arguments a model takes and how to use them.'],
-  ['readiness', 'MODEL_ID…, --arg, --arguments, --root', 'Checks that a model can run on this Mac, without downloading anything.'],
-  ['run', 'MODEL_ID, --arg, --arguments, --root', 'Runs a model and waits for it to finish.'],
+  ['readiness', 'MODEL_ID…', 'Checks that models are installed and that Metal works on this Mac.'],
+  ['check', 'MODEL_ID, KEY=VALUE…, --arguments, --root', 'Checks one run’s arguments, input paths and weights, without running it or downloading anything.'],
+  ['run', 'MODEL_ID, KEY=VALUE…, --arguments, --root', 'Runs a model and waits for it to finish.'],
   ['setup', 'MODEL_ID, --all, --refresh, --plan, --progress', 'Downloads weights ahead of time, for working offline.'],
   ['serve', '--root', 'Starts the MCP server for an agent. Needs the mcp extra.'],
-  ['checkpoints', '--model-id', 'Lists where model checkpoints come from. Downloads nothing.'],
+  ['checkpoints', 'MODEL_ID', 'Lists where model checkpoints come from. Downloads nothing.'],
   ['packages', '', 'Lists the model families and which runtimes are installed.'],
   ['runtime', '', 'Checks MLX and Metal on this Mac.'],
 ];
@@ -34,9 +35,10 @@ export const cliExamples = {
 
 /** Public functions and their signatures, from src/medmlx at the tag. */
 export const pythonFunctions = [
-  ['run', '(model_id, *, arguments, root=None)', 'Runs a model and waits for it to finish. If you interrupt it, the model stops.'],
+  ['run', '(model_id, *, root=None, **arguments)', 'Runs a model and waits for it to finish. If you interrupt it, the model stops.'],
   ['describe_model', '(model_id)', 'Shows the arguments a model takes and how to use them.'],
-  ['model_readiness', '(model_ids=None, *, arguments=None, root=None)', 'Checks that models can run on this Mac. With arguments, it also checks their names and that the input paths exist.'],
+  ['model_readiness', '(model_ids=None)', 'Checks that models are installed and that Metal works on this Mac.'],
+  ['check_run', '(model_id, *, root=None, **arguments)', 'Checks one run without running it: the argument names, the input paths and the weights.'],
   ['list_models', '(task=None, family=None)', 'Lists the installed models, and any installed model that failed to load.'],
   ['list_packages', '()', 'Lists the model families, which runtimes are installed and the models each one provides.'],
   ['list_checkpoints', '(model_id=None)', 'Lists where model checkpoints come from. Downloads nothing.'],
@@ -54,7 +56,8 @@ export const pythonExamples = {
     '',
     'result = medmlx.run(',
     '    "mlx-segment-ct",',
-    '    arguments={"image_path": "ct.nii.gz", "output_dir": "segment-ct"},',
+    '    image_path="ct.nii.gz",',
+    '    output_dir="segment-ct",',
     '    root="/path/to/medmlx-work",',
     ')',
   ].join('\n'),

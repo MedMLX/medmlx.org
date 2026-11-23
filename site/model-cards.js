@@ -3,7 +3,7 @@
 // Keep implementation details in the linked repository. Reason-CT lives in models.js.
 export const modelCards = {
   "fdg-pet-ct-mlx": {
-    "version": "0.4.0",
+    "version": "0.5.0",
     "rows": [
       [
         "Input",
@@ -50,7 +50,7 @@ export const modelCards = {
       {
         "text": "Creates simulated PET images. Scanner acquisition and reconstruction are not modeled.",
         "sources": [
-          "This is image-space synthesis; it does not simulate projection physics or reconstruction."
+          "Synthesis is in image space, without projection physics or reconstruction."
         ]
       }
     ],
@@ -64,14 +64,14 @@ export const modelCards = {
     ],
     "weights": [],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.4.0/LICENSE).",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.5.0/LICENSE).",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md)."
+        "[Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.5.0/LICENSE). See [third-party notices](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.5.0/THIRD_PARTY_NOTICES.md)."
       ]
     }
   },
   "nnunet-mlx": {
-    "version": "0.9.0",
+    "version": "0.10.0",
     "rows": [
       [
         "Input",
@@ -146,14 +146,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.9.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.9.0/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.9.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "siam": {
-    "version": "0.9.0",
+    "version": "0.10.0",
     "rows": [
       [
         "Input",
@@ -168,9 +168,9 @@ export const modelCards = {
       [
         "Output",
         {
-          "text": "A label map on the input scan’s grid. Its 17 labels cover grey and white matter, CSF and ventricles, cerebellar grey matter, five deep nuclei, hippocampus and amygdala, dura, vessels, skull and scalp, plus **Anomalies** (17) for pathology such as tumors.",
+          "text": "A label map on the input scan’s grid. Its 17 labels cover gray and white matter, CSF and ventricles, cerebellar gray matter, deep nuclei, hippocampus and amygdala, dura, vessels, skull and scalp, plus **Anomalies** (17) for pathology such as tumors.",
           "sources": [
-            "17 labels cover grey and white matter, CSF and ventricles, cerebellar grey matter, deep nuclei, hippocampus and amygdala, dura, vessels, skull and scalp, plus `Anomalies` (17) for pathology.",
+            "17 labels cover gray and white matter, CSF and ventricles, cerebellar gray matter, deep nuclei, hippocampus and amygdala, dura, vessels, skull and scalp, plus `Anomalies` (17) for pathology.",
             "returns labels on the input grid"
           ]
         }
@@ -222,14 +222,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.9.0/LICENSE). SIAM weights: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), by Valabregue et al., converted from the [original release](https://zenodo.org/records/17733431).",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/LICENSE). SIAM weights: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), by Valabregue et al., converted from the [original release](https://zenodo.org/records/17733431).",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.9.0/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.9.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "mlx-segment-ct": {
-    "version": "0.4.0",
+    "version": "0.4.1",
     "rows": [
       [
         "Input",
@@ -260,10 +260,10 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "table": [{"model": "CT model", "weight": 0, "peak": "5.9 GB", "input": "768×768×101 abdominal CT, all classes"}, {"model": "CT/MRI model", "weight": 1, "peak": "11.0 GB", "input": "576×468×72 abdominal MRI"}],
+        "table": [{"model": "CT model", "weight": 0, "peak": "3.6 GB", "input": "768×768×101 abdominal CT, all classes"}, {"model": "CT/MRI model", "weight": 1, "peak": "5.2 GB", "input": "576×468×72 abdominal MRI"}],
         "sources": [
-          "| `mlx-segment-ct` | 872 MB | 5.9 GB | All classes of a 768×768×101 abdominal CT |",
-          "| `mlx-segment-ctmr` | 872 MB | 11.0 GB | All classes of a 576×468×72 abdominal MRI |"
+          "| `mlx-segment-ct` | 872 MB | 3.6 GB | Apple M1 Max, all classes of AMOS22 `amos_0008` (768×768×101 abdominal CT) |",
+          "| `mlx-segment-ctmr` | 872 MB | 5.2 GB | Apple M1 Max, all classes of AMOS22 `amos_0544` (576×468×72 abdominal MRI) |"
         ]
       }
     ],
@@ -282,14 +282,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.1/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "segresnet-mlx": {
-    "version": "0.5.0",
+    "version": "0.6.0",
     "rows": [
       [
         "Input",
@@ -306,7 +306,7 @@ export const modelCards = {
           "text": "A label map aligned with the original scan, marking renal arteries, veins, ureters, tumors and kidney tissue.",
           "sources": [
             "Renal labels on the input grid",
-            "The mask is float32 with labels 1 artery, 2 vein, 3 ureter, 4 neoplasm and 5 parenchyma"
+            "with labels 1 artery, 2 vein, 3 ureter, 4 neoplasm and 5 parenchyma"
           ]
         }
       ]
@@ -315,7 +315,7 @@ export const modelCards = {
       {
         "text": "The three scans must already be aligned on one grid.",
         "sources": [
-          "Inputs are finite 3D volumes on one voxel grid, with spatial units in millimetres or unspecified."
+          "finite 3D volumes on one voxel grid"
         ]
       }
     ],
@@ -336,14 +336,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.5.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.6.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.5.0/LICENSE). See [third-party notices](https://github.com/MedMLX/segresnet-mlx/blob/v0.5.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.6.0/LICENSE). See [third-party notices](https://github.com/MedMLX/segresnet-mlx/blob/v0.6.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "unest-mlx": {
-    "version": "0.3.0",
+    "version": "0.4.0",
     "rows": [
       [
         "Input",
@@ -389,21 +389,21 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.3.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.3.0/LICENSE). See [third-party notices](https://github.com/MedMLX/unest-mlx/blob/v0.3.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/unest-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "swin-unetr-mlx": {
-    "version": "0.3.0",
+    "version": "0.4.0",
     "rows": [
       [
         "Input",
         {
           "text": "A 3D abdominal CT scan saved as a NIfTI file.",
           "sources": [
-            "One 3D abdominal CT in NIfTI, in Hounsfield units"
+            "One 3D abdominal CT in NIfTI-1 or NIfTI-2, in Hounsfield units"
           ]
         }
       ],
@@ -435,21 +435,21 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.3.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.3.0/LICENSE). See [third-party notices](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.3.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "sam3-mlx": {
-    "version": "0.4.0",
+    "version": "0.4.1",
     "rows": [
       [
         "Input",
         {
-          "text": "One 2D image, such as a PNG or JPEG, or one chosen frame of an image folder or video, with a text prompt, a box or a point.",
+          "text": "One 2D image, or one frame of an image folder or video, with a text prompt, a box or a point.",
           "sources": [
-            "One 2D image (PNG, JPEG or any Pillow-readable format), or one chosen frame of an image folder or video; a text prompt, one box and/or one point"
+            "One 2D image, or one frame of an image folder or video · text, box or point prompt"
           ]
         }
       ],
@@ -458,7 +458,8 @@ export const modelCards = {
         {
           "text": "One mask per detected object at the image's size, plus boxes and scores.",
           "sources": [
-            "`out/masks.npy`, boolean `(N, height, width)` at the input resolution, and `out/prediction.json` with pixel boxes and scores"
+            "Masks, pixel boxes and scores at the input resolution",
+            "Boolean `(N, height, width)`, one mask per detection, at the input image or frame resolution"
           ]
         }
       ]
@@ -467,8 +468,7 @@ export const modelCards = {
       {
         "text": "Reads ordinary 8-bit images. DICOM, NIfTI and 3D volumes are not read; export a slice to PNG first.",
         "sources": [
-          "Images are 2D and decoded with Pillow; DICOM, NIfTI and 3D volumes are not read. Export a slice to PNG first.",
-          "Image files and frames must be 8-bit."
+          "2D and 8-bit, decoded with Pillow. DICOM, NIfTI and 3D volumes are not read; export a slice to PNG first."
         ]
       }
     ],
@@ -490,7 +490,7 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software and model files: the [SAM License](https://github.com/MedMLX/sam3-mlx/blob/v0.4.0/LICENSE), which allows commercial use but bars military, weapons and trade-controlled uses. Publications must acknowledge SAM.",
+      "text": "Software and model files: the [SAM License](https://github.com/MedMLX/sam3-mlx/blob/v0.4.1/LICENSE), which allows commercial use but bars military, weapons and trade-controlled uses. Publications must acknowledge SAM.",
       "sources": [
         "royalty-free, including commercial use;",
         "not for military, weapons or other uses barred by trade controls;",
@@ -499,7 +499,7 @@ export const modelCards = {
     }
   },
   "medsam2-mlx": {
-    "version": "0.4.0",
+    "version": "0.5.0",
     "rows": [
       [
         "Input",
@@ -572,14 +572,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.5.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/medsam2-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms; see the [model card](https://huggingface.co/MedMLX/medsam2-mlx)."
+        "[Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.5.0/LICENSE). See [third-party notices](https://github.com/MedMLX/medsam2-mlx/blob/v0.5.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms; see the [model card](https://huggingface.co/MedMLX/medsam2-mlx)."
       ]
     }
   },
   "biomedparse-mlx": {
-    "version": "0.2.0",
+    "version": "0.3.0",
     "rows": [
       [
         "Input",
@@ -619,7 +619,7 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "table": [{"model":"BioMedParse v2","weight":0,"peak":"3.8 GB","input":"Four organ prompts on a 768×768×101 abdominal CT"}],
+        "table": [{"model":"BiomedParse v2","weight":0,"peak":"3.8 GB","input":"Four organ prompts on a 768×768×101 abdominal CT"}],
         "sources": [
           "| `biomedparse-v2` | 1.5 GB | 3.8 GB | Four organ prompts on a 768×768×101 abdominal CT |"
         ]
@@ -627,21 +627,21 @@ export const modelCards = {
     ],
     "weights": [
       {
-        "name": "BioMedParse v2",
+        "name": "BiomedParse v2",
         "url": "https://huggingface.co/MedMLX/biomedparse-v2-mlx",
         "revision": "7790b9183b1c708b970820a400016f71ef399310",
         "size": "1.5 GB"
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.2.0/LICENSE). Model files have their own license terms. BioMedParse models are for noncommercial use under CC-BY-NC-SA-4.0.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.3.0/LICENSE). Model files have their own license terms. BiomedParse models are for noncommercial use under CC-BY-NC-SA-4.0.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.2.0/LICENSE). See [third-party notices](https://github.com/MedMLX/biomedparse-mlx/blob/v0.2.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. BioMedParse weights are CC-BY-NC-SA-4.0."
+        "[Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.3.0/LICENSE). See [third-party notices](https://github.com/MedMLX/biomedparse-mlx/blob/v0.3.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. BiomedParse weights are CC-BY-NC-SA-4.0."
       ]
     }
   },
   "totalsegmentator-mlx": {
-    "version": "0.3.0",
+    "version": "0.4.0",
     "rows": [
       [
         "Input",
@@ -711,14 +711,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.3.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.3.0/LICENSE). See [third-party notices](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.3.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "synthseg-mlx": {
-    "version": "0.4.0",
+    "version": "0.5.0",
     "rows": [
       [
         "Input",
@@ -742,9 +742,9 @@ export const modelCards = {
     "limitations": [],
     "measurements": [
       {
-        "table": [{"model":"SynthSeg","weight":0,"peak":"11.6 GB","input":"160×192×192 T1 brain MRI with cortical parcellation"}],
+        "table": [{"model":"SynthSeg","weight":0,"peak":"6.6 GB","input":"160×192×192 T1 brain MRI with cortical parcellation"}],
         "sources": [
-          "| `synthseg` | 424 MB | 11.6 GB | 160×192×192 T1 MRI with cortical parcellation |"
+          "| `synthseg` | 424 MB | 6.6 GB | Apple M1 Max, 160×192×192 T1 MRI with cortical parcellation |"
         ]
       }
     ],
@@ -757,14 +757,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.5.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/synthseg-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.5.0/LICENSE). See [third-party notices](https://github.com/MedMLX/synthseg-mlx/blob/v0.5.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "flexray-mlx": {
-    "version": "0.3.0",
+    "version": "0.3.1",
     "rows": [
       [
         "Input",
@@ -811,14 +811,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.3.0/LICENSE). Model files have their own license terms. FleXray models are for noncommercial use under CC-BY-NC-4.0.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.3.1/LICENSE). Model files have their own license terms. FleXray models are for noncommercial use under CC-BY-NC-4.0.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.3.0/LICENSE). See [third-party notices](https://github.com/MedMLX/flexray-mlx/blob/v0.3.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. FleXray weights are noncommercial (CC-BY-NC-4.0)."
+        "[Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.3.1/LICENSE). See [third-party notices](https://github.com/MedMLX/flexray-mlx/blob/v0.3.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. FleXray weights are noncommercial (CC-BY-NC-4.0)."
       ]
     }
   },
   "flexible-unet-mlx": {
-    "version": "0.3.0",
+    "version": "0.4.0",
     "rows": [
       [
         "Input",
@@ -864,14 +864,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.3.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.3.0/LICENSE). See [third-party notices](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.3.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "lung-nodule-mlx": {
-    "version": "0.3.0",
+    "version": "0.3.1",
     "rows": [
       [
         "Input",
@@ -887,7 +887,7 @@ export const modelCards = {
         {
           "text": "Boxes around possible lung nodules, with a score for each.",
           "sources": [
-            "| `detections.json` | `medmlx.detections.v1` candidate boxes (`cccwhd`, class 0 `nodule`) in RAS millimetres with their scores |",
+            "| `detections.json` | `medmlx.detections.v1` candidate boxes (`cccwhd`, class 0 `nodule`) in RAS millimeters with their scores |",
           "| `bundle_detections.json` | The MONAI bundle rows in patient LPS |"
           ]
         }
@@ -926,14 +926,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.0/LICENSE). See [third-party notices](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.1/LICENSE). See [third-party notices](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "mlx-generate-ctmr": {
-    "version": "0.7.0",
+    "version": "0.8.0",
     "rows": [
       [
         "Input",
@@ -975,9 +975,9 @@ export const modelCards = {
       {
         "table": [{"model": "CT", "weight": 0, "peak": "10.3 GiB", "input": "256×256×256, from an anatomy mask"}, {"model": "Brain MRI", "weight": 0, "peak": "9.5 GiB", "input": "256×256×128"}, {"model": "General MRI", "weight": 0, "peak": "9.5 GiB", "input": "128×256×256"}],
         "sources": [
-          "| `mlx-generate-ctmr-ct` | 10.3 GiB | 256³ CT from a mask, ControlNet + four-window decode |",
-          "| `mlx-generate-ctmr-mr-brain` | 9.5 GiB | 256×256×128 MR-Brain, guided batch 2 |",
-          "| `mlx-generate-ctmr-mr` | 9.5 GiB | 128×256×256 general MR |"
+          "| `mlx-generate-ctmr-ct` | 1.9 GB | 10.3 GiB | 256³ CT from a mask, ControlNet + four-window decode |",
+          "| `mlx-generate-ctmr-mr-brain` | 806 MB | 9.5 GiB | 256×256×128 MR-Brain, guided batch 2 |",
+          "| `mlx-generate-ctmr-mr` | 806 MB | 9.5 GiB | 128×256×256 general MR |"
         ]
       }
     ],
@@ -990,14 +990,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.7.0/LICENSE). Model files have their own license terms. General MRI models have noncommercial terms. The CT license terms need clarification from the publisher.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.8.0/LICENSE). Model files have their own license terms. General MRI models have noncommercial terms. The CT license terms need clarification from the publisher.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.7.0/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.7.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. General-MR weights have noncommercial terms; CT component terms require publisher clarification."
+        "[Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.8.0/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.8.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. General-MR weights have noncommercial terms; CT component terms require publisher clarification."
       ]
     }
   },
   "lesiondiffusion-mlx": {
-    "version": "0.3.0",
+    "version": "0.4.0",
     "rows": [
       [
         "Input",
@@ -1037,8 +1037,8 @@ export const modelCards = {
       {
         "table": [{"model":"LesionDiffusion, default mode","weight":0,"peak":"5.19 GB","input":"160×160×128 crop at 1 mm, 200 generation steps"},{"model":"LesionDiffusion, source mode","weight":0,"peak":"3.46 GB","input":"160×160×128 crop at 1 mm, 200 generation steps"}],
         "sources": [
-          "| `lesiondiffusion`, conditioned mode (default) | 1.7 GB | 5.19 GB | 160×160×128, 1 mm RAS crop, 200 diffusion steps |",
-          "| `lesiondiffusion`, source mode | 1.7 GB | 3.46 GB | 160×160×128, 1 mm RAS crop, 200 diffusion steps |"
+          "| `lesiondiffusion`, conditioned mode (default) | 1.7 GB | 5.19 GB | M5 Max, 160×160×128, 1 mm RAS crop, 200 diffusion steps |",
+          "| `lesiondiffusion`, source mode | 1.7 GB | 3.46 GB | M5 Max, 160×160×128, 1 mm RAS crop, 200 diffusion steps |"
         ]
       },
     ],
@@ -1051,14 +1051,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.3.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.3.0/LICENSE). See [third-party notices](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.3.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "med-vlm-mlx": {
-    "version": "0.3.4",
+    "version": "0.4.0",
     "rows": [
       [
         "Input",
@@ -1091,7 +1091,10 @@ export const modelCards = {
       {
         "table": [{"model":"MedGemma 1.5 4B","weight":0,"peak":"4.4 GB","input":"1929×2207 chest radiograph, up to 256 tokens"},{"model":"MedGemma 4B","weight":1,"peak":"4.1 GB","input":"1929×2207 chest radiograph, up to 256 tokens"},{"model":"MedGemma 27B","weight":2,"peak":"17.9 GB","input":"1929×2207 chest radiograph, up to 256 tokens"}],
         "sources": [
-          "Weights: 3.4 GB (MedGemma 1.5 4B), 3.0 GB (MedGemma 4B) or 16.9 GB (MedGemma 27B) download. Peak MLX memory to describe a 1929×2207 chest radiograph in up to 256 tokens: 4.4 GB (MedGemma 1.5 4B), 4.1 GB (MedGemma 4B) and 17.9 GB (MedGemma 27B)."
+          "| MedGemma 1.5 4B | 3.4 GB | 4.4 GB |",
+          "| MedGemma 4B | 3.0 GB | 4.1 GB |",
+          "| MedGemma 27B | 16.9 GB | 17.9 GB |",
+          "Peak memory is for describing a 1929×2207 chest radiograph in up to 256 tokens."
         ]
       }
     ],
@@ -1118,12 +1121,12 @@ export const modelCards = {
     "terms": {
       "text": "Software: MIT, with Apache-2.0 adaptations. Model use is covered by the [Health AI Developer Foundations terms](https://developers.google.com/health-ai-developer-foundations/terms).",
       "sources": [
-        "MIT, with Apache-2.0 adaptations. See [LICENSE](https://github.com/MedMLX/med-vlm-mlx/blob/v0.3.4/LICENSE) and [third-party notices](https://github.com/MedMLX/med-vlm-mlx/blob/v0.3.4/THIRD_PARTY_NOTICES.md). MedGemma weights are subject to the [Health AI Developer Foundations terms](https://developers.google.com/health-ai-developer-foundations/terms)."
+        "MIT, with Apache-2.0 adaptations. See [LICENSE](https://github.com/MedMLX/med-vlm-mlx/blob/v0.4.0/LICENSE) and [third-party notices](https://github.com/MedMLX/med-vlm-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). MedGemma weights are subject to the [Health AI Developer Foundations terms](https://developers.google.com/health-ai-developer-foundations/terms)."
       ]
     }
   },
   "radimagenet-mlx": {
-    "version": "0.4.0",
+    "version": "0.4.1",
     "rows": [
       [
         "Input",
@@ -1188,9 +1191,9 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.1/LICENSE). See [third-party notices](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },

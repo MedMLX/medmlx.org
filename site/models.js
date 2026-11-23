@@ -90,7 +90,7 @@ export const additionalRuntimes = [
   { name: 'SwinUNETR', distribution: 'swin-unetr-mlx', task: 'Segmentation', description: 'Organ segmentation in abdominal CT.' },
   { name: 'MedSAM2', distribution: 'medsam2-mlx', task: 'Segmentation', description: 'Lesion or organ segmentation from a box, point or mask prompt, tracked through the volume.' },
   { name: 'SAM 3', distribution: 'sam3-mlx', task: 'Segmentation', description: 'Segment objects in 2D images or video frames from a text, box or point prompt with Meta SAM 3.' },
-  { name: 'BioMedParse', distribution: 'biomedparse-mlx', task: 'Segmentation', description: 'Text-prompted 3D segmentation with Microsoft BioMedParse v2.' },
+  { name: 'BiomedParse', distribution: 'biomedparse-mlx', task: 'Segmentation', description: 'Text-prompted 3D segmentation with Microsoft BiomedParse v2.' },
   { name: 'TotalSegmentator', distribution: 'totalsegmentator-mlx', task: 'Segmentation', description: 'Identify 117 organs and other body structures in CT scans.' },
   { name: 'SynthSeg', distribution: 'synthseg-mlx', task: 'Segmentation', description: 'Brain segmentation and parcellation.' },
   { name: 'FleXray', distribution: 'flexray-mlx', task: 'Segmentation', description: 'Radiograph segmentation.' },
@@ -116,7 +116,7 @@ export const additionalRuntimes = [
 export const runExamples = {
   'fdg-pet-ct-mlx': {
     id: 'fdg-pet-ct', extras: 'generate,mcp',
-    args: 'image_path=ct.nii.gz mask_path=labels.nii.gz profile_path=profiles.json output_dir=fdg-pet',
+    args: 'image_path=ct.nii.gz label_map_path=labels.nii.gz profile_path=profiles.json output_dir=fdg-pet',
     prompt: 'Use MedMLX to make a synthetic FDG PET from ct.nii.gz, labels.nii.gz and profiles.json in my work folder.',
     output: 'The synthetic PET is written to `fdg-pet/pet.nii.gz` in SUV.',
   },
@@ -168,7 +168,7 @@ export const runExamples = {
   'biomedparse-mlx': {
     id: 'biomedparse-v2', extras: 'segment,mcp',
     args: "image_path=ct.nii.gz 'prompt=Visualization of the liver in abdominal CT imaging' output_dir=biomedparse",
-    prompt: 'Use MedMLX to segment the liver in ct.nii.gz in my work folder with BioMedParse.',
+    prompt: 'Use MedMLX to segment the liver in ct.nii.gz in my work folder with BiomedParse.',
   },
   'totalsegmentator-mlx': {
     id: 'totalsegmentator', extras: 'segment,mcp',
@@ -230,5 +230,5 @@ export const runExamples = {
 /** The terminal commands for a runtime page: install, any setup, describe, then run. */
 export function runCommand({ id, extras, before = [], args }) {
   return [`uv tool install --python ${pythonVersion} "medmlx[${extras}]"`, ...before,
-    `medmlx describe ${id}`, `medmlx run ${id} --arg ${args}`].join('\n');
+    `medmlx describe ${id}`, `medmlx run ${id} ${args}`].join('\n');
 }

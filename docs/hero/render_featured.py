@@ -61,7 +61,7 @@ ANATOMY_SOURCE = ('MedMLX/totalsegmentator-mlx', 'v0.1.6', 'docs/example.png')
 # Fractions of the figure (left, top, right, bottom): the 3D panel's torso, neck to hips.
 ANATOMY_CROP = (0.044, 0.1003, 0.238, 0.6217)
 ANATOMY_FADE = 0.2
-# The middle "Four text prompts" panel of the BioMedParse figure, inside its frame.
+# The middle "Four text prompts" panel of the BiomedParse figure, inside its frame.
 PROMPT_SOURCE = ('MedMLX/biomedparse-mlx', 'v0.1.5', 'docs/example-abdomen.png')
 PROMPT_CROP = (0.337, 0.2, 0.628, 0.8)
 # The middle panel of the SegResNet renal figure: one axial CT slice with its labels.
@@ -112,7 +112,7 @@ def save_panel(panel, name):
 def panels(_args):
     """Model-page panels cropped from tagged figures, with the documentation-panel tone.
 
-    The BioMedParse figure shows the slice with posterior at the top (spine up,
+    The BiomedParse figure shows the slice with posterior at the top (spine up,
     kidneys behind it). A vertical flip gives the standard display, anterior at the
     top, and keeps patient right on image left.
     """

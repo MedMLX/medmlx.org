@@ -35,7 +35,7 @@ const totalSegmentatorArguments = [
 /** JSON arguments for each tool call in the TotalSegmentator example. */
 export const mcpCalls = [
   ['describe_model', '{"model_id": "totalsegmentator"}'],
-  ['model_readiness', ['{', '  "model_ids": ["totalsegmentator"],', ...totalSegmentatorArguments, '}'].join('\n')],
+  ['check_run', ['{', '  "model_id": "totalsegmentator",', ...totalSegmentatorArguments, '}'].join('\n')],
   ['run_model', ['{', '  "model_id": "totalsegmentator",', ...totalSegmentatorArguments, '}'].join('\n')],
   ['get_job', '{"job_id": "RETURNED_JOB_ID", "wait_seconds": 30}'],
 ];
@@ -47,7 +47,9 @@ export const mcpTools = [
   ['list_models', 'Optional `task`, `family`', 'Lists the installed models. You can filter by task, or by the `segment`, `generate` or `vision` family.'],
   ['list_checkpoints', 'Optional `model_id`', 'Lists where model checkpoints come from and their channel order. Downloads nothing.'],
   ['describe_model', '`model_id`', 'Shows the arguments a model takes and its author\u2019s instructions.'],
-  ['model_readiness', 'Optional `model_ids`, `arguments`', 'Checks that a model can run. With arguments, it also checks their names and that input and weight paths exist.'],
+  ['model_readiness', 'Optional `model_ids`', 'Checks that models are installed and that Metal works.'],
+  ['check_run', '`model_id`, `arguments`', 'Checks one run without running it: the argument names, the input and weight paths and the weights.'],
+  ['setup_model', '`model_id`', 'Downloads a model\u2019s weights as a job and returns the folder to pass as `weights_path`.'],
   ['run_model', '`model_id`, `arguments`', 'Starts a model in its own process and returns a job.'],
   ['get_job', '`job_id`, optional `wait_seconds`', 'Shows a job\u2019s state, the end of its log, and its result or error when done.'],
   ['list_jobs', 'None', 'Lists this session\u2019s jobs.'],
