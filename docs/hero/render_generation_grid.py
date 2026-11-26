@@ -122,9 +122,8 @@ def public_paths(value, run_dir):
 
 def generate(args):
     import mlx.core as mx
-    from mlx_generate_ctmr.medmlx import run
-
     from medmlx_core.errors import InvalidInputError, ModelExecutionError
+    from mlx_generate_ctmr.medmlx import run
 
     failed = []
     for spec, seed in ((spec, seed) for spec in TILES for seed in args.seeds

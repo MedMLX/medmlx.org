@@ -16,9 +16,8 @@ small enough for a README.
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
-
 import render_film as film
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / 'docs/homepage.webp'

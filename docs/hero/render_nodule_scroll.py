@@ -145,9 +145,9 @@ def encode(ffmpeg, frames, output):
         ffmpeg, '-hide_banner', '-loglevel', 'error', '-y',
         '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{FRAME[0]}x{FRAME[1]}',
         '-framerate', str(FPS), '-i', '-',
-        '-vf', 'scale=out_color_matrix=bt709:out_range=tv:flags=accurate_rnd+full_chroma_int,'
-               'format=yuv420p,'
-               'setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709:range=tv',
+        '-vf', ('scale=out_color_matrix=bt709:out_range=tv:flags=accurate_rnd+full_chroma_int,'
+                'format=yuv420p,'
+                'setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709:range=tv'),
         '-c:v', 'libx264', '-preset', 'veryslow', '-crf', str(CRF), '-pix_fmt', 'yuv420p',
         '-movflags', '+faststart', '-an', '-map_metadata', '-1',
         '-fflags', '+bitexact', '-flags:v', '+bitexact', str(output),
@@ -158,8 +158,9 @@ def encode(ffmpeg, frames, output):
 
 def stream_tags(ffmpeg, video):
     """Read back the stored stream description; ffprobe is not bundled."""
+    # ffmpeg exits nonzero when given an input and no output; only stderr is read.
     info = subprocess.run([ffmpeg, '-hide_banner', '-i', str(video)],
-                          capture_output=True, text=True).stderr
+                          capture_output=True, text=True, check=False).stderr
     stream = next(line.strip() for line in info.splitlines() if 'Video:' in line)
     if not re.search(r'yuv420p\(tv, bt709, progressive\)', stream) or 'Audio:' in info:
         raise ValueError(f'Expected silent yuv420p tagged BT.709 throughout: {stream}')

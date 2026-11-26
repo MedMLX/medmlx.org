@@ -245,7 +245,7 @@ def render(args):
     fonts = ROOT / 'site/assets/fonts'
     font = ImageFont.truetype(str(fonts / 'plex-sans-regular.woff2'), FONT_PX)
     caption_font = ImageFont.truetype(str(fonts / 'plex-sans-regular.woff2'), CAPTION_PX)
-    rx0, ry0, rx1, ry1 = REPORT_BOX
+    rx0, ry0, rx1, _ = REPORT_BOX
     pad = 26
     text_width = rx1 - rx0 - 2 * pad
 
@@ -276,7 +276,7 @@ def render(args):
     for _, t, _, _ in schedule:
         if t is not None:
             z += (target_z[t] - z) * 0.25
-        slices.append(int(round(z)))
+        slices.append(round(float(z)))
 
     def compose(k, previous_heat):
         shown, t, weight, alpha = schedule[k]
