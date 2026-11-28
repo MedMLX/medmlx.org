@@ -49,7 +49,7 @@ test('every runtime card exposes its reviewed source, limits and resource eviden
     for (const row of card.measurements.flatMap(fact => fact.table ?? [])) assert.ok(body.includes(row.peak), `${item.slug} ${row.model}`);
   }
   const generation = String(route('/models/mlx-generate-ctmr').body);
-  assert.match(generation, /10\.3 GiB/);
+  assert.match(generation, /10\.8 GiB/);
   assert.match(generation, /General MRI generates T1 only/);
 });
 

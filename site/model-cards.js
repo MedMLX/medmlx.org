@@ -3,7 +3,7 @@
 // Keep implementation details in the linked repository. Reason-CT lives in models.js.
 export const modelCards = {
   "fdg-pet-ct-mlx": {
-    "version": "0.5.0",
+    "version": "0.5.1",
     "rows": [
       [
         "Input",
@@ -64,14 +64,14 @@ export const modelCards = {
     ],
     "weights": [],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.5.0/LICENSE).",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.5.1/LICENSE).",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.5.0/LICENSE). See [third-party notices](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.5.0/THIRD_PARTY_NOTICES.md)."
+        "[Apache-2.0](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.5.1/LICENSE). See [third-party notices](https://github.com/MedMLX/fdg-pet-ct-mlx/blob/v0.5.1/THIRD_PARTY_NOTICES.md)."
       ]
     }
   },
   "nnunet-mlx": {
-    "version": "0.10.0",
+    "version": "0.10.1",
     "rows": [
       [
         "Input",
@@ -146,14 +146,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.1/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "siam": {
-    "version": "0.10.0",
+    "version": "0.10.1",
     "rows": [
       [
         "Input",
@@ -222,14 +222,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/LICENSE). SIAM weights: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), by Valabregue et al., converted from the [original release](https://zenodo.org/records/17733431).",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.1/LICENSE). SIAM weights: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), by Valabregue et al., converted from the [original release](https://zenodo.org/records/17733431).",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.1/LICENSE). See [third-party notices](https://github.com/MedMLX/nnunet-mlx/blob/v0.10.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "mlx-segment-ct": {
-    "version": "0.4.1",
+    "version": "0.4.2",
     "rows": [
       [
         "Input",
@@ -282,14 +282,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.1/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.2/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.1/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.2/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-segment-ct/blob/v0.4.2/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "segresnet-mlx": {
-    "version": "0.6.0",
+    "version": "0.6.1",
     "rows": [
       [
         "Input",
@@ -336,14 +336,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.6.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.6.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.6.0/LICENSE). See [third-party notices](https://github.com/MedMLX/segresnet-mlx/blob/v0.6.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/segresnet-mlx/blob/v0.6.1/LICENSE). See [third-party notices](https://github.com/MedMLX/segresnet-mlx/blob/v0.6.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "unest-mlx": {
-    "version": "0.4.0",
+    "version": "0.4.1",
     "rows": [
       [
         "Input",
@@ -389,14 +389,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.4.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/unest-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/unest-mlx/blob/v0.4.1/LICENSE). See [third-party notices](https://github.com/MedMLX/unest-mlx/blob/v0.4.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "swin-unetr-mlx": {
-    "version": "0.4.0",
+    "version": "0.4.1",
     "rows": [
       [
         "Input",
@@ -435,14 +435,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.4.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.4.1/LICENSE). See [third-party notices](https://github.com/MedMLX/swin-unetr-mlx/blob/v0.4.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "sam3-mlx": {
-    "version": "0.4.1",
+    "version": "0.4.2",
     "rows": [
       [
         "Input",
@@ -490,7 +490,7 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software and model files: the [SAM License](https://github.com/MedMLX/sam3-mlx/blob/v0.4.1/LICENSE), which allows commercial use but bars military, weapons and trade-controlled uses. Publications must acknowledge SAM.",
+      "text": "Software and model files: the [SAM License](https://github.com/MedMLX/sam3-mlx/blob/v0.4.2/LICENSE), which allows commercial use but bars military, weapons and trade-controlled uses. Publications must acknowledge SAM.",
       "sources": [
         "royalty-free, including commercial use;",
         "not for military, weapons or other uses barred by trade controls;",
@@ -499,7 +499,7 @@ export const modelCards = {
     }
   },
   "medsam2-mlx": {
-    "version": "0.5.0",
+    "version": "0.5.1",
     "rows": [
       [
         "Input",
@@ -572,14 +572,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.5.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.5.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.5.0/LICENSE). See [third-party notices](https://github.com/MedMLX/medsam2-mlx/blob/v0.5.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms; see the [model card](https://huggingface.co/MedMLX/medsam2-mlx)."
+        "[Apache-2.0](https://github.com/MedMLX/medsam2-mlx/blob/v0.5.1/LICENSE). See [third-party notices](https://github.com/MedMLX/medsam2-mlx/blob/v0.5.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms; see the [model card](https://huggingface.co/MedMLX/medsam2-mlx)."
       ]
     }
   },
   "biomedparse-mlx": {
-    "version": "0.3.0",
+    "version": "0.3.1",
     "rows": [
       [
         "Input",
@@ -634,14 +634,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.3.0/LICENSE). Model files have their own license terms. BiomedParse models are for noncommercial use under CC-BY-NC-SA-4.0.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.3.1/LICENSE). Model files have their own license terms. BiomedParse models are for noncommercial use under CC-BY-NC-SA-4.0.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.3.0/LICENSE). See [third-party notices](https://github.com/MedMLX/biomedparse-mlx/blob/v0.3.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. BiomedParse weights are CC-BY-NC-SA-4.0."
+        "[Apache-2.0](https://github.com/MedMLX/biomedparse-mlx/blob/v0.3.1/LICENSE). See [third-party notices](https://github.com/MedMLX/biomedparse-mlx/blob/v0.3.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. BiomedParse weights are CC-BY-NC-SA-4.0."
       ]
     }
   },
   "totalsegmentator-mlx": {
-    "version": "0.4.0",
+    "version": "0.4.1",
     "rows": [
       [
         "Input",
@@ -711,14 +711,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.4.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.4.1/LICENSE). See [third-party notices](https://github.com/MedMLX/totalsegmentator-mlx/blob/v0.4.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "synthseg-mlx": {
-    "version": "0.5.0",
+    "version": "0.5.1",
     "rows": [
       [
         "Input",
@@ -757,14 +757,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.5.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.5.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.5.0/LICENSE). See [third-party notices](https://github.com/MedMLX/synthseg-mlx/blob/v0.5.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/synthseg-mlx/blob/v0.5.1/LICENSE). See [third-party notices](https://github.com/MedMLX/synthseg-mlx/blob/v0.5.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "flexray-mlx": {
-    "version": "0.3.1",
+    "version": "0.3.2",
     "rows": [
       [
         "Input",
@@ -811,14 +811,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.3.1/LICENSE). Model files have their own license terms. FleXray models are for noncommercial use under CC-BY-NC-4.0.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.3.2/LICENSE). Model files have their own license terms. FleXray models are for noncommercial use under CC-BY-NC-4.0.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.3.1/LICENSE). See [third-party notices](https://github.com/MedMLX/flexray-mlx/blob/v0.3.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. FleXray weights are noncommercial (CC-BY-NC-4.0)."
+        "[Apache-2.0](https://github.com/MedMLX/flexray-mlx/blob/v0.3.2/LICENSE). See [third-party notices](https://github.com/MedMLX/flexray-mlx/blob/v0.3.2/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. FleXray weights are noncommercial (CC-BY-NC-4.0)."
       ]
     }
   },
   "flexible-unet-mlx": {
-    "version": "0.4.0",
+    "version": "0.4.1",
     "rows": [
       [
         "Input",
@@ -864,14 +864,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.4.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.4.1/LICENSE). See [third-party notices](https://github.com/MedMLX/flexible-unet-mlx/blob/v0.4.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "lung-nodule-mlx": {
-    "version": "0.3.1",
+    "version": "0.3.2",
     "rows": [
       [
         "Input",
@@ -926,14 +926,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.1/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.2/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.1/LICENSE). See [third-party notices](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.2/LICENSE). See [third-party notices](https://github.com/MedMLX/lung-nodule-mlx/blob/v0.3.2/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "mlx-generate-ctmr": {
-    "version": "0.8.0",
+    "version": "0.8.1",
     "rows": [
       [
         "Input",
@@ -973,11 +973,11 @@ export const modelCards = {
     ],
     "measurements": [
       {
-        "table": [{"model": "CT", "weight": 0, "peak": "10.3 GiB", "input": "256×256×256, from an anatomy mask"}, {"model": "Brain MRI", "weight": 0, "peak": "9.5 GiB", "input": "256×256×128"}, {"model": "General MRI", "weight": 0, "peak": "9.5 GiB", "input": "128×256×256"}],
+        "table": [{"model": "CT", "weight": 0, "peak": "10.8 GiB", "input": "256×256×256, from an anatomy mask"}, {"model": "Brain MRI", "weight": 0, "peak": "8.1 GiB", "input": "256×256×128"}, {"model": "General MRI", "weight": 0, "peak": "8.1 GiB", "input": "128×256×256"}],
         "sources": [
-          "| `mlx-generate-ctmr-ct` | 1.9 GB | 10.3 GiB | 256³ CT from a mask, ControlNet + four-window decode |",
-          "| `mlx-generate-ctmr-mr-brain` | 806 MB | 9.5 GiB | 256×256×128 MR-Brain, guided batch 2 |",
-          "| `mlx-generate-ctmr-mr` | 806 MB | 9.5 GiB | 128×256×256 general MR |"
+          "| `mlx-generate-ctmr-ct` | 1.9 GB | 10.8 GiB | 256³ CT from a mask, ControlNet + four-window decode |",
+          "| `mlx-generate-ctmr-mr-brain` | 806 MB | 8.1 GiB | 256×256×128 MR-Brain, guided batch 2 |",
+          "| `mlx-generate-ctmr-mr` | 806 MB | 8.1 GiB | 128×256×256 general MR |"
         ]
       }
     ],
@@ -990,14 +990,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.8.0/LICENSE). Model files have their own license terms. General MRI models have noncommercial terms. The CT license terms need clarification from the publisher.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.8.1/LICENSE). Model files have their own license terms. General MRI models have noncommercial terms. The CT license terms need clarification from the publisher.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.8.0/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.8.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. General-MR weights have noncommercial terms; CT component terms require publisher clarification."
+        "[Apache-2.0](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.8.1/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-generate-ctmr/blob/v0.8.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms. General-MR weights have noncommercial terms; CT component terms require publisher clarification."
       ]
     }
   },
   "lesiondiffusion-mlx": {
-    "version": "0.4.0",
+    "version": "0.4.1",
     "rows": [
       [
         "Input",
@@ -1051,9 +1051,9 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.4.0/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.4.1/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.4.0/LICENSE). See [third-party notices](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.4.0/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.4.1/LICENSE). See [third-party notices](https://github.com/MedMLX/lesiondiffusion-mlx/blob/v0.4.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
@@ -1126,7 +1126,7 @@ export const modelCards = {
     }
   },
   "radimagenet-mlx": {
-    "version": "0.4.1",
+    "version": "0.4.2",
     "rows": [
       [
         "Input",
@@ -1191,14 +1191,14 @@ export const modelCards = {
       }
     ],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.1/LICENSE). Model files have their own license terms.",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.2/LICENSE). Model files have their own license terms.",
       "sources": [
-        "[Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.1/LICENSE). See [third-party notices](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.1/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
+        "[Apache-2.0](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.2/LICENSE). See [third-party notices](https://github.com/MedMLX/radimagenet-mlx/blob/v0.4.2/THIRD_PARTY_NOTICES.md). Model weights retain their publisher terms."
       ]
     }
   },
   "mlxradiomics": {
-    "version": "1.2.0",
+    "version": "1.2.1",
     "rows": [
       [
         "Input",
@@ -1240,7 +1240,7 @@ export const modelCards = {
       {
         "text": "The Simoncelli and Riesz filters are not available in this release.",
         "sources": [
-          "Simoncelli and Riesz filters are unavailable on this release; see the limits guide."
+          "| `Simoncelli` (alias `NonseparableWavelet`), `Riesz` | Recognized but cannot run on this release; see [Limits](#limits) |"
         ]
       },
       {
@@ -1253,7 +1253,7 @@ export const modelCards = {
     "measurements": [],
     "weights": [],
     "terms": {
-      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v1.2.0/LICENSE).",
+      "text": "Software: [Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/v1.2.1/LICENSE).",
       "sources": [
         "[Apache-2.0](https://github.com/MedMLX/mlx-radiomics/blob/main/LICENSE). See [third-party notices](https://github.com/MedMLX/mlx-radiomics/blob/main/THIRD_PARTY_NOTICES.md), including CC BY 4.0 attribution"
       ]
